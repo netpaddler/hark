@@ -1,4 +1,4 @@
-const CACHE = "hark-v3";
+const CACHE = "hark-v4";
 
 const PRECACHE = [
   "./index.html",
@@ -9,6 +9,7 @@ const PRECACHE = [
   "./favicon.svg",
   "./data/hymns.json",
   "./data/recordings.json",
+  "./data/themes.json",
   "./fonts/newsreader-400.woff2",
   "./fonts/newsreader-400-italic.woff2",
   "./fonts/newsreader-600.woff2",

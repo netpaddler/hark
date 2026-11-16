@@ -50,3 +50,19 @@ Licensed words can come from:
   - nos. 222 and 223, stanza 2: replaced with commas.
   Curly quotes were normalized to straight quotes.
 - **Spellings** follow the source, for example "Counsellor" and "Counselor" in no. 233, and "heav'n".
+
+## Themes
+File: `data/themes.json`. These tags do not change the hymn lines in `data/hymns.json`.
+
+`seasons` and `topics` name each group. Each has an `id` and a `title`. `hymns` is keyed by hymnal number. Each hymn lists `seasons` and `topics` by those ids.
+
+Seasons follow the hymnal `section`, then the text:
+- Advent: `section` is Advent.
+- Christmas: `section` is Christmas. That includes no. 162, which this file labels Christmas.
+- Epiphany: the words tell of the star, the wise men, or the child shown to the nations. Those hymns also keep Christmas, because that is their section here.
+
+A hymn may have more than one topic. A topic is used only when the words clearly teach it. For the four copyright-withheld hymns, the season comes from the section. A topic is added only when the title itself states it. No. 230 is tagged The Incarnation for that reason. Nos. 212, 231, and 232 have a season and no topic.
+
+Lent, Holy Week, Easter, Ascension, Pentecost, and Thanksgiving are not listed while no hymn uses them. Add the id under `seasons`, and on the hymns that belong there, and the Themes tab will show the new group.
+
+Each group has a link, `#/theme/` plus the id. For example, `#/theme/incarnation`.

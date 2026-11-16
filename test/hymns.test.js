@@ -15,6 +15,10 @@ import {
   neighbors,
   partialNote,
   stanzaPlan,
+  findTheme,
+  hymnsInTheme,
+  themeOutline,
+  themesForHymn,
   titleLetter,
   titleSortKey,
   tuneCaution,
@@ -23,6 +27,7 @@ import {
 
 const hymns = JSON.parse(readFileSync(new URL("../data/hymns.json", import.meta.url), "utf8"));
 const recordings = JSON.parse(readFileSync(new URL("../data/recordings.json", import.meta.url), "utf8"));
+const themes = JSON.parse(readFileSync(new URL("../data/themes.json", import.meta.url), "utf8"));
 const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
 
 function groups() {
@@ -177,6 +182,41 @@ test("neighbors follow hymnal number", () => {
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
 
+test("every hymn has a season and every theme tag is a real hymn", () => {
+  const numbers = new Set(hymns.map((hymn) => hymn.number));
+  const seasonIds = new Set(themes.seasons.map((item) => item.id));
+  const topicIds = new Set(themes.topics.map((item) => item.id));
+  const defined = new Set([...seasonIds, ...topicIds]);
+  assert.equal(themes.seasons.map((item) => item.id).join(","), "advent,christmas,epiphany");
+  for (const hymn of hymns) {
+    assert.equal(hymn.themes, undefined);
+    const entry = themes.hymns[String(hymn.number)];
+    assert.ok(entry, `missing themes for ${hymn.number}`);
+    assert.ok(entry.seasons.length >= 1, `no season for ${hymn.number}`);
+    for (const id of [...entry.seasons, ...entry.topics]) {
+      assert.ok(defined.has(id), `${hymn.number} has unknown theme ${id}`);
+    }
+    if (hymn.section === "Advent") assert.ok(entry.seasons.includes("advent"));
+    if (hymn.section === "Christmas") assert.ok(entry.seasons.includes("christmas"));
+  }
+  for (const id of defined) {
+    const users = hymnsInTheme(themes, id);
+    assert.ok(users.length >= 2, `${id} is used ${users.length} time`);
+    for (const number of users) assert.ok(numbers.has(number), `${id} lists ${number}`);
+  }
+  for (const key of Object.keys(themes.hymns)) assert.ok(numbers.has(Number(key)), key);
+  assert.deepEqual(hymnsInTheme(themes, "epiphany"), [206, 213, 218, 226, 228, 229]);
+  assert.ok(!hymnsInTheme(themes, "advent").includes(203));
+  assert.ok(themesForHymn(themes, 203).some((item) => item.id === "incarnation"));
+  assert.equal(findTheme(themes, "incarnation").title, "The Incarnation");
+  const advent = themeOutline(themes, hymns, { section: "Advent" });
+  assert.deepEqual(
+    advent.seasons.map((group) => group.id),
+    ["advent"],
+  );
+  assert.equal(byNumber.get(203).stanzas[0][0], "Hark! the herald angels sing,");
+});
+
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
   assert.equal(Object.keys(recordings).length, 27);
   assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 126);
@@ -254,8 +294,13 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "README.md",
     "docs/data.md",
     "docs/recordings.md",
+    "data/themes.json",
     ".github/workflows/pages.yml",
   ];
+  const workflow = readFileSync(new URL("../.github/workflows/pages.yml", import.meta.url), "utf8");
+  assert.match(workflow, /workflow_dispatch/);
+  assert.match(workflow, /branches:\s*\[main\]/);
+  assert.match(workflow, /enablement:\s*true/);
   for (const file of files) {
     const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
     assert.equal(/\u2013|\u2014/.test(text), false, file);

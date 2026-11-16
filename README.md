@@ -27,6 +27,7 @@ The home screen has a search box, section chips, and three tabs.
 - **Number** keeps hymnal order. Each row shows the number, title, and tune.
 - **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.
 - **Author** groups hymns by author and by translator, filed under the surname. John Mason Neale is listed as "Neale, John Mason (tr.)". A paraphrase credit is marked "(para.)". A hymn can appear under more than one name.
+- **Themes** groups the same hymns by season and by topic. A season or topic opens as a list of numbers and titles. On a hymn, the same themes are small links, such as `#/theme/incarnation`.
 
 Search checks the number, title, any line of the text (including the refrain), and also the author, translator, and tune. The section chips and the search apply to whichever tab is open. Deep links look like `#/hymn/203`, `#/title`, and `#/author`.
 
@@ -103,14 +104,16 @@ The workflow in `.github/workflows/pages.yml` publishes the site on every push t
 
 1. Make this repository public.
 2. In Settings, open Pages. Under Build and deployment, set Source to GitHub Actions.
-3. Push to `main`, or run "Deploy GitHub Pages" by hand from the Actions tab.
+3. Push to `main`, or run "Deploy GitHub Pages" by hand from the Actions tab. The workflow runs on every push to `main`, and you can start it yourself.
 4. The site will be at <https://netpaddler.github.io/hark/>.
+
+If Pages is not turned on yet, the workflow tries to enable it and set the source to GitHub Actions. You can also turn that on yourself under Settings, Pages.
 
 Paths are relative, so the same files work at the domain root and on a project site.
 
 ## Data and type
 
-Source notes, copyright, and caveats are in [docs/data.md](docs/data.md). The hymns are in [data/hymns.json](data/hymns.json).
+Source notes, copyright, and caveats are in [docs/data.md](docs/data.md). The hymns are in [data/hymns.json](data/hymns.json). Seasons and topics are in [data/themes.json](data/themes.json).
 
 The recording file is a full scan of the Faith Presbyterian channel: 126 entries. How they were found, and which hymns have none, is in [docs/recordings.md](docs/recordings.md).
 
