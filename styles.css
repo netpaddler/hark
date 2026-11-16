@@ -38,6 +38,10 @@
   --sticky-h: 12rem;
 }
 
+html[data-installed="true"] .install-btn {
+  display: none !important;
+}
+
 :root[data-theme="dark"] {
   color-scheme: dark;
   --paper: #141210;
@@ -211,6 +215,107 @@ a {
 .icon-btn[aria-disabled="true"] {
   opacity: 0.28;
   pointer-events: none;
+}
+
+.install-btn {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.install-help {
+  width: min(100% - 1.5rem, 26rem);
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 1.1rem 1.15rem 1rem;
+  border: 0;
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.install-help::backdrop {
+  background: rgba(20, 18, 16, 0.45);
+}
+
+.install-help h2,
+.install-page h2 {
+  margin: 0 0 0.45rem;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.install-steps h3,
+.install-help h3 {
+  margin: 0.95rem 0 0.3rem;
+  font-size: 1rem;
+}
+
+.install-steps p,
+.install-help p,
+.install-steps li,
+.install-help li {
+  margin: 0.25rem 0;
+}
+
+.install-steps ol,
+.install-help ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.install-help a,
+.install-page a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.install-close {
+  width: 100%;
+  min-height: 2.75rem;
+  margin-top: 1rem;
+  border: 1px solid var(--chip-border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.install-page {
+  padding-top: 0.8rem;
+}
+
+.qr-card {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  margin: 0.85rem 0 0.4rem;
+  padding: 0.75rem 0.75rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.qr-card img {
+  width: min(100%, 168px);
+  height: auto;
+}
+
+.qr-card p,
+.qr-card figcaption {
+  margin: 0;
+  color: #3d342c;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 .search {
