@@ -1,4 +1,4 @@
-const CACHE = "hark-v12";
+const CACHE = "hark-v13";
 
 const PRECACHE = [
   "./index.html",

@@ -156,11 +156,10 @@ The Worker allows 5 posts an hour from one address, drops a filled honeypot, and
 
 The live app is <https://netpaddler.github.io/hark/>. The install page, with steps and a QR code, is <https://netpaddler.github.io/hark/#/install>.
 
-On the home screen, tap **Install Hark**.
+On the home screen, a small Install Hark link in the top right opens the install page.
 
-- In Android Chrome, and in Chrome or Edge on a computer, that button opens the browser's own install prompt when the browser offers one.
-- If the prompt is not available, the button opens short steps. On Android, use the three dot menu, then Add to Home screen or Install app. On iPhone, use Safari, tap Share, then Add to Home Screen.
-- The button hides once Hark is installed or already open as an app.
+- The link is plain text in a muted color. It hides once Hark is installed or already open as an app.
+- The install page has the steps. On Android, use the three dot menu, then Add to Home screen or Install app. On iPhone, use Safari, tap Share, then Add to Home Screen.
 
 The QR code in `icons/hark-qr.svg` points at the live site. It is a file in the repo, not a link to an outside image service. There is no Play Store or App Store listing.
 

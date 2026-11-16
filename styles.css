@@ -38,7 +38,7 @@
   --sticky-h: 12rem;
 }
 
-html[data-installed="true"] .install-btn {
+html[data-installed="true"] .install-link {
   display: none !important;
 }
 
@@ -236,16 +236,25 @@ a {
   pointer-events: none;
 }
 
-.install-btn {
-  width: 100%;
-  min-height: 2.75rem;
-  border: 0;
-  border-radius: 12px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto;
+}
+
+.install-link {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.install-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .install-help {
