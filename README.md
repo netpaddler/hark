@@ -73,6 +73,8 @@ To add or change a recording, edit only `data/recordings.json`:
 
 `video_date` is `YYYY-MM-DD` and decides the order. `url` should be a YouTube watch link with `&t=120s` (or the matching `start_seconds`) so the link opens at the hymn. Leave a number out, or give it an empty list, when there is no recording yet.
 
+Prefer a recording of the full congregation singing. If a hymn in this file was sung during the Lord's Supper, when the singing is sparse, replace it only when another Faith livestream has the same hymn sung by the full congregation and the start time is verified from the captions. If no such recording is available, keep the existing entry. Do not drop a recording only because it was sung at communion. Do not guess a start time. Use the label "congregation" only when the congregation is asked to sing.
+
 ## Sermons on the Sins tab
 
 `data/sermons.json` holds Faith Presbyterian sermons for the Sins tab. It is separate from the hymn texts. `page` is the list for the closing repentance and gospel section, in the order given. The other lists are `ten-commandments`, `works-of-the-flesh`, `heart-and-tongue`, and `proverbs-6`. An empty list stays hidden. `service` and `note` stay in the file for editors and are not shown.

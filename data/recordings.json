@@ -123,13 +123,13 @@
       "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
     },
     {
-      "label": "Sunday Morning Worship, Nov 30, 2025, unspecified",
-      "video_title": "Sunday Morning Worship - November 30, 2025",
-      "video_date": "2025-11-30",
-      "url": "https://www.youtube.com/watch?v=CKtA7MdZi68&t=4800s",
-      "start_seconds": 4800,
+      "label": "Sunday Morning Worship, Dec 10, 2023, congregation",
+      "video_title": "Sunday Morning Worship - December 10, 2023",
+      "video_date": "2023-12-10",
+      "url": "https://www.youtube.com/watch?v=yshskaKCxhA&t=5038s",
+      "start_seconds": 5038,
       "confidence": "medium",
-      "notes": "Sung during the Lord's Supper, after the invitation to come forward; start placed just after the invitation, from sung lyrics in the captions."
+      "notes": "Replaces the Nov 30, 2025 communion singing of this hymn. Auto captions at 5038 seconds: let's stand now for our final hymn number 193, Let All Mortal Flesh. No communion language around that announcement. The benediction follows the hymn."
     },
     {
       "label": "Sunday Morning Worship, Dec 8, 2024, congregation",
