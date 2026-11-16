@@ -303,10 +303,78 @@ export function neighbors(hymns, number) {
   };
 }
 
+const OTHER_TUNE = { 204: 205, 205: 204, 222: 223, 223: 222 };
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 function youtubeId(value) {
   if (!value) return null;
   const id = String(value).split(/[?&#/]/)[0];
   return /^[A-Za-z0-9_-]{6,}$/.test(id) ? id : null;
+}
+
+function parseTimestamp(value) {
+  const text = String(value || "").trim();
+  if (/^\d+s?$/.test(text)) return Number(text.replace(/s$/, ""));
+  const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(text);
+  if (!match || (match[1] == null && match[2] == null && match[3] == null)) return null;
+  return Number(match[1] || 0) * 3600 + Number(match[2] || 0) * 60 + Number(match[3] || 0);
+}
+
+export function recordingStart(recording) {
+  if (!recording || typeof recording !== "object") return null;
+  const raw = recording.start_seconds;
+  if (typeof raw === "number" && Number.isFinite(raw) && raw >= 0) return Math.floor(raw);
+  if (typeof raw === "string" && /^\d+(\.\d+)?$/.test(raw.trim())) return Math.floor(Number(raw));
+  if (typeof recording.url !== "string") return null;
+  try {
+    const parsed = new URL(recording.url.trim(), "https://hark.local/");
+    const stamp = parsed.searchParams.get("t") || parsed.searchParams.get("start");
+    const seconds = parseTimestamp(stamp);
+    return seconds == null ? null : seconds;
+  } catch {
+    return null;
+  }
+}
+
+export function youtubeEmbedSrc(id, start) {
+  const base = `https://www.youtube-nocookie.com/embed/${id}`;
+  if (start == null) return base;
+  return `${base}?start=${start}`;
+}
+
+export function formatRecordingDate(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || "").trim());
+  if (!match) return "";
+  const month = MONTHS[Number(match[2]) - 1];
+  if (!month) return "";
+  return `${month} ${Number(match[3])}, ${match[1]}`;
+}
+
+export function tuneCaution(number) {
+  const other = OTHER_TUNE[Number(number)];
+  if (!other) return "";
+  return `The tune sung may differ. The hymnal also sets these words to another tune (no. ${other}).`;
+}
+
+function presentRecording(recording, fallbackLabel) {
+  if (!recording || typeof recording !== "object") return null;
+  const media = classifyRecording(recording.url);
+  if (!media) return null;
+  const label =
+    typeof recording.label === "string" && recording.label.trim()
+      ? recording.label.trim()
+      : fallbackLabel;
+  const start = media.kind === "youtube" ? recordingStart(recording) : null;
+  const url = typeof recording.url === "string" ? recording.url.trim() : "";
+  return {
+    label,
+    date: formatRecordingDate(recording.video_date),
+    dateSort: typeof recording.video_date === "string" ? recording.video_date : "",
+    url,
+    start,
+    ...media,
+    embed: media.kind === "youtube" ? youtubeEmbedSrc(media.id, start) : null,
+  };
 }
 
 export function classifyRecording(url) {
@@ -345,14 +413,25 @@ export function listRecordings(hymn) {
   if (!hymn || !Array.isArray(hymn.recordings)) return [];
   const items = [];
   for (const recording of hymn.recordings) {
-    if (!recording || typeof recording !== "object") continue;
-    const media = classifyRecording(recording.url);
-    if (!media) continue;
-    const label =
-      typeof recording.label === "string" && recording.label.trim()
-        ? recording.label.trim()
-        : "Choir recording";
-    items.push({ label, ...media });
+    const item = presentRecording(recording, "Choir recording");
+    if (item) items.push(item);
   }
+  return items;
+}
+
+export function faithRecordings(catalog, number) {
+  if (!catalog || typeof catalog !== "object") return [];
+  const raw = catalog[String(number)];
+  if (!Array.isArray(raw)) return [];
+  const items = [];
+  raw.forEach((entry, index) => {
+    const item = presentRecording(entry, "Worship recording");
+    if (item) items.push({ ...item, index });
+  });
+  items.sort((a, b) => {
+    if (a.dateSort !== b.dateSort) return a.dateSort < b.dateSort ? 1 : -1;
+    if ((a.start || 0) !== (b.start || 0)) return (b.start || 0) - (a.start || 0);
+    return a.index - b.index;
+  });
   return items;
 }

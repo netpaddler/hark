@@ -1,12 +1,14 @@
 import {
   attributionParts,
   browse,
+  faithRecordings,
   isWithheld,
   listRecordings,
   listSections,
   neighbors,
   partialNote,
   stanzaPlan,
+  tuneCaution,
 } from "./hymn-model.js";
 
 const homeBar = document.getElementById("home-bar");
@@ -32,6 +34,7 @@ const TAB_IDS = [
 
 const scrollMemory = { number: 0, title: 0, author: 0 };
 let hymns = [];
+let recordingCatalog = {};
 let section = "all";
 let activeIndex = null;
 let ready = false;
@@ -380,39 +383,109 @@ function linesEl(lines, className) {
   return paragraph;
 }
 
+function playerFrame(item) {
+  const frame = el("div", { class: "video-frame" });
+  frame.append(
+    el("iframe", {
+      src: item.embed,
+      title: item.label,
+      loading: "lazy",
+      allow:
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+      allowfullscreen: true,
+      referrerpolicy: "strict-origin-when-cross-origin",
+    }),
+  );
+  return frame;
+}
+
+function mediaFigure(item) {
+  const figure = el("figure");
+  figure.append(el("figcaption", {}, item.label));
+  if (item.kind === "youtube") figure.append(playerFrame(item));
+  else if (item.kind === "video") {
+    const video = el("video", { controls: true, playsinline: true, preload: "metadata" });
+    video.src = item.url;
+    figure.append(video);
+  } else {
+    const audio = el("audio", { controls: true, preload: "metadata" });
+    audio.src = item.url;
+    figure.append(audio);
+  }
+  return figure;
+}
+
+function youtubeLink(item) {
+  return el(
+    "a",
+    {
+      class: "faith-link",
+      href: item.url,
+      target: "_blank",
+      rel: "noopener noreferrer",
+    },
+    "Play on YouTube",
+  );
+}
+
+function faithCard(item, openPlayer) {
+  const figure = el("figure", { class: "faith-item" });
+  if (item.date) figure.append(el("p", { class: "faith-date" }, item.date));
+  figure.append(el("p", { class: "faith-label" }, item.label));
+  if (item.kind === "youtube" && openPlayer) figure.append(playerFrame(item));
+  else if (item.kind === "youtube") {
+    const details = el("details", { class: "faith-play" });
+    details.append(el("summary", {}, "Play in the page"));
+    details.addEventListener("toggle", () => {
+      if (details.open && !details.querySelector("iframe")) details.append(playerFrame(item));
+    });
+    figure.append(details);
+  } else if (item.kind === "video") {
+    const video = el("video", { controls: true, playsinline: true, preload: "metadata" });
+    video.src = item.url;
+    figure.append(video);
+  } else if (item.url) {
+    const audio = el("audio", { controls: true, preload: "metadata" });
+    audio.src = item.url;
+    figure.append(audio);
+  }
+  if (item.kind === "youtube" && item.url) {
+    const link = youtubeLink(item);
+    link.setAttribute("aria-label", `Play on YouTube, ${item.label}`);
+    figure.append(link);
+  }
+  return figure;
+}
+
+function faithSection(hymn) {
+  const items = faithRecordings(recordingCatalog, hymn.number);
+  if (items.length === 0) return null;
+  const sectionEl = el("section", {
+    class: "recordings faith",
+    "aria-label": "Hear it at Faith Presbyterian",
+  });
+  sectionEl.append(el("h2", { class: "faith-heading" }, "Hear it at Faith Presbyterian"));
+  const caution = tuneCaution(hymn.number);
+  if (caution) sectionEl.append(el("p", { class: "faith-note" }, caution));
+  sectionEl.append(faithCard(items[0], true));
+  if (items.length > 1) {
+    const details = el("details", { class: "earlier" });
+    const older = items.length - 1;
+    details.append(
+      el("summary", {}, older === 1 ? "1 earlier recording" : `${older} earlier recordings`),
+    );
+    for (const item of items.slice(1)) details.append(faithCard(item, false));
+    sectionEl.append(details);
+  }
+  return sectionEl;
+}
+
 function recordingSection(hymn) {
   const items = listRecordings(hymn);
   if (items.length === 0) return null;
   const sectionEl = el("section", { class: "recordings" });
   sectionEl.append(el("h2", {}, "Choir"));
-  for (const item of items) {
-    const figure = el("figure");
-    figure.append(el("figcaption", {}, item.label));
-    if (item.kind === "youtube") {
-      const frame = el("div", { class: "video-frame" });
-      frame.append(
-        el("iframe", {
-          src: `https://www.youtube-nocookie.com/embed/${item.id}`,
-          title: item.label,
-          loading: "lazy",
-          allow:
-            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
-          allowfullscreen: true,
-          referrerpolicy: "strict-origin-when-cross-origin",
-        }),
-      );
-      figure.append(frame);
-    } else if (item.kind === "video") {
-      const video = el("video", { controls: true, playsinline: true, preload: "metadata" });
-      video.src = item.url;
-      figure.append(video);
-    } else {
-      const audio = el("audio", { controls: true, preload: "metadata" });
-      audio.src = item.url;
-      figure.append(audio);
-    }
-    sectionEl.append(figure);
-  }
+  for (const item of items) sectionEl.append(mediaFigure(item));
   return sectionEl;
 }
 
@@ -488,8 +561,8 @@ function renderHymn(number) {
     if (credit.people) article.append(el("p", { class: "attribution" }, credit.people));
     if (credit.music) article.append(el("p", { class: "attribution" }, credit.music));
 
-    const recordings = recordingSection(hymn);
-    if (recordings) article.append(recordings);
+    const heard = faithSection(hymn);
+    const choir = recordingSection(hymn);
 
     if (isWithheld(hymn)) {
       const notice = el("div", { class: "notice" });
@@ -532,7 +605,9 @@ function renderHymn(number) {
       article.append(text);
     }
 
-    if (!recordings) {
+    if (heard) article.append(heard);
+    if (choir) article.append(choir);
+    if (!heard && !choir) {
       article.append(el("p", { class: "coming" }, "Choir recording coming soon."));
     }
 
@@ -579,11 +654,19 @@ function showError() {
 
 async function load() {
   try {
-    const response = await fetch(new URL("data/hymns.json", import.meta.url));
-    if (!response.ok) throw new Error(String(response.status));
-    const data = await response.json();
+    const [hymnResponse, recordingResponse] = await Promise.all([
+      fetch(new URL("data/hymns.json", import.meta.url)),
+      fetch(new URL("data/recordings.json", import.meta.url)),
+    ]);
+    if (!hymnResponse.ok) throw new Error(String(hymnResponse.status));
+    const data = await hymnResponse.json();
     if (!Array.isArray(data)) throw new Error("bad data");
     hymns = data;
+    recordingCatalog = {};
+    if (recordingResponse.ok) {
+      const catalog = await recordingResponse.json();
+      if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) recordingCatalog = catalog;
+    }
     ready = true;
     buildChips();
     render();

@@ -5,7 +5,9 @@ import {
   authorIndex,
   browse,
   classifyRecording,
+  faithRecordings,
   filterHymns,
+  formatRecordingDate,
   gapNote,
   isWithheld,
   listRecordings,
@@ -15,9 +17,12 @@ import {
   stanzaPlan,
   titleLetter,
   titleSortKey,
+  tuneCaution,
+  youtubeEmbedSrc,
 } from "../hymn-model.js";
 
 const hymns = JSON.parse(readFileSync(new URL("../data/hymns.json", import.meta.url), "utf8"));
+const recordings = JSON.parse(readFileSync(new URL("../data/recordings.json", import.meta.url), "utf8"));
 const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
 
 function groups() {
@@ -170,6 +175,43 @@ test("neighbors follow hymnal number", () => {
   assert.equal(neighbors(hymns, 162).prev, null);
   assert.equal(neighbors(hymns, 233).next, null);
   assert.equal(neighbors(hymns, 999).hymn, null);
+});
+
+test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
+  assert.equal(Object.keys(recordings).length, 27);
+  const herald = faithRecordings(recordings, 203);
+  assert.equal(herald.length, 9);
+  assert.equal(herald[0].date, "Dec 28, 2025");
+  assert.equal(herald[0].dateSort, "2025-12-28");
+  assert.ok(herald[0].url.includes("t="));
+  assert.match(herald[0].embed, /start=\d+$/);
+  assert.equal(herald[0].confidence, undefined);
+  assert.equal(herald[0].notes, undefined);
+  assert.deepEqual(
+    herald.map((item) => item.dateSort),
+    [...herald.map((item) => item.dateSort)].sort((a, b) => (a < b ? 1 : a > b ? -1 : 0)),
+  );
+  assert.equal(faithRecordings(recordings, 200).length, 0);
+  assert.equal(faithRecordings(recordings, 211).length, 0);
+  const away = faithRecordings(recordings, 204);
+  const awayOther = faithRecordings(recordings, 205);
+  assert.equal(away.length, 1);
+  assert.equal(away[0].url, awayOther[0].url);
+  assert.equal(
+    faithRecordings(recordings, 222).map((item) => item.url).join("|"),
+    faithRecordings(recordings, 223).map((item) => item.url).join("|"),
+  );
+  assert.match(tuneCaution(204), /tune sung may differ/);
+  assert.match(tuneCaution(204), /no\. 205/);
+  assert.match(tuneCaution(223), /no\. 222/);
+  assert.equal(tuneCaution(203), "");
+  assert.equal(formatRecordingDate("2026-04-26"), "Apr 26, 2026");
+  const reversed = faithRecordings(
+    { 1: [recordings["203"][recordings["203"].length - 1], recordings["203"][0]] },
+    1,
+  );
+  assert.equal(reversed[0].dateSort, "2025-12-28");
+  assert.equal(youtubeEmbedSrc("abcdefghijk", 120), "https://www.youtube-nocookie.com/embed/abcdefghijk?start=120");
 });
 
 test("recordings accept audio files and YouTube links", () => {

@@ -1,6 +1,6 @@
 # Hark
 
-Hark is a phone-first hymnal for reading the words of hymns from the Trinity Hymnal (1990), the hymnal of the PCA and OPC. It is meant for pulling up a number quickly, including from an Android home screen, and it can hold a choir recording on each hymn later.
+Hark is a phone-first hymnal for reading the words of hymns from the Trinity Hymnal (1990), the hymnal of the PCA and OPC. It is meant for pulling up a number quickly, including from an Android home screen. Worship recordings from Faith Presbyterian Church, Tacoma, play on the hymn page, and a choir recording can be added later.
 
 This copy has 42 Advent and Christmas hymns: nos. 193 to 233, plus no. 162. The wording in `data/hymns.json` is the text to sing. Do not edit it.
 
@@ -42,9 +42,35 @@ Previous and next follow hymnal number. Back returns to the list you came from.
 
 If `public_domain` is false, Hark shows the title, number, author, and `copyright_note`, and tells you to see the printed Trinity Hymnal. It does not show the words. If a public-domain hymn has a `copyright_note` or a gap in `stanza_numbers`, Hark says which stanzas are omitted and where they would have been.
 
+## Hear it at Faith Presbyterian
+
+Worship recordings from [Faith Presbyterian Church, Tacoma](https://www.youtube.com/@faithpresbyterianchurch-ta4701) are in `data/recordings.json`, separate from the hymn texts so you can update them on their own. The file is an object keyed by Trinity Hymnal number. Each number maps to a list of recordings.
+
+On the hymn page, Hark shows "Hear it at Faith Presbyterian" after the words. Recordings are listed newest first, with the date and the label. The newest one has a player that starts at `start_seconds`. Every recording also has a YouTube link that opens at the same moment. Older recordings stay tucked under "earlier recordings" until you open them. `confidence` and `notes` stay in the file for editors and are not shown.
+
+Nos. 204 and 205 share one text with two tunes, and so do nos. 222 and 223. On those hymns Hark adds a note that the tune sung may differ.
+
+To add or change a recording, edit only `data/recordings.json`:
+
+```json
+"203": [
+  {
+    "label": "Sunday Morning Worship, Dec 25, 2022, congregation",
+    "video_title": "Sunday Morning Worship - December 25, 2022",
+    "video_date": "2022-12-25",
+    "url": "https://www.youtube.com/watch?v=VIDEO_ID&t=120s",
+    "start_seconds": 120,
+    "confidence": "medium",
+    "notes": "Optional note for editors. Not shown in the app."
+  }
+]
+```
+
+`video_date` is `YYYY-MM-DD` and decides the order. `url` should be a YouTube watch link with `&t=120s` (or the matching `start_seconds`) so the link opens at the hymn. Leave a number out, or give it an empty list, when there is no recording yet.
+
 ## Choir recordings
 
-Add an optional `recordings` array to a hymn. Each item needs a `label` and a `url`. The url can be an audio file or a YouTube link. Leave the array off, or leave it empty, and the page shows a quiet line that a recording is coming soon.
+Add an optional `recordings` array on a hymn in `data/hymns.json` when you have a choir file of your own. Each item needs a `label` and a `url`. The url can be an audio file or a YouTube link. When a hymn has neither a Faith recording nor a choir file, the page shows a quiet line that a choir recording is coming soon.
 
 ```json
 "recordings": [
