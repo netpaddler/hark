@@ -1184,6 +1184,66 @@ main.has-jump {
   }
 }
 
+.music-block {
+  margin: 1.2rem 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper-raised);
+  padding: 0.2rem 0.85rem 0.7rem;
+}
+
+.music-block summary {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.music-credit,
+.music-note {
+  margin: 0.2rem 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.music-score {
+  background: #f7f1e6;
+  color: #211c16;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.music-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.music-controls button {
+  min-height: 2.75rem;
+  min-width: 4.5rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.music-controls .tempo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

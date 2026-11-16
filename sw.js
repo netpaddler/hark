@@ -1,4 +1,4 @@
-const CACHE = "hark-v6";
+const CACHE = "hark-v7";
 
 const PRECACHE = [
   "./index.html",
@@ -6,6 +6,8 @@ const PRECACHE = [
   "./app.js",
   "./hymn-model.js",
   "./install.js",
+  "./vendor/abcjs-basic-min.js",
+  "./data/music.json",
   "./manifest.webmanifest",
   "./favicon.svg",
   "./data/hymns.json",
@@ -23,6 +25,23 @@ const PRECACHE = [
   "./icons/icon-maskable-512.png",
   "./icons/apple-touch-icon.png",
   "./icons/hark-qr.svg",
+  "./data/music/ADESTE_FIDELES.abc",
+  "./data/music/CAROL.abc",
+  "./data/music/DIVINUM_MYSTERIUM.abc",
+  "./data/music/DIX.abc",
+  "./data/music/ES_IST_EIN_ROS_ENTSPRUNGEN.abc",
+  "./data/music/GOD_REST_YOU_MERRY.abc",
+  "./data/music/HYFRYDOL.abc",
+  "./data/music/MUELLER.abc",
+  "./data/music/PICARDY.abc",
+  "./data/music/REGENT_SQUARE.abc",
+  "./data/music/SEE_AMID_THE_WINTERS_SNOW.abc",
+  "./data/music/TALLIS_CANON.abc",
+  "./data/music/TEMPUS_ADEST_FLORIDUM.abc",
+  "./data/music/THIRSTING.abc",
+  "./data/music/VENI_EMMANUEL.abc",
+  "./data/music/VON_HIMMEL_HOCH.abc",
+  "./data/music/WARUM_SOLLT_ICH_MICH_DENN_GRAMEN.abc",
 ];
 
 self.addEventListener("install", (event) => {

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
+import vm from "node:vm";
 import { INSTALL_URL, installGuide } from "../install.js";
 import {
   authorIndex,
@@ -32,6 +33,7 @@ const recordings = JSON.parse(readFileSync(new URL("../data/recordings.json", im
 const themes = JSON.parse(readFileSync(new URL("../data/themes.json", import.meta.url), "utf8"));
 const sins = JSON.parse(readFileSync(new URL("../data/sins.json", import.meta.url), "utf8"));
 const sermons = JSON.parse(readFileSync(new URL("../data/sermons.json", import.meta.url), "utf8"));
+const music = JSON.parse(readFileSync(new URL("../data/music.json", import.meta.url), "utf8"));
 const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
 
 function groups() {
@@ -473,6 +475,44 @@ test("install manifest, guide, and QR code", () => {
   assert.match(appSource, /beforeinstallprompt/);
 });
 
+test("every score parses, names its source, and matches a hymn", () => {
+  const code = readFileSync(new URL("../vendor/abcjs-basic-min.js", import.meta.url), "utf8");
+  const sandbox = { console, setTimeout, clearTimeout, navigator: { userAgent: "node" } };
+  sandbox.window = sandbox;
+  sandbox.self = sandbox;
+  sandbox.globalThis = sandbox;
+  vm.createContext(sandbox);
+  vm.runInContext(code, sandbox);
+  const files = new Set(readdirSync(new URL("../data/music", import.meta.url)).filter((name) => name.endsWith(".abc")));
+  const used = new Set();
+  const numbers = new Set(hymns.map((hymn) => String(hymn.number)));
+  for (const number of numbers) {
+    assert.ok(music.scores[number] || music.omitted[number], `no music record for ${number}`);
+  }
+  for (const [number, score] of Object.entries(music.scores)) {
+    const hymn = byNumber.get(Number(number));
+    assert.equal(score.tune, hymn.tune);
+    assert.ok(score.source && score.source_url && score.harmony_credit);
+    assert.ok(score.harmony === "SATB" || score.harmony === "melody");
+    assert.equal(files.has(score.file), true, score.file);
+    used.add(score.file);
+    const abc = readFileSync(new URL(`../data/music/${score.file}`, import.meta.url), "utf8");
+    const meter = abc.match(/^M:\s*(\S+)/m)[1];
+    assert.equal(meter, score.meter, score.file);
+    assert.ok(abc.includes("|"), score.file);
+    const parsed = sandbox.ABCJS.parseOnly(abc);
+    assert.equal(parsed[0].warnings, undefined, score.file);
+    assert.equal(/\u2013|\u2014/.test(abc), false, score.file);
+  }
+  for (const file of files) assert.ok(used.has(file), `orphan ${file}`);
+  assert.equal(music.scores["197"].harmony, "melody");
+  assert.equal(music.scores["197"].unsure, true);
+  assert.equal(music.scores["401"].tune, "TALLIS' CANON");
+  assert.ok(music.omitted["108"]);
+  assert.ok(music.omitted["559"]);
+  assert.equal(/\u2013|\u2014/.test(JSON.stringify(music)), false);
+});
+
 test("shell files exist and UI copy has no en or em dashes", () => {
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
   for (const match of sw.matchAll(/"\.\/([^"]+)"/g)) {
@@ -492,6 +532,8 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "data/themes.json",
     "data/sins.json",
     "data/sermons.json",
+    "data/music.json",
+    "vendor/abcjs-basic-min.js",
     ".github/workflows/pages.yml",
   ];
   const workflow = readFileSync(new URL("../.github/workflows/pages.yml", import.meta.url), "utf8");
