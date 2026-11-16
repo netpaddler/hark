@@ -280,7 +280,7 @@ a {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 3px;
   padding: 3px;
   border-radius: 12px;
@@ -289,11 +289,13 @@ a {
 
 .tabs button {
   min-height: 2.5rem;
+  padding: 0 0.15rem;
   border: 0;
   border-radius: 9px;
   background: transparent;
   color: var(--muted);
   font-weight: 600;
+  font-size: 0.92rem;
 }
 
 .tabs button[aria-selected="true"] {
@@ -306,6 +308,133 @@ a {
   margin: 0;
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.theme-jumps {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0.15rem 0 0.35rem;
+}
+
+.theme-jumps::-webkit-scrollbar {
+  display: none;
+}
+
+.theme-jumps button {
+  flex: 0 0 auto;
+  min-height: 2.4rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--chip-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.theme-kind {
+  margin: 1rem 0 0.15rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.theme-group {
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: calc(var(--sticky-h) + 0.35rem);
+}
+
+.theme-group summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.65rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.theme-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.theme-group summary::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-top: 0.15rem;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg);
+  flex: none;
+}
+
+.theme-group[open] summary::before {
+  margin-top: 0.35rem;
+  transform: rotate(45deg);
+}
+
+.theme-name {
+  flex: 1;
+  font-family: var(--serif);
+  font-size: 1.22rem;
+  font-weight: 600;
+}
+
+.theme-count {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.theme-group .hymn-list {
+  margin: 0 0 0.4rem;
+}
+
+.theme-page-title {
+  margin: 0.2rem 0 0.8rem;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.theme-back {
+  margin: 0.6rem 0 0.2rem;
+}
+
+.theme-back a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0 0.2rem;
+}
+
+.theme-chips a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid var(--chip-border);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.theme-chips a.season {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .hymn-bar {
@@ -552,11 +681,6 @@ main.has-jump {
 
 .hymn-title:focus {
   outline: none;
-}
-
-.hymn-title:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
 }
 
 .attribution {

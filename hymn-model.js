@@ -419,6 +419,51 @@ export function listRecordings(hymn) {
   return items;
 }
 
+export function themesForHymn(catalog, number) {
+  if (!catalog || !catalog.hymns) return [];
+  const entry = catalog.hymns[String(number)];
+  if (!entry) return [];
+  const seasons = catalog.seasons || [];
+  const topics = catalog.topics || [];
+  const pick = (defs, ids) =>
+    (ids || []).map((id) => defs.find((item) => item.id === id)).filter(Boolean);
+  return [...pick(seasons, entry.seasons), ...pick(topics, entry.topics)];
+}
+
+export function findTheme(catalog, id) {
+  if (!catalog) return null;
+  return [...(catalog.seasons || []), ...(catalog.topics || [])].find((item) => item.id === id) || null;
+}
+
+export function hymnsInTheme(catalog, id) {
+  if (!catalog || !catalog.hymns) return [];
+  const numbers = [];
+  for (const [key, entry] of Object.entries(catalog.hymns)) {
+    const tags = [...(entry.seasons || []), ...(entry.topics || [])];
+    if (tags.includes(id)) numbers.push(Number(key));
+  }
+  return numbers.sort((a, b) => a - b);
+}
+
+export function themeOutline(catalog, hymns, options = {}) {
+  const visible = new Set(filterHymns(hymns, options.query || "", options.section || "all").map((hymn) => hymn.number));
+  const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
+  const build = (defs) =>
+    (defs || [])
+      .map((def) => ({
+        ...def,
+        hymns: hymnsInTheme(catalog, def.id)
+          .filter((number) => visible.has(number))
+          .map((number) => byNumber.get(number))
+          .filter(Boolean),
+      }))
+      .filter((group) => group.hymns.length > 0);
+  return {
+    seasons: build(catalog && catalog.seasons),
+    topics: build(catalog && catalog.topics),
+  };
+}
+
 export function faithRecordings(catalog, number) {
   if (!catalog || typeof catalog !== "object") return [];
   const raw = catalog[String(number)];

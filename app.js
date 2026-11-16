@@ -2,12 +2,17 @@ import {
   attributionParts,
   browse,
   faithRecordings,
+  filterHymns,
   isWithheld,
   listRecordings,
   listSections,
   neighbors,
   partialNote,
   stanzaPlan,
+  themeOutline,
+  themesForHymn,
+  findTheme,
+  hymnsInTheme,
   tuneCaution,
 } from "./hymn-model.js";
 
@@ -30,11 +35,13 @@ const TAB_IDS = [
   ["tab-number", "number"],
   ["tab-title", "title"],
   ["tab-author", "author"],
+  ["tab-themes", "themes"],
 ];
 
 const scrollMemory = { number: 0, title: 0, author: 0 };
 let hymns = [];
 let recordingCatalog = {};
+let themeCatalog = { seasons: [], topics: [], hymns: {} };
 let section = "all";
 let activeIndex = null;
 let ready = false;
@@ -127,6 +134,9 @@ function route() {
   if (path === "/" || path === "/number") return { view: "index", index: "number" };
   if (path === "/title") return { view: "index", index: "title" };
   if (path === "/author") return { view: "index", index: "author" };
+  if (path === "/themes") return { view: "themes" };
+  const themeMatch = path.match(/^\/theme\/([a-z0-9-]+)\/?$/);
+  if (themeMatch) return { view: "theme", id: themeMatch[1] };
   const match = path.match(/^\/hymn\/(\d+)\/?$/);
   if (match) return { view: "hymn", number: Number(match[1]) };
   return { view: "index", index: "number" };
@@ -135,6 +145,8 @@ function route() {
 function indexHref(index) {
   if (index === "title") return "#/title";
   if (index === "author") return "#/author";
+  if (index === "themes") return "#/themes";
+  if (typeof index === "string" && index.startsWith("theme:")) return `#/theme/${index.slice(6)}`;
   return "#/";
 }
 
@@ -145,7 +157,10 @@ function rememberScroll() {
 function storedIndex() {
   try {
     const stored = sessionStorage.getItem("hark-index");
-    if (stored === "title" || stored === "author" || stored === "number") return stored;
+    if (stored === "title" || stored === "author" || stored === "number" || stored === "themes") {
+      return stored;
+    }
+    if (/^theme:[a-z0-9-]+$/.test(stored || "")) return stored;
   } catch {
     /* ignore */
   }
@@ -170,9 +185,10 @@ function countLabel(total) {
 }
 
 function syncTabs(index) {
+  const selectedName = typeof index === "string" && index.startsWith("theme") ? "themes" : index;
   for (const [id, name] of TAB_IDS) {
     const button = document.getElementById(id);
-    const selected = name === index;
+    const selected = name === selectedName;
     button.setAttribute("aria-selected", selected ? "true" : "false");
     button.tabIndex = selected ? 0 : -1;
   }
@@ -348,6 +364,138 @@ function jumpBar(letters) {
     lastJump = "";
     jumpTo(button.dataset.letter);
   });
+  return nav;
+}
+
+function themeHymnList(list) {
+  return el(
+    "ul",
+    { class: "hymn-list" },
+    list.map((hymn) => hymnRow(hymn)),
+  );
+}
+
+function themeGroup(group, open) {
+  const details = el("details", {
+    class: "theme-group",
+    id: `theme-${group.id}`,
+    open: open ? true : null,
+  });
+  const summary = el("summary", {});
+  summary.append(
+    el("span", { class: "theme-name" }, group.title),
+    el("span", { class: "theme-count" }, countLabel(group.hymns.length)),
+  );
+  details.append(summary, themeHymnList(group.hymns));
+  return details;
+}
+
+function themeJump(groups) {
+  const row = el("div", { class: "theme-jumps" });
+  for (const group of groups) {
+    const button = el("button", { type: "button" }, group.title);
+    button.addEventListener("click", () => {
+      const node = document.getElementById(`theme-${group.id}`);
+      if (!node) return;
+      if (node.tagName === "DETAILS") node.open = true;
+      node.scrollIntoView({ block: "start" });
+    });
+    row.append(button);
+  }
+  return row;
+}
+
+function renderThemes() {
+  homeBar.hidden = false;
+  hymnBar.hidden = true;
+  activeIndex = "themes";
+  saveIndex("themes");
+  syncTabs("themes");
+  main.setAttribute("role", "tabpanel");
+  main.setAttribute("aria-labelledby", "tab-themes");
+  main.classList.remove("has-jump");
+  const outline = themeOutline(themeCatalog, hymns, { query: queryInput.value, section });
+  const shown = new Set();
+  for (const group of [...outline.seasons, ...outline.topics]) {
+    for (const hymn of group.hymns) shown.add(hymn.number);
+  }
+  count.textContent = countLabel(shown.size);
+  document.title = "Themes · Hark";
+  if (shown.size === 0) {
+    main.replaceChildren(el("p", { class: "empty" }, "No hymns match that search."));
+  } else {
+    const root = el("div", { class: "themes" });
+    const jumps = [...outline.seasons, ...outline.topics];
+    if (jumps.length) root.append(themeJump(jumps));
+    if (outline.seasons.length) {
+      root.append(el("h2", { class: "theme-kind" }, "Seasons"));
+      outline.seasons.forEach((group, index) => root.append(themeGroup(group, index === 0)));
+    }
+    if (outline.topics.length) {
+      root.append(el("h2", { class: "theme-kind" }, "Topics"));
+      for (const group of outline.topics) root.append(themeGroup(group, false));
+    }
+    main.replaceChildren(root);
+  }
+  const y = scrollMemory.themes || 0;
+  requestAnimationFrame(() => window.scrollTo(0, y));
+}
+
+function renderTheme(id) {
+  homeBar.hidden = false;
+  hymnBar.hidden = true;
+  const key = `theme:${id}`;
+  activeIndex = key;
+  saveIndex(key);
+  syncTabs("themes");
+  main.setAttribute("role", "tabpanel");
+  main.setAttribute("aria-labelledby", "tab-themes");
+  main.classList.remove("has-jump");
+  const theme = findTheme(themeCatalog, id);
+  if (!theme) {
+    count.textContent = "";
+    document.title = "Theme not found · Hark";
+    main.replaceChildren(
+      el("div", { class: "theme-page" }, [
+        el("p", {}, el("a", { href: "#/themes" }, "All themes")),
+        el("h2", { class: "theme-page-title" }, "Theme not found"),
+        el("p", {}, "There is no theme by that name."),
+      ]),
+    );
+    window.scrollTo(0, 0);
+    return;
+  }
+  const numbers = new Set(hymnsInTheme(themeCatalog, id));
+  const list = filterHymns(hymns, queryInput.value, section).filter((hymn) => numbers.has(hymn.number));
+  count.textContent = countLabel(list.length);
+  document.title = `${theme.title} · Hark`;
+  const page = el("div", { class: "theme-page" });
+  page.append(el("p", { class: "theme-back" }, el("a", { href: "#/themes" }, "All themes")));
+  page.append(el("h2", { class: "theme-page-title" }, theme.title));
+  if (list.length === 0) page.append(el("p", { class: "empty" }, "No hymns match that search."));
+  else page.append(themeHymnList(list));
+  main.replaceChildren(page);
+  const y = scrollMemory[key] || 0;
+  requestAnimationFrame(() => window.scrollTo(0, y));
+}
+
+function themeChips(hymn) {
+  const themes = themesForHymn(themeCatalog, hymn.number);
+  if (themes.length === 0) return null;
+  const nav = el("nav", { class: "theme-chips", "aria-label": "Themes for this hymn" });
+  const seasonIds = new Set((themeCatalog.seasons || []).map((item) => item.id));
+  for (const theme of themes) {
+    nav.append(
+      el(
+        "a",
+        {
+          href: `#/theme/${theme.id}`,
+          class: seasonIds.has(theme.id) ? "season" : "topic",
+        },
+        theme.title,
+      ),
+    );
+  }
   return nav;
 }
 
@@ -531,9 +679,15 @@ function renderHymn(number) {
 
   const back = document.getElementById("back-link");
   back.href = indexHref(listIndex);
-  back.replaceChildren(icon("back"), document.createTextNode("Hymns"));
-  const listName =
-    listIndex === "title" ? "title index" : listIndex === "author" ? "author index" : "hymn list";
+  const fromThemes = listIndex === "themes" || (typeof listIndex === "string" && listIndex.startsWith("theme:"));
+  back.replaceChildren(icon("back"), document.createTextNode(fromThemes ? "Themes" : "Hymns"));
+  const listName = fromThemes
+    ? "themes"
+    : listIndex === "title"
+      ? "title index"
+      : listIndex === "author"
+        ? "author index"
+        : "hymn list";
   back.setAttribute("aria-label", `Back to the ${listName}`);
 
   const found = neighbors(hymns, number);
@@ -560,6 +714,8 @@ function renderHymn(number) {
     const credit = attributionParts(hymn);
     if (credit.people) article.append(el("p", { class: "attribution" }, credit.people));
     if (credit.music) article.append(el("p", { class: "attribution" }, credit.music));
+    const chipsForHymn = themeChips(hymn);
+    if (chipsForHymn) article.append(chipsForHymn);
 
     const heard = faithSection(hymn);
     const choir = recordingSection(hymn);
@@ -631,6 +787,8 @@ function render() {
   bubble.hidden = true;
   const current = route();
   if (current.view === "hymn") renderHymn(current.number);
+  else if (current.view === "themes") renderThemes();
+  else if (current.view === "theme") renderTheme(current.id);
   else renderIndex(current.index);
   syncSticky();
 }
@@ -654,9 +812,10 @@ function showError() {
 
 async function load() {
   try {
-    const [hymnResponse, recordingResponse] = await Promise.all([
+    const [hymnResponse, recordingResponse, themeResponse] = await Promise.all([
       fetch(new URL("data/hymns.json", import.meta.url)),
       fetch(new URL("data/recordings.json", import.meta.url)),
+      fetch(new URL("data/themes.json", import.meta.url)),
     ]);
     if (!hymnResponse.ok) throw new Error(String(hymnResponse.status));
     const data = await hymnResponse.json();
@@ -666,6 +825,11 @@ async function load() {
     if (recordingResponse.ok) {
       const catalog = await recordingResponse.json();
       if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) recordingCatalog = catalog;
+    }
+    themeCatalog = { seasons: [], topics: [], hymns: {} };
+    if (themeResponse.ok) {
+      const catalog = await themeResponse.json();
+      if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) themeCatalog = catalog;
     }
     ready = true;
     buildChips();
