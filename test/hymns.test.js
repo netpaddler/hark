@@ -498,10 +498,93 @@ test("comments and requests stay closed until an endpoint is set", () => {
   assert.equal(worker.includes("Hymn requests are limited to the Trinity Hymnal."), false);
   assert.equal(appSource.includes('name: "company"'), true);
   assert.equal(appSource.includes("turnstile:"), true);
-  assert.match(appSource, /labels=\$\{encodeURIComponent\(requestConfig\.label\)\}/);
-  assert.match(appSource, /issue\.comments_url/);
+  assert.match(appSource, /fetch\(requestConfig\.endpoint, \{ method: "GET"/);
+  assert.equal(appSource.includes("api.github.com"), false);
+  assert.equal(appSource.includes("innerHTML"), false);
+  assert.match(appSource, /controllerchange/);
+  assert.match(appSource, /reloading/);
   assert.equal(worker.includes("GITHUB_TOKEN"), true);
-  assert.equal(/api\.github\.com/.test(appSource), true);
+  assert.equal(worker.includes("caches.default"), true);
+  assert.equal(worker.includes("max-age=60"), true);
+  assert.equal(worker.includes("pull_request"), true);
+  assert.equal(worker.includes("plainText"), true);
+  assert.equal(/api\.github\.com/.test(worker), true);
+});
+
+test("worker list strips html, drops pull requests, and caches for 60 seconds", async () => {
+  const issues = [
+    {
+      number: 4,
+      title: "Hello <b>there</b>",
+      created_at: "2026-11-16T00:00:00Z",
+      html_url: "https://github.com/netpaddler/hark/issues/4",
+      body: "Please add <script>alert(1)</script> hymn 12",
+      comments: 1,
+    },
+    { number: 5, pull_request: { url: "https://github.com/netpaddler/hark/pull/5" }, title: "A pull request", comments: 0 },
+  ];
+  const store = new Map();
+  globalThis.caches = {
+    default: {
+      async match(key) {
+        return store.get(key.url);
+      },
+      async put(key, response) {
+        store.set(key.url, response);
+      },
+    },
+  };
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    const href = String(url);
+    if (href.includes("/comments")) {
+      return new Response(
+        JSON.stringify([{ user: { login: "netpaddler" }, body: "Thanks <em>yes</em>", created_at: "2026-11-16T01:00:00Z" }]),
+        { status: 200, headers: { "content-type": "application/json" } },
+      );
+    }
+    if (href.includes("/issues?")) {
+      return new Response(JSON.stringify(issues), { status: 200, headers: { "content-type": "application/json" } });
+    }
+    return new Response("no", { status: 404 });
+  };
+  try {
+    const worker = await import(`../worker/src/index.js?list=${Date.now()}`);
+    const env = {
+      GITHUB_TOKEN: "test-token",
+      ALLOWED_ORIGIN: "https://netpaddler.github.io",
+      REPO: "netpaddler/hark",
+      LABEL: "hymn-request",
+    };
+    const first = await worker.default.fetch(
+      new Request("https://hark-requests.example/", { headers: { origin: "https://netpaddler.github.io" } }),
+      env,
+    );
+    assert.equal(first.status, 200);
+    assert.equal(first.headers.get("access-control-allow-origin"), "https://netpaddler.github.io");
+    assert.equal(first.headers.get("cache-control"), "public, max-age=60");
+    const body = await first.json();
+    assert.equal(body.length, 1);
+    assert.equal(body[0].number, 4);
+    assert.equal(body[0].title, "Hello there");
+    assert.equal(body[0].body, "Please add alert(1) hymn 12");
+    assert.equal(body[0].html_url, "https://github.com/netpaddler/hark/issues/4");
+    assert.equal(body[0].comments[0].author, "netpaddler");
+    assert.equal(body[0].comments[0].body, "Thanks yes");
+    globalThis.fetch = async () => {
+      throw new Error("cache miss");
+    };
+    const second = await worker.default.fetch(new Request("https://hark-requests.example/"), env);
+    const again = await second.json();
+    assert.equal(again[0].number, 4);
+    const blocked = await worker.default.fetch(
+      new Request("https://hark-requests.example/", { headers: { origin: "https://evil.example" } }),
+      env,
+    );
+    assert.equal(blocked.status, 403);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("every score parses, names its source, and matches a hymn", () => {
@@ -555,7 +638,9 @@ test("the Hark title links home on the list and on a hymn", () => {
   assert.match(css, /\.brand-home\s*\{[^}]*color:\s*inherit/);
   assert.match(css, /\.brand-home:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--accent\)/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /hark-v11/);
+  assert.match(sw, /hark-v12/);
+  assert.match(sw, /skipWaiting\(\)/);
+  assert.match(sw, /clients\.claim\(\)/);
 });
 
 test("shell files exist and UI copy has no en or em dashes", () => {

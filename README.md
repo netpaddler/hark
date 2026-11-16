@@ -121,7 +121,7 @@ The words are cached for offline reading. A recording still needs a network conn
 
 ## Comments/Requests
 
-The page is `#/requests`. `#/comments` opens the same page. Visitors do not log in. The form posts to a Cloudflare Worker. The Worker opens a public GitHub issue and adds a reply. The page then reads those issues from the public GitHub API. No token is stored in the site.
+The page is `#/requests`. `#/comments` opens the same page. Visitors do not log in. The form posts to a Cloudflare Worker. The Worker opens a public GitHub issue and adds a reply. The page loads past submissions with a GET to that same Worker. The Worker reads the issues with its own token and returns plain text. No token is stored in the site. Redeploy the Worker after this change, or the list still fails.
 
 GitHub Discussions are not used.
 
