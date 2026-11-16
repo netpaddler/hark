@@ -23,6 +23,14 @@
         } catch (e) {}
       })();
     </script>
+    <script>
+      (function () {
+        var standalone = matchMedia("(display-mode: standalone)").matches
+          || matchMedia("(display-mode: fullscreen)").matches
+          || window.navigator.standalone === true;
+        if (standalone) document.documentElement.dataset.installed = "true";
+      })();
+    </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -42,6 +50,7 @@
           </div>
           <button type="button" class="icon-btn" id="theme-home" aria-label="Switch to dark mode"></button>
         </div>
+        <button type="button" class="install-btn" id="install-btn">Install Hark</button>
         <form class="search" id="search-form" role="search">
           <label class="visually-hidden" for="q">Search by number, title, or a line</label>
           <input id="q" type="search" placeholder="Number, title, or a line" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
@@ -73,6 +82,7 @@
       </main>
     </div>
     <div class="jump-bubble" id="jump-bubble" hidden aria-hidden="true"></div>
+    <dialog class="install-help" id="install-help" aria-labelledby="install-help-title"></dialog>
     <noscript>
       <p class="notice">Hark needs JavaScript to open the hymnal.</p>
     </noscript>

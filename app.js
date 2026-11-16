@@ -1,3 +1,4 @@
+import { INSTALL_URL, installGuide } from "./install.js";
 import {
   attributionParts,
   browse,
@@ -140,6 +141,7 @@ function route() {
   if (path === "/author") return { view: "index", index: "author" };
   if (path === "/themes") return { view: "themes" };
   if (path === "/sins") return { view: "sins" };
+  if (path === "/install") return { view: "install" };
   const themeMatch = path.match(/^\/theme\/([a-z0-9-]+)\/?$/);
   if (themeMatch) return { view: "theme", id: themeMatch[1] };
   const match = path.match(/^\/hymn\/(\d+)\/?$/);
@@ -411,10 +413,11 @@ function themeJump(groups) {
   return row;
 }
 
-function setBrowseChrome(shown) {
+function setBrowseChrome(shown, options = {}) {
   searchForm.hidden = !shown;
   chips.hidden = !shown;
   count.hidden = !shown;
+  tabs.hidden = Boolean(options.hideTabs);
 }
 
 function scriptureBlock(reference, lines) {
@@ -1019,6 +1022,7 @@ function render() {
   else if (current.view === "themes") renderThemes();
   else if (current.view === "theme") renderTheme(current.id);
   else if (current.view === "sins") renderSins();
+  else if (current.view === "install") renderInstall();
   else renderIndex(current.index);
   syncSticky();
 }
@@ -1139,8 +1143,111 @@ syncTheme();
 clearButton.replaceChildren(icon("close"));
 load();
 
+const installButton = document.getElementById("install-btn");
+const installHelp = document.getElementById("install-help");
+let installEvent = null;
+
+function runningAsApp() {
+  return document.documentElement.dataset.installed === "true"
+    || window.matchMedia("(display-mode: standalone)").matches
+    || window.matchMedia("(display-mode: fullscreen)").matches
+    || window.navigator.standalone === true;
+}
+
+function syncInstallButton() {
+  if (!installButton) return;
+  installButton.hidden = runningAsApp();
+}
+
+function installSteps(includeComputer) {
+  const wrap = el("div", { class: "install-steps" });
+  if (runningAsApp()) wrap.append(el("p", {}, installGuide.installed));
+  wrap.append(el("p", {}, installGuide.intro));
+  wrap.append(el("h3", {}, installGuide.androidTitle));
+  wrap.append(el("ol", {}, installGuide.android.map((step) => el("li", {}, step))));
+  wrap.append(el("h3", {}, installGuide.iphoneTitle));
+  wrap.append(el("ol", {}, installGuide.iphone.map((step) => el("li", {}, step))));
+  if (includeComputer) wrap.append(el("p", {}, installGuide.computer));
+  return wrap;
+}
+
+function fillInstallHelp() {
+  installHelp.replaceChildren();
+  installHelp.append(el("h2", { id: "install-help-title" }, "Install Hark"));
+  installHelp.append(installSteps(false));
+  installHelp.append(
+    el("p", {}, el("a", { href: "#/install", id: "install-more" }, installGuide.pageLink)),
+  );
+  installHelp.append(el("button", { type: "button", class: "install-close", id: "install-close" }, "Close"));
+  installHelp.querySelector("#install-more").addEventListener("click", () => installHelp.close());
+  installHelp.querySelector("#install-close").addEventListener("click", () => installHelp.close());
+}
+
+function renderInstall() {
+  homeBar.hidden = false;
+  hymnBar.hidden = true;
+  setBrowseChrome(false, { hideTabs: true });
+  activeIndex = "install";
+  saveIndex("install");
+  syncTabs("install");
+  main.classList.remove("has-jump");
+  main.removeAttribute("role");
+  main.removeAttribute("aria-labelledby");
+  count.textContent = "";
+  document.title = "Install Hark";
+  const page = el("article", { class: "install-page" });
+  page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Hymns")));
+  page.append(el("h2", {}, "Install Hark"));
+  page.append(installSteps(true));
+  const card = el("figure", { class: "qr-card" });
+  card.append(
+    el("img", {
+      src: "icons/hark-qr.svg",
+      width: "168",
+      height: "168",
+      alt: `QR code that opens ${INSTALL_URL}`,
+    }),
+  );
+  card.append(el("figcaption", {}, installGuide.qrCaption));
+  page.append(card);
+  page.append(el("p", {}, el("a", { href: INSTALL_URL }, INSTALL_URL)));
+  main.replaceChildren(page);
+  window.scrollTo(0, 0);
+}
+
+installButton.addEventListener("click", async () => {
+  if (installEvent) {
+    installEvent.prompt();
+    const choice = await installEvent.userChoice;
+    installEvent = null;
+    if (choice && choice.outcome === "accepted") {
+      document.documentElement.dataset.installed = "true";
+      syncInstallButton();
+    }
+    return;
+  }
+  fillInstallHelp();
+  if (!installHelp.open) installHelp.showModal();
+});
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  installEvent = event;
+  syncInstallButton();
+});
+
+window.addEventListener("appinstalled", () => {
+  installEvent = null;
+  document.documentElement.dataset.installed = "true";
+  syncInstallButton();
+});
+
+syncInstallButton();
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register(new URL("sw.js", import.meta.url)).catch(() => {});
+    const script = new URL("sw.js", import.meta.url);
+    const scope = new URL("./", script);
+    navigator.serviceWorker.register(script, { scope: scope.href }).catch(() => {});
   });
 }

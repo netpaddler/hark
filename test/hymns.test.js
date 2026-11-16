@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
+import { INSTALL_URL, installGuide } from "../install.js";
 import {
   authorIndex,
   browse,
@@ -415,6 +416,42 @@ test("sins page quotes the catechism and Scripture, and stays out of hymn search
   assert.equal(/\u2013|\u2014/.test(JSON.stringify(sermons)), false);
 });
 
+test("install manifest, guide, and QR code", () => {
+  const manifest = JSON.parse(readFileSync(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
+  assert.equal(manifest.name, "Hark");
+  assert.equal(manifest.short_name, "Hark");
+  assert.equal(manifest.start_url, "/hark/");
+  assert.equal(manifest.scope, "/hark/");
+  assert.equal(manifest.id, "/hark/");
+  assert.equal(manifest.display, "standalone");
+  assert.equal(manifest.theme_color, "#f3eee4");
+  assert.equal(manifest.background_color, "#f3eee4");
+  for (const size of ["192x192", "512x512"]) {
+    for (const purpose of ["any", "maskable"]) {
+      const icon = manifest.icons.find((item) => item.sizes === size && item.purpose === purpose);
+      assert.ok(icon, `${size} ${purpose}`);
+      assert.equal(icon.src.startsWith("/hark/icons/"), true);
+      const file = icon.src.slice("/hark/".length);
+      const bytes = readFileSync(new URL(`../${file}`, import.meta.url));
+      const width = bytes.readUInt32BE(16);
+      assert.equal(width, Number(size.slice(0, 3)));
+      assert.equal(bytes.readUInt32BE(20), width);
+    }
+  }
+  const svg = readFileSync(new URL("../icons/hark-qr.svg", import.meta.url), "utf8");
+  assert.equal(svg.startsWith("<svg"), true);
+  assert.match(svg, new RegExp(INSTALL_URL.replace(/[.]/g, "\\.")));
+  assert.equal(/<image[\s>]/i.test(svg), false);
+  assert.equal(svg.includes("xlink:href"), false);
+  assert.ok(installGuide.android.some((step) => step.includes("Add to Home screen")));
+  assert.ok(installGuide.android.some((step) => step.includes("three dot menu")));
+  assert.ok(installGuide.iphone.some((step) => step.includes("Share")));
+  assert.ok(installGuide.iphone.some((step) => step.includes("Add to Home Screen")));
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /scope: scope\.href/);
+  assert.match(appSource, /beforeinstallprompt/);
+});
+
 test("shell files exist and UI copy has no en or em dashes", () => {
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
   for (const match of sw.matchAll(/"\.\/([^"]+)"/g)) {
@@ -425,6 +462,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "styles.css",
     "app.js",
     "hymn-model.js",
+    "install.js",
     "sw.js",
     "manifest.webmanifest",
     "README.md",

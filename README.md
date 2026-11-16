@@ -116,13 +116,19 @@ Put audio files in the repo (for example `recordings/203.mp3`) and use a site-re
 
 The words are cached for offline reading. A recording still needs a network connection unless the browser has already stored that file.
 
-## Install on Android
+## Install Hark
 
-1. Open the deployed site in Chrome (a local server on your own network works too).
-2. Use the Chrome menu and choose "Install app" or "Add to Home screen".
-3. Hark opens full screen. After the first visit online, the hymn words stay available offline.
+The live app is <https://netpaddler.github.io/hark/>. The install page, with steps and a QR code, is <https://netpaddler.github.io/hark/#/install>.
 
-The install uses `manifest.webmanifest`, the icons in `icons/`, and `sw.js`.
+On the home screen, tap **Install Hark**.
+
+- In Android Chrome, and in Chrome or Edge on a computer, that button opens the browser's own install prompt when the browser offers one.
+- If the prompt is not available, the button opens short steps. On Android, use the three dot menu, then Add to Home screen or Install app. On iPhone, use Safari, tap Share, then Add to Home Screen.
+- The button hides once Hark is installed or already open as an app.
+
+The QR code in `icons/hark-qr.svg` points at the live site. It is a file in the repo, not a link to an outside image service. There is no Play Store or App Store listing.
+
+The manifest uses `start_url` and `scope` of `/hark/`, with 192 and 512 icons, including maskable icons. The service worker is registered for that same folder, so on GitHub Pages its scope is `/hark/`.
 
 ## Deploy to GitHub Pages
 
