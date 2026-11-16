@@ -390,7 +390,8 @@ a {
 
 .chip,
 .tabs button,
-.retry {
+.retry,
+.install-now {
   font: inherit;
   cursor: pointer;
 }
@@ -1243,7 +1244,8 @@ main.has-jump {
   font-size: 0.8rem;
 }
 
-.retry {
+.retry,
+.install-now {
   margin-top: 0.8rem;
   min-height: 2.75rem;
   padding: 0.4rem 0.9rem;

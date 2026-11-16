@@ -1531,6 +1531,31 @@ function fillInstallHelp() {
   installHelp.querySelector("#install-close").addEventListener("click", () => installHelp.close());
 }
 
+function openInstallHelp() {
+  if (!installHelp || typeof installHelp.showModal !== "function") return false;
+  fillInstallHelp();
+  installHelp.showModal();
+  return true;
+}
+
+// Chrome and Edge hand the page a beforeinstallprompt event instead of showing
+// their own install bar. Nothing can reopen it, so the Install Hark link spends
+// it here rather than sending a phone that can install in one tap off to read
+// the manual steps.
+async function promptInstall() {
+  const saved = installEvent;
+  if (!saved) return false;
+  installEvent = null;
+  try {
+    saved.prompt();
+    await saved.userChoice;
+  } catch {
+    /* the browser already spent or dropped this prompt */
+  }
+  syncInstallButton();
+  return true;
+}
+
 function renderInstall() {
   homeBar.hidden = false;
   hymnBar.hidden = true;
@@ -1546,6 +1571,14 @@ function renderInstall() {
   const page = el("article", { class: "install-page" });
   page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Hymns")));
   page.append(el("h2", {}, "Install Hark"));
+  if (installEvent && !runningAsApp()) {
+    const now = el("button", { type: "button", class: "install-now" }, "Install now");
+    now.addEventListener("click", async () => {
+      await promptInstall();
+      render();
+    });
+    page.append(now);
+  }
   page.append(installSteps(true));
   const card = el("figure", { class: "qr-card" });
   card.append(
@@ -1576,12 +1609,31 @@ window.addEventListener("appinstalled", () => {
   syncInstallButton();
 });
 
+if (installLink) {
+  installLink.addEventListener("click", (event) => {
+    if (runningAsApp()) return;
+    if (installEvent) {
+      event.preventDefault();
+      promptInstall();
+      return;
+    }
+    // No native prompt on this browser, so show the steps. If the dialog is not
+    // supported the link falls through to the install page.
+    if (openInstallHelp()) event.preventDefault();
+  });
+}
+
 syncInstallButton();
 
 if ("serviceWorker" in navigator) {
   let reloading = false;
+  // True only when a worker was already running this page, which means this is
+  // an update. On a first visit the new worker claims the page and fires
+  // controllerchange too, and reloading there throws away whatever the reader
+  // has already typed or opened.
+  const hadController = Boolean(navigator.serviceWorker.controller);
   navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (reloading) return;
+    if (!hadController || reloading) return;
     reloading = true;
     window.location.reload();
   });
