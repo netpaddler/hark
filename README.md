@@ -42,6 +42,8 @@ The hymn page uses large type. It shows the number, the title, and a short credi
 
 Previous and next follow hymnal number. Back returns to the list you came from.
 
+Where a public domain score is on file, the hymn page has a Music section with the tune, a credit for the harmony, and Play and Stop. The piano sound may need a connection the first time you press Play. If the setting is still under copyright, or no pre-1931 score was found, the page says the music is not shown. Sources are listed in `docs/data.md`.
+
 If `public_domain` is false, Hark shows the title, number, author, and `copyright_note`, and tells you to see the printed Trinity Hymnal. It does not show the words. If a public-domain hymn has a `copyright_note` or a gap in `stanza_numbers`, Hark says which stanzas are omitted and where they would have been.
 
 ## Hear it at Faith Presbyterian

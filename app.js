@@ -47,6 +47,7 @@ let recordingCatalog = {};
 let themeCatalog = { seasons: [], topics: [], hymns: {} };
 let sinsCatalog = null;
 let sermonCatalog = { page: [], groups: {} };
+let musicCatalog = { scores: {}, omitted: {} };
 let section = "all";
 let activeIndex = null;
 let ready = false;
@@ -895,6 +896,106 @@ function endLink(hymn, direction) {
   return link;
 }
 
+let activeSynth = null;
+
+function renderScore(container, abc) {
+  if (!window.ABCJS) return null;
+  container.replaceChildren();
+  const width = Math.max(280, container.clientWidth || 320);
+  const rendered = ABCJS.renderAbc(container, abc, {
+    responsive: "resize",
+    staffwidth: width,
+    add_classes: true,
+    paddingleft: 0,
+    paddingright: 8,
+  });
+  return rendered && rendered[0];
+}
+
+async function stopScore() {
+  if (!activeSynth) return;
+  try {
+    activeSynth.stop();
+  } catch {
+    /* already stopped */
+  }
+  activeSynth = null;
+}
+
+async function playScore(visualObj, qpm) {
+  await stopScore();
+  if (!visualObj || !window.ABCJS || !ABCJS.synth || !ABCJS.synth.supportsAudio()) return;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  const audioContext = new AudioCtx();
+  const synth = new ABCJS.synth.CreateSynth();
+  await synth.init({ audioContext, visualObj, options: { qpm } });
+  await synth.prime();
+  await synth.start();
+  activeSynth = synth;
+}
+
+function musicBlock(hymn) {
+  const key = String(hymn.number);
+  const score = musicCatalog.scores && musicCatalog.scores[key];
+  const omitted = musicCatalog.omitted && musicCatalog.omitted[key];
+  if (score) {
+    const details = el("details", { class: "music-block" });
+    details.append(el("summary", {}, "Music"));
+    details.append(
+      el(
+        "p",
+        { class: "music-credit" },
+        `Tune: ${score.tune}. Harmony: ${score.harmony_credit}. May differ from the Trinity Hymnal setting.`,
+      ),
+    );
+    const scoreEl = el("div", { class: "music-score", "aria-label": `Music for ${score.tune}` });
+    const play = el("button", { type: "button" }, "Play");
+    const stop = el("button", { type: "button" }, "Stop");
+    const tempo = el("input", { type: "range", min: "60", max: "160", value: "100" });
+    tempo.setAttribute("aria-label", "Tempo");
+    const controls = el("div", { class: "music-controls" });
+    controls.append(play, stop, el("label", { class: "tempo" }, ["Tempo ", tempo]));
+    details.append(scoreEl, controls);
+    details.append(
+      el(
+        "p",
+        { class: "music-note" },
+        "The first time you press Play, the piano sound may need a connection.",
+      ),
+    );
+    let visual = null;
+    const ensureScore = async () => {
+      if (visual) return visual;
+      const response = await fetch(new URL(`data/music/${score.file}`, import.meta.url));
+      const display = (await response.text())
+        .split("\n")
+        .filter((line) => !/^[TCSW]:/.test(line))
+        .join("\n");
+      visual = renderScore(scoreEl, display);
+      return visual;
+    };
+    details.addEventListener("toggle", () => {
+      if (details.open) ensureScore();
+    });
+    play.addEventListener("click", async () => {
+      details.open = true;
+      await playScore(await ensureScore(), Number(tempo.value) || 100);
+    });
+    stop.addEventListener("click", () => {
+      stopScore();
+    });
+    return details;
+  }
+  if (omitted) {
+    const box = el("div", { class: "notice" });
+    box.append(el("h2", {}, "Music not shown"));
+    box.append(el("p", {}, omitted.reason));
+    box.append(el("p", {}, "See the printed Trinity Hymnal for the music."));
+    return box;
+  }
+  return null;
+}
+
 function renderHymn(number) {
   const listIndex = activeIndex || storedIndex();
   activeIndex = null;
@@ -993,6 +1094,9 @@ function renderHymn(number) {
       article.append(text);
     }
 
+    const music = musicBlock(hymn);
+    if (music) article.append(music);
+
     if (heard) article.append(heard);
     if (choir) article.append(choir);
     if (!heard && !choir) {
@@ -1046,12 +1150,13 @@ function showError() {
 
 async function load() {
   try {
-    const [hymnResponse, recordingResponse, themeResponse, sinsResponse, sermonResponse] = await Promise.all([
+    const [hymnResponse, recordingResponse, themeResponse, sinsResponse, sermonResponse, musicResponse] = await Promise.all([
       fetch(new URL("data/hymns.json", import.meta.url)),
       fetch(new URL("data/recordings.json", import.meta.url)),
       fetch(new URL("data/themes.json", import.meta.url)),
       fetch(new URL("data/sins.json", import.meta.url)),
       fetch(new URL("data/sermons.json", import.meta.url)),
+      fetch(new URL("data/music.json", import.meta.url)),
     ]);
     if (!hymnResponse.ok) throw new Error(String(hymnResponse.status));
     const data = await hymnResponse.json();
@@ -1076,6 +1181,11 @@ async function load() {
     if (sermonResponse.ok) {
       const catalog = await sermonResponse.json();
       if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) sermonCatalog = catalog;
+    }
+    musicCatalog = { scores: {}, omitted: {} };
+    if (musicResponse.ok) {
+      const catalog = await musicResponse.json();
+      if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) musicCatalog = catalog;
     }
     ready = true;
     buildChips();
