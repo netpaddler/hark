@@ -17,6 +17,7 @@ import {
   tuneCaution,
   listSermons,
 } from "./hymn-model.js";
+import { giscusConfig, giscusReady, giscusTheme, hymnTerm } from "./config/giscus.js";
 
 const homeBar = document.getElementById("home-bar");
 const hymnBar = document.getElementById("hymn-bar");
@@ -39,9 +40,10 @@ const TAB_IDS = [
   ["tab-author", "author"],
   ["tab-themes", "themes"],
   ["tab-sins", "sins"],
+  ["tab-comments", "comments"],
 ];
 
-const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0 };
+const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0, comments: 0 };
 let hymns = [];
 let recordingCatalog = {};
 let themeCatalog = { seasons: [], topics: [], hymns: {} };
@@ -120,6 +122,13 @@ function syncTheme() {
   const color = dark ? "#141210" : "#f3eee4";
   const meta = document.getElementById("theme-color");
   if (meta) meta.setAttribute("content", color);
+  const frame = document.querySelector("iframe.giscus-frame");
+  if (frame && frame.contentWindow) {
+    frame.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: giscusTheme(dark ? "dark" : "light") } } },
+      "https://giscus.app",
+    );
+  }
 }
 
 function toggleTheme() {
@@ -141,6 +150,7 @@ function route() {
   if (path === "/author") return { view: "index", index: "author" };
   if (path === "/themes") return { view: "themes" };
   if (path === "/sins") return { view: "sins" };
+  if (path === "/comments") return { view: "comments" };
   if (path === "/install") return { view: "install" };
   const themeMatch = path.match(/^\/theme\/([a-z0-9-]+)\/?$/);
   if (themeMatch) return { view: "theme", id: themeMatch[1] };
@@ -154,6 +164,7 @@ function indexHref(index) {
   if (index === "author") return "#/author";
   if (index === "themes") return "#/themes";
   if (index === "sins") return "#/sins";
+  if (index === "comments") return "#/comments";
   if (typeof index === "string" && index.startsWith("theme:")) return `#/theme/${index.slice(6)}`;
   return "#/";
 }
@@ -165,7 +176,14 @@ function rememberScroll() {
 function storedIndex() {
   try {
     const stored = sessionStorage.getItem("hark-index");
-    if (stored === "title" || stored === "author" || stored === "number" || stored === "themes" || stored === "sins") {
+    if (
+      stored === "title" ||
+      stored === "author" ||
+      stored === "number" ||
+      stored === "themes" ||
+      stored === "sins" ||
+      stored === "comments"
+    ) {
       return stored;
     }
     if (/^theme:[a-z0-9-]+$/.test(stored || "")) return stored;
@@ -199,6 +217,7 @@ function syncTabs(index) {
     const selected = name === selectedName;
     button.setAttribute("aria-selected", selected ? "true" : "false");
     button.tabIndex = selected ? 0 : -1;
+    if (selected) button.scrollIntoView({ inline: "nearest", block: "nearest" });
   }
 }
 
@@ -909,17 +928,20 @@ function renderHymn(number) {
   back.href = indexHref(listIndex);
   const fromThemes = listIndex === "themes" || (typeof listIndex === "string" && listIndex.startsWith("theme:"));
   const fromSins = listIndex === "sins";
-  const backLabel = fromSins ? "Sins" : fromThemes ? "Themes" : "Hymns";
+  const fromComments = listIndex === "comments";
+  const backLabel = fromComments ? "Comments" : fromSins ? "Sins" : fromThemes ? "Themes" : "Hymns";
   back.replaceChildren(icon("back"), document.createTextNode(backLabel));
-  const listName = fromSins
-    ? "Sins page"
-    : fromThemes
-      ? "themes"
-      : listIndex === "title"
-        ? "title index"
-        : listIndex === "author"
-          ? "author index"
-          : "hymn list";
+  const listName = fromComments
+    ? "comments"
+    : fromSins
+      ? "Sins page"
+      : fromThemes
+        ? "themes"
+        : listIndex === "title"
+          ? "title index"
+          : listIndex === "author"
+            ? "author index"
+            : "hymn list";
   back.setAttribute("aria-label", `Back to the ${listName}`);
 
   const found = neighbors(hymns, number);
@@ -1006,12 +1028,75 @@ function renderHymn(number) {
     if (next) nav.append(next);
     if (previous || next) article.append(nav);
     article.append(el("p", { class: "colophon" }, "Trinity Hymnal, 1990"));
+    article.append(commentsSection(hymnTerm(hymn.number), giscusConfig.hymnComments));
     main.replaceChildren(article);
   }
 
   window.scrollTo(0, 0);
   const heading = document.getElementById("hymn-title");
   if (heading) heading.focus({ preventScroll: true });
+}
+
+function mountGiscus(host, category, term) {
+  host.replaceChildren();
+  if (!giscusConfig.repoId || !giscusReady(category.categoryId)) {
+    host.append(el("p", { class: "coming" }, "Comments are coming soon."));
+    return;
+  }
+  const script = document.createElement("script");
+  script.src = "https://giscus.app/client.js";
+  script.async = true;
+  script.crossOrigin = "anonymous";
+  script.setAttribute("data-repo", giscusConfig.repo);
+  script.setAttribute("data-repo-id", giscusConfig.repoId);
+  script.setAttribute("data-category", category.category);
+  script.setAttribute("data-category-id", category.categoryId);
+  script.setAttribute("data-mapping", "specific");
+  script.setAttribute("data-term", term);
+  script.setAttribute("data-strict", "0");
+  script.setAttribute("data-reactions-enabled", "1");
+  script.setAttribute("data-emit-metadata", "0");
+  script.setAttribute("data-input-position", "bottom");
+  script.setAttribute("data-theme", giscusTheme(appliedTheme()));
+  script.setAttribute("data-lang", "en");
+  host.append(script);
+}
+
+function commentsSection(term, category) {
+  const section = el("section", { class: "hymn-comments" });
+  section.append(el("h2", {}, "Comments"));
+  const host = el("div", { class: "giscus-host" });
+  section.append(host);
+  mountGiscus(host, category, term);
+  return section;
+}
+
+function renderComments() {
+  homeBar.hidden = false;
+  hymnBar.hidden = true;
+  setBrowseChrome(false);
+  activeIndex = "comments";
+  saveIndex("comments");
+  syncTabs("comments");
+  main.setAttribute("role", "tabpanel");
+  main.setAttribute("aria-labelledby", "tab-comments");
+  main.classList.remove("has-jump");
+  document.title = "Comments and Requests · Hark";
+  const page = el("article", { class: "comments-page" });
+  page.append(el("h2", {}, "Comments and Requests"));
+  page.append(
+    el(
+      "p",
+      {},
+      "Ask questions or request a hymn. Requests are limited to hymns in the Trinity Hymnal.",
+    ),
+  );
+  const host = el("div", { class: "giscus-host" });
+  page.append(host);
+  mountGiscus(host, giscusConfig.requests, giscusConfig.requests.term);
+  main.replaceChildren(page);
+  const y = scrollMemory.comments || 0;
+  requestAnimationFrame(() => window.scrollTo(0, y));
 }
 
 function render() {
@@ -1022,6 +1107,7 @@ function render() {
   else if (current.view === "themes") renderThemes();
   else if (current.view === "theme") renderTheme(current.id);
   else if (current.view === "sins") renderSins();
+  else if (current.view === "comments") renderComments();
   else if (current.view === "install") renderInstall();
   else renderIndex(current.index);
   syncSticky();
