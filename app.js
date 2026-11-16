@@ -959,6 +959,28 @@ function endLink(hymn, direction) {
 }
 
 let activeSynth = null;
+let abcjsLoad = null;
+
+// abcjs is close to half a megabyte, more than everything else in Hark put
+// together. It used to be a blocking script tag, so every reader paid for it
+// on every page whether or not they ever opened the music. Nothing needs it
+// until someone does, so it is fetched here instead.
+function loadAbcjs() {
+  if (window.ABCJS) return Promise.resolve(window.ABCJS);
+  if (abcjsLoad) return abcjsLoad;
+  abcjsLoad = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = new URL("vendor/abcjs-basic-min.js", import.meta.url).href;
+    script.addEventListener("load", () => resolve(window.ABCJS || null));
+    script.addEventListener("error", () => {
+      // Let the next try start over rather than holding a rejected promise.
+      abcjsLoad = null;
+      reject(new Error("The music could not be loaded."));
+    });
+    document.head.append(script);
+  });
+  return abcjsLoad;
+}
 
 function renderScore(container, abc) {
   if (!window.ABCJS) return null;
@@ -1026,15 +1048,29 @@ function musicBlock(hymn) {
       ),
     );
     let visual = null;
-    const ensureScore = async () => {
-      if (visual) return visual;
-      const response = await fetch(new URL(`data/music/${score.file}`, import.meta.url));
-      const display = (await response.text())
-        .split("\n")
-        .filter((line) => !/^[TCSW]:/.test(line))
-        .join("\n");
-      visual = renderScore(scoreEl, display);
+    let pending = null;
+    const buildScore = async () => {
+      scoreEl.textContent = "Loading the music...";
+      try {
+        await loadAbcjs();
+        const response = await fetch(new URL(`data/music/${score.file}`, import.meta.url));
+        const display = (await response.text())
+          .split("\n")
+          .filter((line) => !/^[TCSW]:/.test(line))
+          .join("\n");
+        visual = renderScore(scoreEl, display);
+      } catch {
+        pending = null;
+        scoreEl.textContent = "The music did not load. Check your connection, then try again.";
+      }
       return visual;
+    };
+    // Opening the block and pressing Play both ask for the score, and Play
+    // opens the block, so without this the music was fetched and drawn twice.
+    const ensureScore = () => {
+      if (visual) return Promise.resolve(visual);
+      if (!pending) pending = buildScore();
+      return pending;
     };
     details.addEventListener("toggle", () => {
       if (details.open) ensureScore();

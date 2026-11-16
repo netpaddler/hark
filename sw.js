@@ -1,5 +1,9 @@
-const CACHE = "hark-v16";
+const CACHE = "hark-v17";
 
+// vendor/abcjs-basic-min.js is deliberately absent. It is close to half a
+// megabyte, and precaching it meant every first visit paid for music the
+// reader may never open. The fetch handler below caches it the first time
+// someone does, and it stays available offline from then on.
 const PRECACHE = [
   "./index.html",
   "./styles.css",
@@ -7,7 +11,6 @@ const PRECACHE = [
   "./hymn-model.js",
   "./install.js",
   "./config/requests.js",
-  "./vendor/abcjs-basic-min.js",
   "./data/music.json",
   "./manifest.webmanifest",
   "./favicon.svg",
