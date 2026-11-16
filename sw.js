@@ -1,10 +1,11 @@
-const CACHE = "hark-v4";
+const CACHE = "hark-v5";
 
 const PRECACHE = [
   "./index.html",
   "./styles.css",
   "./app.js",
   "./hymn-model.js",
+  "./install.js",
   "./manifest.webmanifest",
   "./favicon.svg",
   "./data/hymns.json",
@@ -19,6 +20,7 @@ const PRECACHE = [
   "./icons/icon-maskable-192.png",
   "./icons/icon-maskable-512.png",
   "./icons/apple-touch-icon.png",
+  "./icons/hark-qr.svg",
 ];
 
 self.addEventListener("install", (event) => {
