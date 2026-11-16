@@ -840,6 +840,24 @@ test("every score parses, names its source, and matches a hymn", () => {
   assert.equal(/\u2013|\u2014/.test(JSON.stringify(music)), false);
 });
 
+test("abcjs loads when the music is opened, not on every page", () => {
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  // Nothing in the shell drags in half a megabyte before the first paint, and
+  // the worker does not download it on a first visit either.
+  assert.equal(/<script[^>]*src="[^"]*abcjs[^"]*"/.test(page), false, "no blocking script tag");
+  assert.equal(sw.includes('"./vendor/abcjs-basic-min.js"'), false, "not precached");
+  assert.equal(existsSync(new URL("../vendor/abcjs-basic-min.js", import.meta.url)), true);
+  assert.match(appSource, /function loadAbcjs\(\)/);
+  assert.match(appSource, /createElement\("script"\)/);
+  assert.match(appSource, /vendor\/abcjs-basic-min\.js/);
+  assert.match(appSource, /await loadAbcjs\(\)/);
+  // Opening the block and pressing Play both ask for the score, so the build
+  // is shared rather than run twice.
+  assert.match(appSource, /if \(!pending\) pending = buildScore\(\)/);
+});
+
 test("the Hark title links home on the list and on a hymn", () => {
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
