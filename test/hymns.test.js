@@ -538,6 +538,22 @@ test("every score parses, names its source, and matches a hymn", () => {
   assert.equal(/\u2013|\u2014/.test(JSON.stringify(music)), false);
 });
 
+test("the Hark title links home on the list and on a hymn", () => {
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  const links = page.match(/<a class="brand-home"[^>]*>Hark<\/a>/g) || [];
+  assert.equal(links.length, 2);
+  for (const link of links) {
+    assert.match(link, /href="#\/"/);
+    assert.match(link, /aria-label="Hark home"/);
+  }
+  assert.match(css, /\.brand-home\s*\{[^}]*text-decoration:\s*none/);
+  assert.match(css, /\.brand-home\s*\{[^}]*color:\s*inherit/);
+  assert.match(css, /\.brand-home:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--accent\)/);
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  assert.match(sw, /hark-v9/);
+});
+
 test("shell files exist and UI copy has no en or em dashes", () => {
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
   for (const match of sw.matchAll(/"\.\/([^"]+)"/g)) {
