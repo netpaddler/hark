@@ -1,6 +1,6 @@
 # Hark: hymn data notes
 
-File: `data/hymns.json`. It holds 42 entries: Trinity Hymnal (1990) nos. 193-233, plus no. 162.
+File: `data/hymns.json`. It holds 45 entries: Trinity Hymnal (1990) nos. 193-233, plus nos. 108, 162, 401, and 559.
 
 ## Fields
 These are the requested fields plus one extra, `stanza_numbers`. It gives the hymnal's stanza number for each entry in `stanzas`. It matters for no. 196, where only stanzas 1 and 4 are given. Stanza numbers and "[Refrain]" markers have been removed from the lines. `refrain` is printed once. `refrain_after_each_stanza` is true wherever the source marks the refrain as repeated.
@@ -60,6 +60,9 @@ Seasons follow the hymnal `section`, then the text:
 - Advent: `section` is Advent.
 - Christmas: `section` is Christmas. That includes no. 162, which this file labels Christmas.
 - Epiphany: the words tell of the star, the wise men, or the child shown to the nations. Those hymns also keep Christmas, because that is their section here.
+- All Year: nos. 108, 401, and 559. Their sections are God's Work: His Decrees, The Church: Evening, and The Christian Life: Obedience. All Year is listed after Epiphany.
+
+No. 108 is tagged Providence and Trusting God in Trials. No. 559 is tagged Providence and Contentment. No. 401 is tagged Evening and Joy and Praise.
 
 A hymn may have more than one topic. A topic is used only when the words clearly teach it. For the four copyright-withheld hymns, the season comes from the section. A topic is added only when the title itself states it. No. 230 is tagged The Incarnation for that reason. Nos. 212, 231, and 232 have a season and no topic.
 
