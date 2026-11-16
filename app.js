@@ -1221,16 +1221,20 @@ function requestForm() {
   return form;
 }
 
-function submissionCard(issue, comments) {
+function submissionCard(issue) {
   const card = el("article", { class: "request-card" });
-  card.append(el("h3", {}, issue.title));
+  card.append(el("h3", {}, issue.title || ""));
   const when = formatRecordingDate(String(issue.created_at || "").slice(0, 10));
   if (when) card.append(el("p", { class: "request-meta" }, when));
   card.append(el("p", { class: "request-body" }, issue.body || ""));
+  const comments = Array.isArray(issue.comments) ? issue.comments : [];
   if (comments.length) {
     const replies = el("div", { class: "request-replies" });
     replies.append(el("h4", {}, "Replies"));
-    for (const comment of comments) replies.append(el("p", {}, comment.body || ""));
+    for (const comment of comments) {
+      const line = comment.author ? `${comment.author}: ${comment.body || ""}` : comment.body || "";
+      replies.append(el("p", {}, line));
+    }
     card.append(replies);
   }
   return card;
@@ -1238,25 +1242,20 @@ function submissionCard(issue, comments) {
 
 async function loadSubmissions(host) {
   if (!host) return;
+  if (!requestConfig.endpoint) {
+    host.replaceChildren(el("p", { class: "sin-note" }, "No comments yet."));
+    return;
+  }
   host.replaceChildren(el("p", { class: "sin-note" }, "Loading past submissions..."));
   try {
-    const url = `https://api.github.com/repos/${requestConfig.repo}/issues?labels=${encodeURIComponent(requestConfig.label)}&state=all&per_page=20`;
-    const response = await fetch(url, { headers: { accept: "application/vnd.github+json" } });
+    const response = await fetch(requestConfig.endpoint, { method: "GET", headers: { accept: "application/json" } });
     if (!response.ok) throw new Error(String(response.status));
-    const issues = (await response.json()).filter((item) => !item.pull_request);
-    if (!issues.length) {
+    const issues = await response.json();
+    if (!Array.isArray(issues) || !issues.length) {
       host.replaceChildren(el("p", { class: "sin-note" }, "No comments yet."));
       return;
     }
-    const comments = await Promise.all(
-      issues.map(async (issue) => {
-        if (!issue.comments) return [];
-        const reply = await fetch(issue.comments_url, { headers: { accept: "application/vnd.github+json" } });
-        if (!reply.ok) return [];
-        return reply.json();
-      }),
-    );
-    host.replaceChildren(...issues.map((issue, index) => submissionCard(issue, comments[index] || [])));
+    host.replaceChildren(...issues.map((issue) => submissionCard(issue)));
   } catch {
     host.replaceChildren(el("p", { class: "sin-note" }, "The list did not load."));
   }
@@ -1525,6 +1524,12 @@ window.addEventListener("appinstalled", () => {
 syncInstallButton();
 
 if ("serviceWorker" in navigator) {
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
   window.addEventListener("load", () => {
     const script = new URL("sw.js", import.meta.url);
     const scope = new URL("./", script);
