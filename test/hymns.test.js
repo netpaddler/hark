@@ -334,10 +334,36 @@ test("sins page quotes the catechism and Scripture, and stays out of hymn search
     filterHymns(hymns, "any want of conformity").length,
     0,
   );
-  assert.deepEqual(sermons.page, []);
-  assert.deepEqual(sermons.groups, {});
-  assert.deepEqual(listSermons(sermons, "page"), []);
-  assert.deepEqual(listSermons(sermons, "gospel"), []);
+  assert.deepEqual(sermons["proverbs-6"], []);
+  const pageSermons = listSermons(sermons, "page");
+  assert.deepEqual(
+    pageSermons.map((item) => item.title),
+    ["Confession of Sin", "The Father's Grace for Lost Sons, Near and Far"],
+  );
+  assert.equal(pageSermons[0].preacher, "Rev. Steven Nicoletti");
+  assert.equal(pageSermons[0].text, "2 Samuel 12:1-15a; Psalm 51");
+  assert.equal(pageSermons[0].url, "https://www.youtube.com/watch?v=QqLbMP9hiCU&t=708s");
+  assert.equal(pageSermons[0].embed, "https://www.youtube-nocookie.com/embed/QqLbMP9hiCU?start=708");
+  assert.equal(pageSermons[0].note, undefined);
+  assert.equal(pageSermons[0].service, undefined);
+  assert.equal(listSermons(sermons, "proverbs-6").length, 0);
+  assert.equal(
+    listSermons(sermons, "ten-commandments")[0].url,
+    "https://www.youtube.com/watch?v=u-wcjHgvM-w&t=2503s",
+  );
+  assert.equal(listSermons(sermons, "works-of-the-flesh")[0].text, "Galatians 5:13-26");
+  assert.equal(listSermons(sermons, "heart-and-tongue").length, 2);
+  const allowed = new Set([
+    "https://www.youtube.com/watch?v=QqLbMP9hiCU&t=708s",
+    "https://www.youtube.com/watch?v=pdh9xm-iSio&t=1990s",
+    "https://www.youtube.com/watch?v=u-wcjHgvM-w&t=2503s",
+    "https://www.youtube.com/watch?v=ytvEg1w_xRU&t=1844s",
+    "https://www.youtube.com/watch?v=ucdGQ4-Fl8I&t=2329s",
+    "https://www.youtube.com/watch?v=HelgRs0r2Pw&t=2134s",
+  ]);
+  for (const key of ["page", "ten-commandments", "works-of-the-flesh", "heart-and-tongue"]) {
+    for (const item of listSermons(sermons, key)) assert.ok(allowed.has(item.url), item.url);
+  }
   const shown = listSermons(
     {
       page: [{ title: "Blank", url: "" }],

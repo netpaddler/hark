@@ -483,7 +483,12 @@ export function faithRecordings(catalog, number) {
 
 export function listSermons(catalog, key) {
   if (!catalog || typeof catalog !== "object") return [];
-  const raw = key === "page" ? catalog.page : catalog.groups && catalog.groups[key];
+  const grouped = catalog.groups && catalog.groups[key];
+  const raw = key === "page"
+    ? catalog.page
+    : Array.isArray(grouped)
+      ? grouped
+      : catalog[key];
   if (!Array.isArray(raw)) return [];
   const items = [];
   raw.forEach((entry) => {

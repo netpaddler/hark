@@ -72,25 +72,26 @@ To add or change a recording, edit only `data/recordings.json`:
 
 ## Sermons on the Sins tab
 
-`data/sermons.json` holds Faith Presbyterian sermons for the Sins tab. It is separate from the hymn texts. `page` is the list for the closing repentance and gospel section, in the order given. `groups` uses `ten-commandments`, `works-of-the-flesh`, `heart-and-tongue`, and `proverbs-6`. An empty list stays hidden.
+`data/sermons.json` holds Faith Presbyterian sermons for the Sins tab. It is separate from the hymn texts. `page` is the list for the closing repentance and gospel section, in the order given. The other lists are `ten-commandments`, `works-of-the-flesh`, `heart-and-tongue`, and `proverbs-6`. An empty list stays hidden. `service` and `note` stay in the file for editors and are not shown.
 
 Each sermon has `title`, `date` (`YYYY-MM-DD`), `preacher`, `text` (the Scripture the sermon takes up), `url`, and `start_seconds`. A YouTube sermon has a player that starts at `start_seconds`, and a link that opens at the same moment.
 
 ```json
 {
-  "page": [],
-  "groups": {
-    "gospel": [
-      {
-        "title": "Sermon title",
-        "date": "2026-01-04",
-        "preacher": "Name",
-        "text": "1 John 1:9",
-        "url": "https://www.youtube.com/watch?v=VIDEO_ID",
-        "start_seconds": 120
-      }
-    ]
-  }
+  "page": [
+    {
+      "title": "Sermon title",
+      "date": "2026-01-04",
+      "preacher": "Name",
+      "text": "1 John 1:9",
+      "url": "https://www.youtube.com/watch?v=VIDEO_ID",
+      "start_seconds": 120
+    }
+  ],
+  "ten-commandments": [],
+  "works-of-the-flesh": [],
+  "proverbs-6": [],
+  "heart-and-tongue": []
 }
 ```
 
