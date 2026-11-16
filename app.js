@@ -17,6 +17,7 @@ import {
   tuneCaution,
   listSermons,
   formatRecordingDate,
+  youtubeBlock,
 } from "./hymn-model.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 
@@ -494,14 +495,17 @@ function sermonBlock(items) {
     if (meta) card.append(el("p", { class: "sermon-meta" }, meta));
     card.append(el("p", { class: "sermon-title" }, item.title));
     if (item.text) card.append(el("p", { class: "sermon-text" }, item.text));
-    if (item.embed) card.append(playerFrame({ embed: item.embed, label: item.title }));
-    card.append(
-      el(
-        "a",
-        { class: "faith-link", href: item.url, target: "_blank", rel: "noopener noreferrer" },
-        item.youtube ? "Play on YouTube" : "Open the sermon",
-      ),
-    );
+    const player = item.youtube ? mountYoutube(item) : null;
+    if (player) card.append(player);
+    if (item.embeddable !== false) {
+      card.append(
+        el(
+          "a",
+          { class: "faith-link", href: item.url, target: "_blank", rel: "noopener noreferrer" },
+          item.youtube ? "Play on YouTube" : "Open the sermon",
+        ),
+      );
+    }
     box.append(card);
   }
   return box;
@@ -794,10 +798,42 @@ function playerFrame(item) {
   return frame;
 }
 
+function watchCard(block) {
+  const card = el("div", { class: "watch-card" });
+  const thumb = el("a", {
+    class: "watch-thumb",
+    href: block.href,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "Watch on YouTube",
+  });
+  if (block.thumb) thumb.append(el("img", { src: block.thumb, alt: "", loading: "lazy" }));
+  thumb.append(el("span", { class: "watch-play", "aria-hidden": "true" }));
+  card.append(thumb);
+  card.append(
+    el(
+      "a",
+      { class: "faith-link", href: block.href, target: "_blank", rel: "noopener noreferrer" },
+      block.label,
+    ),
+  );
+  return card;
+}
+
+function mountYoutube(item) {
+  const block = youtubeBlock(item);
+  if (!block) return null;
+  if (block.type === "card") return watchCard(block);
+  return playerFrame({ embed: block.src, label: item.label || item.title || "YouTube" });
+}
+
 function mediaFigure(item) {
   const figure = el("figure");
   figure.append(el("figcaption", {}, item.label));
-  if (item.kind === "youtube") figure.append(playerFrame(item));
+  if (item.kind === "youtube") {
+    const player = mountYoutube(item);
+    if (player) figure.append(player);
+  }
   else if (item.kind === "video") {
     const video = el("video", { controls: true, playsinline: true, preload: "metadata" });
     video.src = item.url;
@@ -827,12 +863,20 @@ function faithCard(item, openPlayer) {
   const figure = el("figure", { class: "faith-item" });
   if (item.date) figure.append(el("p", { class: "faith-date" }, item.date));
   figure.append(el("p", { class: "faith-label" }, item.label));
-  if (item.kind === "youtube" && openPlayer) figure.append(playerFrame(item));
-  else if (item.kind === "youtube") {
+  if (item.kind === "youtube" && item.embeddable === false) {
+    const player = mountYoutube(item);
+    if (player) figure.append(player);
+  } else if (item.kind === "youtube" && openPlayer) {
+    const player = mountYoutube(item);
+    if (player) figure.append(player);
+  } else if (item.kind === "youtube") {
     const details = el("details", { class: "faith-play" });
     details.append(el("summary", {}, "Play in the page"));
     details.addEventListener("toggle", () => {
-      if (details.open && !details.querySelector("iframe")) details.append(playerFrame(item));
+      if (details.open && !details.querySelector("iframe") && !details.querySelector(".watch-card")) {
+        const player = mountYoutube(item);
+        if (player) details.append(player);
+      }
     });
     figure.append(details);
   } else if (item.kind === "video") {
@@ -844,7 +888,7 @@ function faithCard(item, openPlayer) {
     audio.src = item.url;
     figure.append(audio);
   }
-  if (item.kind === "youtube" && item.url) {
+  if (item.kind === "youtube" && item.url && item.embeddable !== false) {
     const link = youtubeLink(item);
     link.setAttribute("aria-label", `Play on YouTube, ${item.label}`);
     figure.append(link);

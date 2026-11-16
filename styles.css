@@ -1069,6 +1069,51 @@ main.has-jump {
   border-radius: 8px;
 }
 
+.watch-card {
+  margin: 0.45rem 0 0.1rem;
+}
+
+.watch-thumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #1c1917;
+}
+
+.watch-thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.watch-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.2rem;
+  height: 3.2rem;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: rgba(20, 16, 12, 0.72);
+}
+
+.watch-play::after {
+  content: "";
+  position: absolute;
+  left: 1.28rem;
+  top: 1rem;
+  border-style: solid;
+  border-width: 0.6rem 0 0.6rem 1rem;
+  border-color: transparent transparent transparent #fffaf3;
+}
+
+.watch-thumb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .notice {
   margin: 1rem 0;
   padding: 0.85rem 1rem;

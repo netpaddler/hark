@@ -26,6 +26,7 @@ import {
   titleSortKey,
   tuneCaution,
   youtubeEmbedSrc,
+  youtubeBlock,
   listSermons,
 } from "../hymn-model.js";
 
@@ -440,6 +441,56 @@ test("sins page quotes the catechism and Scripture, and stays out of hymn search
   assert.equal(/\u2013|\u2014/.test(JSON.stringify(sermons)), false);
 });
 
+test("videos marked embeddable false never render an iframe", () => {
+  const blocked = new Set([
+    "KF2s2d68Mgs",
+    "M4QAVBdJYQ0",
+    "QqLbMP9hiCU",
+    "SExoOIkPndE",
+    "WAcu9DsU2Oo",
+    "Xn2S7fum_lI",
+    "gyux6d9UtBM",
+    "qTBSS6y3nTw",
+    "r-Ueu-KXYf8",
+    "ytvEg1w_xRU",
+  ]);
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const watch = appSource.slice(appSource.indexOf("function watchCard"), appSource.indexOf("function mountYoutube"));
+  assert.equal(watch.includes("iframe"), false);
+  assert.match(appSource, /if \(block\.type === "card"\) return watchCard\(block\)/);
+  const entries = [];
+  const walk = (value) => {
+    if (Array.isArray(value)) {
+      for (const item of value) walk(item);
+      return;
+    }
+    if (!value || typeof value !== "object") return;
+    if (typeof value.url === "string") entries.push(value);
+    else for (const item of Object.values(value)) walk(item);
+  };
+  walk(sermons);
+  walk(recordings);
+  let marked = 0;
+  for (const entry of entries) {
+    const match = entry.url.match(/[?&]v=([A-Za-z0-9_-]+)/);
+    if (!match || !blocked.has(match[1])) continue;
+    assert.equal(entry.embeddable, false, entry.url);
+    const presented = entry.title ? listSermons({ page: [entry] }, "page")[0] : faithRecordings({ 1: [entry] }, 1)[0];
+    const block = youtubeBlock(presented);
+    assert.equal(block.type, "card");
+    assert.equal(Object.hasOwn(block, "src"), false);
+    assert.equal(block.label, "Watch on YouTube");
+    assert.equal(block.thumb, `https://i.ytimg.com/vi/${match[1]}/hqdefault.jpg`);
+    assert.match(block.href, /[?&]t=\d+/);
+    marked += 1;
+  }
+  assert.equal(marked, 15);
+  const confession = listSermons(sermons, "page")[0];
+  assert.equal(confession.title, "Confession of Sin");
+  assert.equal(youtubeBlock(confession).type, "card");
+  assert.equal(youtubeBlock(listSermons(sermons, "page")[1]).type, "iframe");
+});
+
 test("install manifest, guide, and QR code", () => {
   const manifest = JSON.parse(readFileSync(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
   assert.equal(manifest.name, "Hark");
@@ -642,7 +693,7 @@ test("the Hark title links home on the list and on a hymn", () => {
   assert.match(css, /\.brand-home\s*\{[^}]*color:\s*inherit/);
   assert.match(css, /\.brand-home:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--accent\)/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /hark-v14/);
+  assert.match(sw, /hark-v15/);
   assert.match(sw, /skipWaiting\(\)/);
   assert.match(sw, /clients\.claim\(\)/);
 });
