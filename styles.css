@@ -1209,19 +1209,83 @@ main.has-jump {
   }
 }
 
-.hymn-comments {
-  margin-top: 1.4rem;
-}
-
-.hymn-comments h2,
 .comments-page h2 {
-  margin: 0 0 0.4rem;
+  margin: 1rem 0 0.4rem;
   font-family: var(--serif);
   font-size: 1.35rem;
 }
 
 .comments-page {
   padding-top: 0.4rem;
+}
+
+.request-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.request-field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.request-field input,
+.request-field textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font: inherit;
+}
+
+.request-field textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.request-form button {
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.request-honey {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.request-card {
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.request-card h3,
+.request-card h4 {
+  margin: 0.2rem 0;
+  font-family: var(--serif);
+}
+
+.request-meta,
+.request-body,
+.request-replies p {
+  margin: 0.25rem 0;
+  white-space: pre-wrap;
+}
+
+.request-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
 }
 
 .music-block {

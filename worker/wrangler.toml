@@ -1,0 +1,8 @@
+name = "hark-requests"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+[vars]
+REPO = "netpaddler/hark"
+LABEL = "hymn-request"
+ALLOWED_ORIGIN = "https://netpaddler.github.io"
