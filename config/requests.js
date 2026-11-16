@@ -6,8 +6,8 @@
 // stays in the Worker.
 
 export const requestConfig = {
-  endpoint: "",
-  turnstileSiteKey: "",
+  endpoint: "https://hark-requests.netpaddler.workers.dev",
+  turnstileSiteKey: "0x4AAAAAAGDxc4LmW_h1XSbx",
   repo: "netpaddler/hark",
   label: "hymn-request",
 };

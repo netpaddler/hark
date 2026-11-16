@@ -28,7 +28,7 @@ The home screen has a search box, section chips, and tabs for Number, Title, Aut
 - **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.
 - **Author** groups hymns by author and by translator, filed under the surname. John Mason Neale is listed as "Neale, John Mason (tr.)". A paraphrase credit is marked "(para.)". A hymn can appear under more than one name.
 - **Themes** groups the same hymns by season and by topic. A season or topic opens as a list of numbers and titles. On a hymn, the same themes are small links, such as `#/theme/incarnation`.
-- **Comments/Requests** is `#/requests`. Leave a comment or ask for a hymn in the Trinity Hymnal. The old address `#/comments` opens the same page.
+- **Comments/Requests** is `#/requests`. Leave a comment or request any hymn. We read every one. The old address `#/comments` opens the same page.
 - **Sins** is a reading page, `#/sins`. It opens with the Westminster Shorter Catechism on what sin is, then the Ten Commandments, the works of the flesh, the seven things the Lord hates, and sins of the heart and tongue. It ends with repentance and the gospel. Hymn links appear only where the words already speak of sin, pardon, repentance, or grace.
 
 Search checks the number, title, any line of the text (including the refrain), and also the author, translator, and tune. The section chips and the search apply to the Number, Title, Author, and Themes tabs. The Sins tab stays out of that search. Deep links look like `#/hymn/203`, `#/title`, `#/author`, and `#/sins`.
@@ -125,7 +125,7 @@ The page is `#/requests`. `#/comments` opens the same page. Visitors do not log 
 
 GitHub Discussions are not used.
 
-Until `endpoint` in `config/requests.js` is an `https://` address, the page says "Comments/Requests open soon".
+The live endpoint is `https://hark-requests.netpaddler.workers.dev`. Until `endpoint` in `config/requests.js` is an `https://` address, the page says "Comments/Requests open soon".
 
 ### What you set up
 

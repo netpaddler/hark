@@ -120,7 +120,7 @@ export default {
     await github(env, `/repos/${repo}/issues/${issue.number}/comments`, {
       method: "POST",
       body: JSON.stringify({
-        body: "Thanks for writing. Hymn requests are limited to the Trinity Hymnal.",
+        body: "Thanks for writing! Hark will reply here soon.",
       }),
     });
     return cors(json({ ok: true, url: issue.html_url }), env);
