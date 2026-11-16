@@ -7,14 +7,7 @@ REPO = "netpaddler/hark"
 LABEL = "hymn-request"
 ALLOWED_ORIGIN = "https://netpaddler.github.io"
 
-# The rate limit counts only what one isolate saw until this is bound to a real
-# namespace, so a caller who lands on a fresh isolate starts over. To make the
-# count shared, run:
-#
-#   npx wrangler kv namespace create hark-rate-limit
-#
-# then put the id it prints below and uncomment all three lines.
-#
-# [[kv_namespaces]]
-# binding = "RATE_LIMIT"
-# id = "put-the-id-here"
+# The hark-rate-limit namespace exists, and the live Worker is already bound to it.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "4d08aacef7c848f88fd1cee2c85e617e"
