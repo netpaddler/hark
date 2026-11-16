@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
+import { giscusConfig, giscusReady, giscusTheme, hymnTerm } from "../config/giscus.js";
 import { INSTALL_URL, installGuide } from "../install.js";
 import {
   authorIndex,
@@ -475,6 +476,30 @@ test("install manifest, guide, and QR code", () => {
   assert.match(appSource, /beforeinstallprompt/);
 });
 
+test("giscus stays unset until category ids are filled in", () => {
+  assert.equal(giscusConfig.repo, "netpaddler/hark");
+  assert.equal(giscusConfig.repoId, "R_kgDOVwYmxQ");
+  assert.equal(giscusConfig.requests.category, "Requests");
+  assert.equal(giscusConfig.requests.term, "Requests");
+  assert.equal(giscusConfig.hymnComments.category, "Hymn Comments");
+  assert.equal(giscusConfig.requests.categoryId, "");
+  assert.equal(giscusConfig.hymnComments.categoryId, "");
+  assert.equal(giscusReady(""), false);
+  assert.equal(giscusReady("DIC_kwDOexample"), true);
+  assert.equal(hymnTerm(108), "TH 108");
+  assert.equal(giscusTheme("dark"), "dark");
+  assert.equal(giscusTheme("light"), "light");
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.equal(page.includes("giscus.app"), false);
+  assert.equal(appSource.includes("https://giscus.app/client.js"), true);
+  assert.equal(appSource.includes("Comments are coming soon."), true);
+  assert.equal(
+    appSource.includes("Ask questions or request a hymn. Requests are limited to hymns in the Trinity Hymnal."),
+    true,
+  );
+});
+
 test("every score parses, names its source, and matches a hymn", () => {
   const code = readFileSync(new URL("../vendor/abcjs-basic-min.js", import.meta.url), "utf8");
   const sandbox = { console, setTimeout, clearTimeout, navigator: { userAgent: "node" } };
@@ -524,6 +549,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "app.js",
     "hymn-model.js",
     "install.js",
+    "config/giscus.js",
     "sw.js",
     "manifest.webmanifest",
     "README.md",

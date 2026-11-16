@@ -384,23 +384,29 @@ a {
 }
 
 .tabs {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
   gap: 3px;
+  overflow-x: auto;
+  scrollbar-width: none;
   padding: 3px;
   border-radius: 12px;
   background: var(--line);
 }
 
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
 .tabs button {
+  flex: 0 0 auto;
   min-height: 2.5rem;
-  padding: 0 0.15rem;
+  padding: 0 0.7rem;
   border: 0;
   border-radius: 9px;
   background: transparent;
   color: var(--muted);
   font-weight: 600;
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   white-space: nowrap;
 }
 
@@ -1182,6 +1188,21 @@ main.has-jump {
   .top {
     gap: 0.4rem;
   }
+}
+
+.hymn-comments {
+  margin-top: 1.4rem;
+}
+
+.hymn-comments h2,
+.comments-page h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+}
+
+.comments-page {
+  padding-top: 0.4rem;
 }
 
 .music-block {

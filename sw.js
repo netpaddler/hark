@@ -1,4 +1,4 @@
-const CACHE = "hark-v7";
+const CACHE = "hark-v8";
 
 const PRECACHE = [
   "./index.html",
@@ -6,6 +6,7 @@ const PRECACHE = [
   "./app.js",
   "./hymn-model.js",
   "./install.js",
+  "./config/giscus.js",
   "./vendor/abcjs-basic-min.js",
   "./data/music.json",
   "./manifest.webmanifest",

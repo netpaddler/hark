@@ -28,6 +28,7 @@ The home screen has a search box, section chips, and tabs for Number, Title, Aut
 - **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.
 - **Author** groups hymns by author and by translator, filed under the surname. John Mason Neale is listed as "Neale, John Mason (tr.)". A paraphrase credit is marked "(para.)". A hymn can appear under more than one name.
 - **Themes** groups the same hymns by season and by topic. A season or topic opens as a list of numbers and titles. On a hymn, the same themes are small links, such as `#/theme/incarnation`.
+- **Comments and Requests** is `#/comments`. Ask a question or request a hymn from the Trinity Hymnal. Each hymn page also has its own comments at the bottom.
 - **Sins** is a reading page, `#/sins`. It opens with the Westminster Shorter Catechism on what sin is, then the Ten Commandments, the works of the flesh, the seven things the Lord hates, and sins of the heart and tongue. It ends with repentance and the gospel. Hymn links appear only where the words already speak of sin, pardon, repentance, or grace.
 
 Search checks the number, title, any line of the text (including the refrain), and also the author, translator, and tune. The section chips and the search apply to the Number, Title, Author, and Themes tabs. The Sins tab stays out of that search. Deep links look like `#/hymn/203`, `#/title`, `#/author`, and `#/sins`.
@@ -117,6 +118,21 @@ Add an optional `recordings` array on a hymn in `data/hymns.json` when you have 
 Put audio files in the repo (for example `recordings/203.mp3`) and use a site-relative url, or point at a file you already host. `mp3`, `m4a`, `ogg`, `wav`, and similar addresses use an audio player. `mp4` and `webm` use a video player. YouTube and youtu.be links are embedded. Other web addresses are treated as audio.
 
 The words are cached for offline reading. A recording still needs a network connection unless the browser has already stored that file.
+
+## Comments
+
+Comments use [giscus](https://giscus.app), which stores the conversation in GitHub Discussions on `netpaddler/hark`. The settings live in `config/giscus.js`.
+
+The general page, `#/comments`, uses the category Requests. Each hymn page uses the category Hymn Comments, with a term such as `TH 108`. The giscus script loads only on those screens. It follows the light or dark theme.
+
+Until the category ids are filled in, Hark shows "Comments are coming soon."
+
+Setup, in order:
+
+1. On the repository, enable Discussions (Settings, General, Features, Discussions).
+2. Create two discussion categories. Both should be open, and neither should be an Announcement category. Name them `Requests` and `Hymn Comments`.
+3. Install the giscus GitHub app on this repository: https://github.com/apps/giscus
+4. Open https://giscus.app, choose this repository, and copy each category id into `config/giscus.js`. A category id starts with `DIC_`. The repository id is already filled in.
 
 ## Install Hark
 
