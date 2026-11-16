@@ -483,6 +483,23 @@ a {
   font-size: 1.25rem;
 }
 
+.stop-it {
+  margin: 1.2rem 0 0.4rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper-raised);
+}
+
+.stop-it p {
+  margin: 0;
+}
+
+.stop-it a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .gospel {
   margin-top: 1.2rem;
   padding-top: 0.4rem;

@@ -72,9 +72,9 @@ To add or change a recording, edit only `data/recordings.json`:
 
 ## Sermons on the Sins tab
 
-`data/sermons.json` holds Faith Presbyterian sermons for the Sins tab. It is separate from the hymn texts. `page` is a list for the whole page. `groups` is an object whose keys match a group id in `data/sins.json`, such as `commandments`, `commandment-1`, `flesh`, `hates`, `heart`, `tongue`, `new-life`, or `gospel`.
+`data/sermons.json` holds Faith Presbyterian sermons for the Sins tab. It is separate from the hymn texts. `page` is the list for the closing repentance and gospel section, in the order given. `groups` uses `ten-commandments`, `works-of-the-flesh`, `heart-and-tongue`, and `proverbs-6`. An empty list stays hidden.
 
-Each sermon has `title`, `date` (`YYYY-MM-DD`), `preacher`, `text` (the Scripture the sermon takes up), `url`, and `start_seconds`. A YouTube link opens at `start_seconds`. An empty list stays hidden. Leave the lists empty until a real sermon URL is in hand.
+Each sermon has `title`, `date` (`YYYY-MM-DD`), `preacher`, `text` (the Scripture the sermon takes up), `url`, and `start_seconds`. A YouTube sermon has a player that starts at `start_seconds`, and a link that opens at the same moment.
 
 ```json
 {

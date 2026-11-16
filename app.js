@@ -449,6 +449,19 @@ function hymnLinks(numbers) {
   return wrap;
 }
 
+const SERMON_KEYS = {
+  commandments: "ten-commandments",
+  flesh: "works-of-the-flesh",
+  hates: "proverbs-6",
+  "heart-tongue": "heart-and-tongue",
+};
+
+const STOP_IT_URL = "https://www.youtube.com/watch?v=aAhA7KfbJgg";
+
+function groupSermons(id) {
+  return listSermons(sermonCatalog, SERMON_KEYS[id] || id);
+}
+
 function sermonBlock(items) {
   if (!items || items.length === 0) return null;
   const box = el("section", { class: "sermons" });
@@ -459,6 +472,7 @@ function sermonBlock(items) {
     if (meta) card.append(el("p", { class: "sermon-meta" }, meta));
     card.append(el("p", { class: "sermon-title" }, item.title));
     if (item.text) card.append(el("p", { class: "sermon-text" }, item.text));
+    if (item.embed) card.append(playerFrame({ embed: item.embed, label: item.title }));
     card.append(
       el(
         "a",
@@ -471,6 +485,21 @@ function sermonBlock(items) {
   return box;
 }
 
+function stopItCard() {
+  const card = el("aside", { class: "stop-it", id: "stop-it" });
+  const line = el("p", {});
+  line.append("Bob Newhart's famous counseling advice: ");
+  line.append(
+    el(
+      "a",
+      { href: STOP_IT_URL, target: "_blank", rel: "noopener noreferrer" },
+      "Stop It!",
+    ),
+  );
+  card.append(line);
+  return card;
+}
+
 function commandmentItem(item) {
   const details = el("details", { class: "sin-item", id: `sin-${item.id}` });
   details.append(el("summary", {}, item.title));
@@ -478,8 +507,6 @@ function commandmentItem(item) {
   if (item.catechism) details.append(catechismBlock(item.catechism));
   const hymns = hymnLinks(item.hymns);
   if (hymns) details.append(hymns);
-  const sermons = sermonBlock(listSermons(sermonCatalog, item.id));
-  if (sermons) details.append(sermons);
   return details;
 }
 
@@ -489,8 +516,6 @@ function sinPart(part) {
   block.append(scriptureBlock(part.reference, part.scripture));
   const hymns = hymnLinks(part.hymns);
   if (hymns) block.append(hymns);
-  const sermons = sermonBlock(listSermons(sermonCatalog, part.id));
-  if (sermons) block.append(sermons);
   return block;
 }
 
@@ -506,7 +531,7 @@ function sinGroup(group, open) {
     group.reference ? el("span", { class: "theme-count" }, group.reference) : "",
   );
   details.append(summary);
-  const sermons = sermonBlock(listSermons(sermonCatalog, group.id));
+  const sermons = sermonBlock(groupSermons(group.id));
   if (sermons) details.append(sermons);
   if (group.note) details.append(el("p", { class: "sin-note" }, group.note));
   if (group.id === "commandments") {
@@ -546,8 +571,6 @@ function renderSins() {
     root.append(catechismBlock(intro.catechism));
   }
   if (intro.note) root.append(el("p", { class: "sin-note" }, intro.note));
-  const pageSermons = sermonBlock(listSermons(sermonCatalog, "page"));
-  if (pageSermons) root.append(pageSermons);
 
   const jumps = [...(catalog.groups || []), catalog.gospel].filter(Boolean);
   if (jumps.length) {
@@ -567,10 +590,21 @@ function renderSins() {
 
   (catalog.groups || []).forEach((group, index) => root.append(sinGroup(group, index === 0)));
 
+  root.append(stopItCard());
+
   const gospel = catalog.gospel;
   if (gospel) {
     const sectionEl = el("section", { class: "gospel", id: `sin-${gospel.id}` });
     sectionEl.append(el("h2", {}, gospel.title));
+    sectionEl.append(
+      el(
+        "p",
+        { class: "sin-note" },
+        "Of course, we can't just stop it on our own. Repentance unto life is a saving grace (WSC Q. 87), and Christ came to save sinners (1 Timothy 1:15).",
+      ),
+    );
+    const sermons = sermonBlock(listSermons(sermonCatalog, "page"));
+    if (sermons) sectionEl.append(sermons);
     if (gospel.catechism) sectionEl.append(catechismBlock(gospel.catechism));
     for (const verse of gospel.verses || []) {
       sectionEl.append(scriptureBlock(verse.reference, [verse.text]));
@@ -586,8 +620,6 @@ function renderSins() {
         ),
       );
     }
-    const sermons = sermonBlock(listSermons(sermonCatalog, gospel.id));
-    if (sermons) sectionEl.append(sermons);
     root.append(sectionEl);
   }
   main.replaceChildren(root);

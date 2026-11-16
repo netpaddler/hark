@@ -486,15 +486,11 @@ export function listSermons(catalog, key) {
   const raw = key === "page" ? catalog.page : catalog.groups && catalog.groups[key];
   if (!Array.isArray(raw)) return [];
   const items = [];
-  raw.forEach((entry, index) => {
+  raw.forEach((entry) => {
     const item = presentSermon(entry);
-    if (item) items.push({ ...item, index });
+    if (item) items.push(item);
   });
-  items.sort((a, b) => {
-    if (a.dateSort !== b.dateSort) return a.dateSort < b.dateSort ? 1 : -1;
-    return a.index - b.index;
-  });
-  return items.map(({ index, ...item }) => item);
+  return items;
 }
 
 function presentSermon(entry) {
@@ -509,13 +505,8 @@ function presentSermon(entry) {
     return null;
   }
   if (parsed.protocol !== "https:") return null;
-  const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
-  const youtube =
-    host === "youtu.be" ||
-    host === "youtube.com" ||
-    host === "m.youtube.com" ||
-    host === "music.youtube.com" ||
-    host === "youtube-nocookie.com";
+  const media = classifyRecording(url);
+  const youtube = Boolean(media && media.kind === "youtube");
   const start = recordingStart(entry);
   if (youtube && start != null && !parsed.searchParams.has("t") && !parsed.searchParams.has("start")) {
     parsed.searchParams.set("t", `${start}s`);
@@ -529,5 +520,6 @@ function presentSermon(entry) {
     url: parsed.toString(),
     youtube,
     start,
+    embed: youtube ? youtubeEmbedSrc(media.id, start) : null,
   };
 }

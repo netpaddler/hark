@@ -362,6 +362,29 @@ test("sins page quotes the catechism and Scripture, and stays out of hymn search
   assert.equal(shown[0].title, "The gospel");
   assert.equal(shown[0].preacher, "A preacher");
   assert.equal(shown[0].url, "https://www.youtube.com/watch?v=abcdefghijk&t=90s");
+  assert.equal(shown[0].embed, "https://www.youtube-nocookie.com/embed/abcdefghijk?start=90");
+  const pageOrder = listSermons(
+    {
+      page: [
+        { title: "First", url: "https://www.youtube.com/watch?v=abcdefghijk", date: "2020-01-01" },
+        { title: "Second", url: "https://www.youtube.com/watch?v=bcdefghijkl", date: "2024-01-01" },
+      ],
+    },
+    "page",
+  );
+  assert.deepEqual(
+    pageOrder.map((item) => item.title),
+    ["First", "Second"],
+  );
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.equal(appSource.includes("https://www.youtube.com/watch?v=aAhA7KfbJgg"), true);
+  assert.equal(
+    appSource.includes(
+      "Of course, we can't just stop it on our own. Repentance unto life is a saving grace (WSC Q. 87), and Christ came to save sinners (1 Timothy 1:15).",
+    ),
+    true,
+  );
+  assert.equal((appSource.match(/STOP IT!/g) || []).length, 0);
   assert.equal(/\u2013|\u2014/.test(JSON.stringify(sins)), false);
   assert.equal(/\u2013|\u2014/.test(JSON.stringify(sermons)), false);
 });
