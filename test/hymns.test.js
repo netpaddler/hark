@@ -499,6 +499,10 @@ test("comments and requests stay closed until an endpoint is set", () => {
   assert.equal(appSource.includes('name: "company"'), true);
   assert.equal(appSource.includes("turnstile:"), true);
   assert.match(appSource, /fetch\(requestConfig\.endpoint, \{ method: "GET"/);
+  assert.match(appSource, /No requests yet\./);
+  assert.match(appSource, /See more/);
+  assert.match(appSource, /showSubmissions\(host, issues, 3\)/);
+  assert.match(appSource, /shown \+ 5/);
   assert.equal(appSource.includes("api.github.com"), false);
   assert.equal(appSource.includes("innerHTML"), false);
   assert.match(appSource, /controllerchange/);
@@ -638,7 +642,7 @@ test("the Hark title links home on the list and on a hymn", () => {
   assert.match(css, /\.brand-home\s*\{[^}]*color:\s*inherit/);
   assert.match(css, /\.brand-home:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--accent\)/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /hark-v13/);
+  assert.match(sw, /hark-v14/);
   assert.match(sw, /skipWaiting\(\)/);
   assert.match(sw, /clients\.claim\(\)/);
 });
