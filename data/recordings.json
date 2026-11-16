@@ -62,6 +62,15 @@
       "start_seconds": 4921,
       "confidence": "medium",
       "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+    },
+    {
+      "label": "Sunday Evening Worship, Aug 1, 2021, congregation",
+      "video_title": "Sunday Evening Worship - August 1, 2021",
+      "video_date": "2021-08-01",
+      "url": "https://www.youtube.com/watch?v=M4QAVBdJYQ0&t=493s",
+      "start_seconds": 493,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. The captions catch only 'hymn Of the Father's love' and no sung lines after it; check by ear."
     }
   ],
   "193": [
@@ -292,6 +301,33 @@
       "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
     },
     {
+      "label": "Sunday Evening Worship, Jul 27, 2025, unspecified",
+      "video_title": "Sunday Evening Worship - July 27, 2025",
+      "video_date": "2025-07-27",
+      "url": "https://www.youtube.com/watch?v=31z9DkZ3TJU&t=406s",
+      "start_seconds": 406,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+    },
+    {
+      "label": "Sunday Morning Worship, Aug 18, 2024, congregation",
+      "video_title": "Sunday Morning Worship - August 18, 2024",
+      "video_date": "2024-08-18",
+      "url": "https://www.youtube.com/watch?v=bwSSYHIcLRg&t=795s",
+      "start_seconds": 795,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+    },
+    {
+      "label": "Sunday Evening Worship, Mar 24, 2024, congregation",
+      "video_title": "Sunday Evening Worship - March 24, 2024",
+      "video_date": "2024-03-24",
+      "url": "https://www.youtube.com/watch?v=h79hYC7NcTY&t=676s",
+      "start_seconds": 676,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+    },
+    {
       "label": "Sunday Evening Worship, Sep 3, 2023, congregation",
       "video_title": "Sunday Evening Worship - September 3, 2023",
       "video_date": "2023-09-03",
@@ -306,6 +342,15 @@
       "video_date": "2022-11-27",
       "url": "https://www.youtube.com/watch?v=PwKncrnMVAI&t=540s",
       "start_seconds": 540,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+    },
+    {
+      "label": "Sunday Evening Worship, Aug 21, 2022, congregation",
+      "video_title": "Sunday Evening Worship - August 21, 2022",
+      "video_date": "2022-08-21",
+      "url": "https://www.youtube.com/watch?v=iCjaKhq-GZQ&t=503s",
+      "start_seconds": 503,
       "confidence": "medium",
       "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
     }

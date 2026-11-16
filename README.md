@@ -112,4 +112,6 @@ Paths are relative, so the same files work at the domain root and on a project s
 
 Source notes, copyright, and caveats are in [docs/data.md](docs/data.md). The hymns are in [data/hymns.json](data/hymns.json).
 
+The recording file is a full scan of the Faith Presbyterian channel: 126 entries. How they were found, and which hymns have none, is in [docs/recordings.md](docs/recordings.md).
+
 The reading face is [Newsreader](https://github.com/productiontype/Newsreader) by Production Type, under the SIL Open Font License. See [fonts/OFL.txt](fonts/OFL.txt).

@@ -179,6 +179,9 @@ test("neighbors follow hymnal number", () => {
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
   assert.equal(Object.keys(recordings).length, 27);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 126);
+  assert.equal(faithRecordings(recordings, 162).length, 8);
+  assert.equal(faithRecordings(recordings, 198).length, 8);
   const herald = faithRecordings(recordings, 203);
   assert.equal(herald.length, 9);
   assert.equal(herald[0].date, "Dec 28, 2025");
@@ -250,6 +253,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "manifest.webmanifest",
     "README.md",
     "docs/data.md",
+    "docs/recordings.md",
     ".github/workflows/pages.yml",
   ];
   for (const file of files) {
