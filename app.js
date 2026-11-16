@@ -14,6 +14,7 @@ import {
   findTheme,
   hymnsInTheme,
   tuneCaution,
+  listSermons,
 } from "./hymn-model.js";
 
 const homeBar = document.getElementById("home-bar");
@@ -36,12 +37,15 @@ const TAB_IDS = [
   ["tab-title", "title"],
   ["tab-author", "author"],
   ["tab-themes", "themes"],
+  ["tab-sins", "sins"],
 ];
 
-const scrollMemory = { number: 0, title: 0, author: 0 };
+const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0 };
 let hymns = [];
 let recordingCatalog = {};
 let themeCatalog = { seasons: [], topics: [], hymns: {} };
+let sinsCatalog = null;
+let sermonCatalog = { page: [], groups: {} };
 let section = "all";
 let activeIndex = null;
 let ready = false;
@@ -135,6 +139,7 @@ function route() {
   if (path === "/title") return { view: "index", index: "title" };
   if (path === "/author") return { view: "index", index: "author" };
   if (path === "/themes") return { view: "themes" };
+  if (path === "/sins") return { view: "sins" };
   const themeMatch = path.match(/^\/theme\/([a-z0-9-]+)\/?$/);
   if (themeMatch) return { view: "theme", id: themeMatch[1] };
   const match = path.match(/^\/hymn\/(\d+)\/?$/);
@@ -146,6 +151,7 @@ function indexHref(index) {
   if (index === "title") return "#/title";
   if (index === "author") return "#/author";
   if (index === "themes") return "#/themes";
+  if (index === "sins") return "#/sins";
   if (typeof index === "string" && index.startsWith("theme:")) return `#/theme/${index.slice(6)}`;
   return "#/";
 }
@@ -157,7 +163,7 @@ function rememberScroll() {
 function storedIndex() {
   try {
     const stored = sessionStorage.getItem("hark-index");
-    if (stored === "title" || stored === "author" || stored === "number" || stored === "themes") {
+    if (stored === "title" || stored === "author" || stored === "number" || stored === "themes" || stored === "sins") {
       return stored;
     }
     if (/^theme:[a-z0-9-]+$/.test(stored || "")) return stored;
@@ -405,9 +411,194 @@ function themeJump(groups) {
   return row;
 }
 
+function setBrowseChrome(shown) {
+  searchForm.hidden = !shown;
+  chips.hidden = !shown;
+  count.hidden = !shown;
+}
+
+function scriptureBlock(reference, lines) {
+  const block = el("blockquote", { class: "scripture" });
+  if (reference) block.append(el("p", { class: "scripture-ref" }, reference));
+  for (const line of lines || []) {
+    if (line) block.append(el("p", {}, line));
+  }
+  return block;
+}
+
+function catechismBlock(item) {
+  const block = el("blockquote", { class: "catechism" });
+  block.append(el("p", { class: "scripture-ref" }, `Westminster Shorter Catechism, Q. ${item.number}`));
+  block.append(el("p", { class: "catechism-q" }, item.question));
+  block.append(el("p", {}, item.answer));
+  return block;
+}
+
+function hymnLinks(numbers) {
+  if (!Array.isArray(numbers) || numbers.length === 0) return null;
+  const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
+  const items = [];
+  for (const number of numbers) {
+    const hymn = byNumber.get(number);
+    if (hymn) items.push(hymnRow(hymn));
+  }
+  if (items.length === 0) return null;
+  const wrap = el("div", { class: "sin-hymns" });
+  wrap.append(el("h3", {}, "Hymns"));
+  wrap.append(el("ul", { class: "hymn-list" }, items));
+  return wrap;
+}
+
+function sermonBlock(items) {
+  if (!items || items.length === 0) return null;
+  const box = el("section", { class: "sermons" });
+  box.append(el("h3", {}, "Hear a sermon on this from Faith Presbyterian"));
+  for (const item of items) {
+    const card = el("div", { class: "sermon" });
+    const meta = [item.date, item.preacher].filter(Boolean).join(" · ");
+    if (meta) card.append(el("p", { class: "sermon-meta" }, meta));
+    card.append(el("p", { class: "sermon-title" }, item.title));
+    if (item.text) card.append(el("p", { class: "sermon-text" }, item.text));
+    card.append(
+      el(
+        "a",
+        { class: "faith-link", href: item.url, target: "_blank", rel: "noopener noreferrer" },
+        item.youtube ? "Play on YouTube" : "Open the sermon",
+      ),
+    );
+    box.append(card);
+  }
+  return box;
+}
+
+function commandmentItem(item) {
+  const details = el("details", { class: "sin-item", id: `sin-${item.id}` });
+  details.append(el("summary", {}, item.title));
+  details.append(scriptureBlock(item.reference, item.scripture));
+  if (item.catechism) details.append(catechismBlock(item.catechism));
+  const hymns = hymnLinks(item.hymns);
+  if (hymns) details.append(hymns);
+  const sermons = sermonBlock(listSermons(sermonCatalog, item.id));
+  if (sermons) details.append(sermons);
+  return details;
+}
+
+function sinPart(part) {
+  const block = el("section", { class: "sin-part", id: `sin-${part.id}` });
+  block.append(el("h3", {}, part.title));
+  block.append(scriptureBlock(part.reference, part.scripture));
+  const hymns = hymnLinks(part.hymns);
+  if (hymns) block.append(hymns);
+  const sermons = sermonBlock(listSermons(sermonCatalog, part.id));
+  if (sermons) block.append(sermons);
+  return block;
+}
+
+function sinGroup(group, open) {
+  const details = el("details", {
+    class: "sin-group theme-group",
+    id: `sin-${group.id}`,
+    open: open ? true : null,
+  });
+  const summary = el("summary", {});
+  summary.append(
+    el("span", { class: "theme-name" }, group.title),
+    group.reference ? el("span", { class: "theme-count" }, group.reference) : "",
+  );
+  details.append(summary);
+  const sermons = sermonBlock(listSermons(sermonCatalog, group.id));
+  if (sermons) details.append(sermons);
+  if (group.note) details.append(el("p", { class: "sin-note" }, group.note));
+  if (group.id === "commandments") {
+    for (const item of group.items || []) details.append(commandmentItem(item));
+  } else {
+    if (group.scripture) details.append(scriptureBlock(group.reference ? "" : "", group.scripture));
+    if (Array.isArray(group.items) && group.items.every((item) => typeof item === "string")) {
+      details.append(el("ul", { class: "sin-list" }, group.items.map((item) => el("li", {}, item))));
+    }
+    if (group.closing) details.append(el("p", { class: "sin-note" }, group.closing));
+    for (const part of group.parts || []) details.append(sinPart(part));
+    const hymns = hymnLinks(group.hymns);
+    if (hymns) details.append(hymns);
+  }
+  return details;
+}
+
+function renderSins() {
+  homeBar.hidden = false;
+  hymnBar.hidden = true;
+  setBrowseChrome(false);
+  activeIndex = "sins";
+  saveIndex("sins");
+  syncTabs("sins");
+  main.setAttribute("role", "tabpanel");
+  main.setAttribute("aria-labelledby", "tab-sins");
+  main.classList.remove("has-jump");
+  document.title = "Sins · Hark";
+  const catalog = sinsCatalog;
+  if (!catalog) {
+    main.replaceChildren(el("p", { class: "empty" }, "The Sins page did not open."));
+    return;
+  }
+  const root = el("div", { class: "sins" });
+  const intro = catalog.intro || {};
+  if (intro.catechism) {
+    root.append(catechismBlock(intro.catechism));
+  }
+  if (intro.note) root.append(el("p", { class: "sin-note" }, intro.note));
+  const pageSermons = sermonBlock(listSermons(sermonCatalog, "page"));
+  if (pageSermons) root.append(pageSermons);
+
+  const jumps = [...(catalog.groups || []), catalog.gospel].filter(Boolean);
+  if (jumps.length) {
+    const row = el("div", { class: "theme-jumps" });
+    for (const group of jumps) {
+      const button = el("button", { type: "button" }, group.title);
+      button.addEventListener("click", () => {
+        const node = document.getElementById(`sin-${group.id}`);
+        if (!node) return;
+        if (node.tagName === "DETAILS") node.open = true;
+        node.scrollIntoView({ block: "start" });
+      });
+      row.append(button);
+    }
+    root.append(row);
+  }
+
+  (catalog.groups || []).forEach((group, index) => root.append(sinGroup(group, index === 0)));
+
+  const gospel = catalog.gospel;
+  if (gospel) {
+    const sectionEl = el("section", { class: "gospel", id: `sin-${gospel.id}` });
+    sectionEl.append(el("h2", {}, gospel.title));
+    if (gospel.catechism) sectionEl.append(catechismBlock(gospel.catechism));
+    for (const verse of gospel.verses || []) {
+      sectionEl.append(scriptureBlock(verse.reference, [verse.text]));
+    }
+    const hymns = hymnLinks(gospel.hymns);
+    if (hymns) sectionEl.append(hymns);
+    if (gospel.theme && gospel.theme.id) {
+      sectionEl.append(
+        el(
+          "p",
+          { class: "sin-note" },
+          el("a", { href: `#/theme/${gospel.theme.id}` }, gospel.theme.title),
+        ),
+      );
+    }
+    const sermons = sermonBlock(listSermons(sermonCatalog, gospel.id));
+    if (sermons) sectionEl.append(sermons);
+    root.append(sectionEl);
+  }
+  main.replaceChildren(root);
+  const y = scrollMemory.sins || 0;
+  requestAnimationFrame(() => window.scrollTo(0, y));
+}
+
 function renderThemes() {
   homeBar.hidden = false;
   hymnBar.hidden = true;
+  setBrowseChrome(true);
   activeIndex = "themes";
   saveIndex("themes");
   syncTabs("themes");
@@ -444,6 +635,7 @@ function renderThemes() {
 function renderTheme(id) {
   homeBar.hidden = false;
   hymnBar.hidden = true;
+  setBrowseChrome(true);
   const key = `theme:${id}`;
   activeIndex = key;
   saveIndex(key);
@@ -502,6 +694,7 @@ function themeChips(hymn) {
 function renderIndex(index) {
   homeBar.hidden = false;
   hymnBar.hidden = true;
+  setBrowseChrome(true);
   activeIndex = index;
   saveIndex(index);
   syncTabs(index);
@@ -680,14 +873,18 @@ function renderHymn(number) {
   const back = document.getElementById("back-link");
   back.href = indexHref(listIndex);
   const fromThemes = listIndex === "themes" || (typeof listIndex === "string" && listIndex.startsWith("theme:"));
-  back.replaceChildren(icon("back"), document.createTextNode(fromThemes ? "Themes" : "Hymns"));
-  const listName = fromThemes
-    ? "themes"
-    : listIndex === "title"
-      ? "title index"
-      : listIndex === "author"
-        ? "author index"
-        : "hymn list";
+  const fromSins = listIndex === "sins";
+  const backLabel = fromSins ? "Sins" : fromThemes ? "Themes" : "Hymns";
+  back.replaceChildren(icon("back"), document.createTextNode(backLabel));
+  const listName = fromSins
+    ? "Sins page"
+    : fromThemes
+      ? "themes"
+      : listIndex === "title"
+        ? "title index"
+        : listIndex === "author"
+          ? "author index"
+          : "hymn list";
   back.setAttribute("aria-label", `Back to the ${listName}`);
 
   const found = neighbors(hymns, number);
@@ -789,6 +986,7 @@ function render() {
   if (current.view === "hymn") renderHymn(current.number);
   else if (current.view === "themes") renderThemes();
   else if (current.view === "theme") renderTheme(current.id);
+  else if (current.view === "sins") renderSins();
   else renderIndex(current.index);
   syncSticky();
 }
@@ -812,10 +1010,12 @@ function showError() {
 
 async function load() {
   try {
-    const [hymnResponse, recordingResponse, themeResponse] = await Promise.all([
+    const [hymnResponse, recordingResponse, themeResponse, sinsResponse, sermonResponse] = await Promise.all([
       fetch(new URL("data/hymns.json", import.meta.url)),
       fetch(new URL("data/recordings.json", import.meta.url)),
       fetch(new URL("data/themes.json", import.meta.url)),
+      fetch(new URL("data/sins.json", import.meta.url)),
+      fetch(new URL("data/sermons.json", import.meta.url)),
     ]);
     if (!hymnResponse.ok) throw new Error(String(hymnResponse.status));
     const data = await hymnResponse.json();
@@ -830,6 +1030,16 @@ async function load() {
     if (themeResponse.ok) {
       const catalog = await themeResponse.json();
       if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) themeCatalog = catalog;
+    }
+    sinsCatalog = null;
+    if (sinsResponse.ok) {
+      const catalog = await sinsResponse.json();
+      if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) sinsCatalog = catalog;
+    }
+    sermonCatalog = { page: [], groups: {} };
+    if (sermonResponse.ok) {
+      const catalog = await sermonResponse.json();
+      if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) sermonCatalog = catalog;
     }
     ready = true;
     buildChips();

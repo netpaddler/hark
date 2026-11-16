@@ -480,3 +480,54 @@ export function faithRecordings(catalog, number) {
   });
   return items;
 }
+
+export function listSermons(catalog, key) {
+  if (!catalog || typeof catalog !== "object") return [];
+  const raw = key === "page" ? catalog.page : catalog.groups && catalog.groups[key];
+  if (!Array.isArray(raw)) return [];
+  const items = [];
+  raw.forEach((entry, index) => {
+    const item = presentSermon(entry);
+    if (item) items.push({ ...item, index });
+  });
+  items.sort((a, b) => {
+    if (a.dateSort !== b.dateSort) return a.dateSort < b.dateSort ? 1 : -1;
+    return a.index - b.index;
+  });
+  return items.map(({ index, ...item }) => item);
+}
+
+function presentSermon(entry) {
+  if (!entry || typeof entry !== "object") return null;
+  const title = typeof entry.title === "string" ? entry.title.trim() : "";
+  const url = typeof entry.url === "string" ? entry.url.trim() : "";
+  if (!title || !url) return null;
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "https:") return null;
+  const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+  const youtube =
+    host === "youtu.be" ||
+    host === "youtube.com" ||
+    host === "m.youtube.com" ||
+    host === "music.youtube.com" ||
+    host === "youtube-nocookie.com";
+  const start = recordingStart(entry);
+  if (youtube && start != null && !parsed.searchParams.has("t") && !parsed.searchParams.has("start")) {
+    parsed.searchParams.set("t", `${start}s`);
+  }
+  return {
+    title,
+    preacher: typeof entry.preacher === "string" ? entry.preacher.trim() : "",
+    text: typeof entry.text === "string" ? entry.text.trim() : "",
+    date: formatRecordingDate(entry.date),
+    dateSort: typeof entry.date === "string" ? entry.date : "",
+    url: parsed.toString(),
+    youtube,
+    start,
+  };
+}
