@@ -1,14 +1,14 @@
 {
   "_note": "Faith Presbyterian Church Tacoma sermons for the Sins tab. Found from YouTube auto captions and the church site faithtacoma.org. Start times are where the Scripture reading or sermon begins.",
   "page": [
-    {"title": "Confession of Sin", "date": "2021-02-21", "service": "Sunday Evening", "preacher": "Rev. Steven Nicoletti", "text": "2 Samuel 12:1-15a; Psalm 51", "url": "https://www.youtube.com/watch?v=QqLbMP9hiCU&t=708s", "start_seconds": 708},
+    {"title": "Confession of Sin", "date": "2021-02-21", "service": "Sunday Evening", "preacher": "Rev. Steven Nicoletti", "text": "2 Samuel 12:1-15a; Psalm 51", "url": "https://www.youtube.com/watch?v=QqLbMP9hiCU&t=708s", "start_seconds": 708, "embeddable": false},
     {"title": "The Father's Grace for Lost Sons, Near and Far", "date": "2025-07-20", "service": "Sunday Evening", "preacher": "Rev. Dr. Luiz Faria (guest)", "text": "Luke 15:11-32", "url": "https://www.youtube.com/watch?v=pdh9xm-iSio&t=1990s", "start_seconds": 1990}
   ],
   "ten-commandments": [
     {"title": "First Things First", "date": "2022-09-04", "service": "Sunday Morning", "preacher": "Rev. Steven Nicoletti", "text": "Deuteronomy 4:44-5:6", "url": "https://www.youtube.com/watch?v=u-wcjHgvM-w&t=2503s", "start_seconds": 2503, "note": "First sermon of a series on the Ten Commandments, September to November 2022"}
   ],
   "works-of-the-flesh": [
-    {"title": "Walking by the Spirit: The Fruit of Self-Control", "date": "2021-01-10", "service": "Sunday Morning", "preacher": "Pastor Nathaniel H. Gutierrez", "text": "Galatians 5:13-26", "url": "https://www.youtube.com/watch?v=ytvEg1w_xRU&t=1844s", "start_seconds": 1844}
+    {"title": "Walking by the Spirit: The Fruit of Self-Control", "date": "2021-01-10", "service": "Sunday Morning", "preacher": "Pastor Nathaniel H. Gutierrez", "text": "Galatians 5:13-26", "url": "https://www.youtube.com/watch?v=ytvEg1w_xRU&t=1844s", "start_seconds": 1844, "embeddable": false}
   ],
   "proverbs-6": [],
   "heart-and-tongue": [

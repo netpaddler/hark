@@ -366,7 +366,7 @@ function presentRecording(recording, fallbackLabel) {
       : fallbackLabel;
   const start = media.kind === "youtube" ? recordingStart(recording) : null;
   const url = typeof recording.url === "string" ? recording.url.trim() : "";
-  return {
+  const item = {
     label,
     date: formatRecordingDate(recording.video_date),
     dateSort: typeof recording.video_date === "string" ? recording.video_date : "",
@@ -375,6 +375,25 @@ function presentRecording(recording, fallbackLabel) {
     ...media,
     embed: media.kind === "youtube" ? youtubeEmbedSrc(media.id, start) : null,
   };
+  if (recording.embeddable === false) item.embeddable = false;
+  return item;
+}
+
+export function youtubeBlock(item) {
+  if (!item) return null;
+  const youtube = item.kind === "youtube" || item.youtube === true;
+  if (!youtube) return null;
+  if (item.embeddable === false) {
+    const id = typeof item.id === "string" ? item.id : "";
+    return {
+      type: "card",
+      href: item.url,
+      thumb: id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "",
+      label: "Watch on YouTube",
+    };
+  }
+  if (!item.embed) return null;
+  return { type: "iframe", src: item.embed };
 }
 
 export function classifyRecording(url) {
@@ -516,7 +535,7 @@ function presentSermon(entry) {
   if (youtube && start != null && !parsed.searchParams.has("t") && !parsed.searchParams.has("start")) {
     parsed.searchParams.set("t", `${start}s`);
   }
-  return {
+  const item = {
     title,
     preacher: typeof entry.preacher === "string" ? entry.preacher.trim() : "",
     text: typeof entry.text === "string" ? entry.text.trim() : "",
@@ -524,7 +543,10 @@ function presentSermon(entry) {
     dateSort: typeof entry.date === "string" ? entry.date : "",
     url: parsed.toString(),
     youtube,
+    id: youtube ? media.id : "",
     start,
     embed: youtube ? youtubeEmbedSrc(media.id, start) : null,
   };
+  if (entry.embeddable === false) item.embeddable = false;
+  return item;
 }
