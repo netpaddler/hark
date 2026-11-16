@@ -16,7 +16,7 @@ export const installGuide = {
     "Tap Add to Home Screen.",
   ],
   computer:
-    "On a computer, Chrome or Edge can install Hark from the Install Hark button.",
+    "On a computer, Chrome or Edge can install Hark from the browser menu.",
   installed: "Hark is already installed on this device.",
   qrCaption: "Scan to open Hark.",
   pageLink: "Open the install page",

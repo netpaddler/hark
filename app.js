@@ -1422,7 +1422,7 @@ syncTheme();
 clearButton.replaceChildren(icon("close"));
 load();
 
-const installButton = document.getElementById("install-btn");
+const installLink = document.getElementById("install-link");
 const installHelp = document.getElementById("install-help");
 let installEvent = null;
 
@@ -1434,8 +1434,8 @@ function runningAsApp() {
 }
 
 function syncInstallButton() {
-  if (!installButton) return;
-  installButton.hidden = runningAsApp();
+  if (!installLink) return;
+  installLink.hidden = runningAsApp();
 }
 
 function installSteps(includeComputer) {
@@ -1494,20 +1494,6 @@ function renderInstall() {
   window.scrollTo(0, 0);
 }
 
-installButton.addEventListener("click", async () => {
-  if (installEvent) {
-    installEvent.prompt();
-    const choice = await installEvent.userChoice;
-    installEvent = null;
-    if (choice && choice.outcome === "accepted") {
-      document.documentElement.dataset.installed = "true";
-      syncInstallButton();
-    }
-    return;
-  }
-  fillInstallHelp();
-  if (!installHelp.open) installHelp.showModal();
-});
 
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
