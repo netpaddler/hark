@@ -1275,7 +1275,7 @@ function renderRequests() {
   document.title = "Comments/Requests · Hark";
   const page = el("article", { class: "comments-page" });
   page.append(el("h2", {}, "Comments/Requests"));
-  page.append(el("p", { class: "sin-note" }, "Hymn requests are limited to the Trinity Hymnal."));
+  page.append(el("p", { class: "sin-note" }, "Leave a comment or request any hymn. We read every one."));
   if (requestsOpen()) page.append(requestForm());
   else page.append(el("p", { class: "coming" }, "Comments/Requests open soon"));
   page.append(el("h2", {}, "Past submissions"));

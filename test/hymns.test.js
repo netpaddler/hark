@@ -479,8 +479,10 @@ test("install manifest, guide, and QR code", () => {
 test("comments and requests stay closed until an endpoint is set", () => {
   assert.equal(requestConfig.repo, "netpaddler/hark");
   assert.equal(requestConfig.label, "hymn-request");
-  assert.equal(requestConfig.endpoint, "");
-  assert.equal(requestsOpen(), false);
+  assert.equal(requestConfig.endpoint, "https://hark-requests.netpaddler.workers.dev");
+  assert.equal(requestConfig.turnstileSiteKey, "0x4AAAAAAGDxc4LmW_h1XSbx");
+  assert.equal(requestsOpen(), true);
+  assert.equal(requestsOpen({ endpoint: "" }), false);
   assert.equal(requestsOpen({ endpoint: "https://hark.example.workers.dev" }), true);
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
@@ -490,8 +492,14 @@ test("comments and requests stay closed until an endpoint is set", () => {
   assert.equal(appSource.includes("https://giscus.app/client.js"), false);
   assert.equal(page.includes(">Comments/Requests<"), true);
   assert.equal(appSource.includes("Comments/Requests open soon"), true);
-  assert.equal(appSource.includes("Hymn requests are limited to the Trinity Hymnal."), true);
+  assert.equal(appSource.includes("Leave a comment or request any hymn. We read every one."), true);
+  assert.equal(appSource.includes("Hymn requests are limited to the Trinity Hymnal."), false);
+  assert.equal(worker.includes("Thanks for writing! Hark will reply here soon."), true);
+  assert.equal(worker.includes("Hymn requests are limited to the Trinity Hymnal."), false);
   assert.equal(appSource.includes('name: "company"'), true);
+  assert.equal(appSource.includes("turnstile:"), true);
+  assert.match(appSource, /labels=\$\{encodeURIComponent\(requestConfig\.label\)\}/);
+  assert.match(appSource, /issue\.comments_url/);
   assert.equal(worker.includes("GITHUB_TOKEN"), true);
   assert.equal(/api\.github\.com/.test(appSource), true);
 });
@@ -547,7 +555,7 @@ test("the Hark title links home on the list and on a hymn", () => {
   assert.match(css, /\.brand-home\s*\{[^}]*color:\s*inherit/);
   assert.match(css, /\.brand-home:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--accent\)/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /hark-v10/);
+  assert.match(sw, /hark-v11/);
 });
 
 test("shell files exist and UI copy has no en or em dashes", () => {
