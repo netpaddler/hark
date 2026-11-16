@@ -22,14 +22,15 @@ node --test
 
 ## Browse
 
-The home screen has a search box, section chips, and three tabs.
+The home screen has a search box, section chips, and tabs for Number, Title, Author, Themes, and Sins.
 
 - **Number** keeps hymnal order. Each row shows the number, title, and tune.
 - **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.
 - **Author** groups hymns by author and by translator, filed under the surname. John Mason Neale is listed as "Neale, John Mason (tr.)". A paraphrase credit is marked "(para.)". A hymn can appear under more than one name.
 - **Themes** groups the same hymns by season and by topic. A season or topic opens as a list of numbers and titles. On a hymn, the same themes are small links, such as `#/theme/incarnation`.
+- **Sins** is a reading page, `#/sins`. It opens with the Westminster Shorter Catechism on what sin is, then the Ten Commandments, the works of the flesh, the seven things the Lord hates, and sins of the heart and tongue. It ends with repentance and the gospel. Hymn links appear only where the words already speak of sin, pardon, repentance, or grace.
 
-Search checks the number, title, any line of the text (including the refrain), and also the author, translator, and tune. The section chips and the search apply to whichever tab is open. Deep links look like `#/hymn/203`, `#/title`, and `#/author`.
+Search checks the number, title, any line of the text (including the refrain), and also the author, translator, and tune. The section chips and the search apply to the Number, Title, Author, and Themes tabs. The Sins tab stays out of that search. Deep links look like `#/hymn/203`, `#/title`, `#/author`, and `#/sins`.
 
 ## Sections
 
@@ -68,6 +69,31 @@ To add or change a recording, edit only `data/recordings.json`:
 ```
 
 `video_date` is `YYYY-MM-DD` and decides the order. `url` should be a YouTube watch link with `&t=120s` (or the matching `start_seconds`) so the link opens at the hymn. Leave a number out, or give it an empty list, when there is no recording yet.
+
+## Sermons on the Sins tab
+
+`data/sermons.json` holds Faith Presbyterian sermons for the Sins tab. It is separate from the hymn texts. `page` is the list for the closing repentance and gospel section, in the order given. The other lists are `ten-commandments`, `works-of-the-flesh`, `heart-and-tongue`, and `proverbs-6`. An empty list stays hidden. `service` and `note` stay in the file for editors and are not shown.
+
+Each sermon has `title`, `date` (`YYYY-MM-DD`), `preacher`, `text` (the Scripture the sermon takes up), `url`, and `start_seconds`. A YouTube sermon has a player that starts at `start_seconds`, and a link that opens at the same moment.
+
+```json
+{
+  "page": [
+    {
+      "title": "Sermon title",
+      "date": "2026-01-04",
+      "preacher": "Name",
+      "text": "1 John 1:9",
+      "url": "https://www.youtube.com/watch?v=VIDEO_ID",
+      "start_seconds": 120
+    }
+  ],
+  "ten-commandments": [],
+  "works-of-the-flesh": [],
+  "proverbs-6": [],
+  "heart-and-tongue": []
+}
+```
 
 ## Choir recordings
 

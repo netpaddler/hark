@@ -385,7 +385,7 @@ a {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 3px;
   padding: 3px;
   border-radius: 12px;
@@ -400,7 +400,8 @@ a {
   background: transparent;
   color: var(--muted);
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
 }
 
 .tabs button[aria-selected="true"] {
@@ -453,7 +454,7 @@ a {
   scroll-margin-top: calc(var(--sticky-h) + 0.35rem);
 }
 
-.theme-group summary {
+.theme-group > summary {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -464,11 +465,11 @@ a {
   list-style: none;
 }
 
-.theme-group summary::-webkit-details-marker {
+.theme-group > summary::-webkit-details-marker {
   display: none;
 }
 
-.theme-group summary::before {
+.theme-group > summary::before {
   content: "";
   width: 0.45rem;
   height: 0.45rem;
@@ -479,7 +480,7 @@ a {
   flex: none;
 }
 
-.theme-group[open] summary::before {
+.theme-group[open] > summary::before {
   margin-top: 0.35rem;
   transform: rotate(45deg);
 }
@@ -494,6 +495,135 @@ a {
 .theme-count {
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.sins {
+  padding-bottom: 1.5rem;
+}
+
+.catechism,
+.scripture {
+  margin: 0.8rem 0;
+  padding: 0.15rem 0 0.15rem 0.85rem;
+  border-left: 3px solid var(--accent);
+}
+
+.catechism p,
+.scripture p,
+.sin-note {
+  margin: 0.35rem 0;
+}
+
+.catechism-q {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.scripture-ref,
+.sermon-meta,
+.sermon-text {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.scripture p:not(.scripture-ref) {
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  line-height: 1.4;
+}
+
+.sin-list {
+  margin: 0.2rem 0 0.8rem;
+  padding-left: 1.2rem;
+}
+
+.sin-list li {
+  margin: 0.28rem 0;
+}
+
+.sin-item {
+  margin: 0.15rem 0 0.35rem;
+  border-top: 1px solid var(--line);
+}
+
+.sin-item summary {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sin-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.sin-item summary::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg);
+  flex: none;
+}
+
+.sin-item[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.sin-part {
+  margin: 0.8rem 0 1rem;
+}
+
+.sin-part h3,
+.sin-hymns h3,
+.sermons h3,
+.gospel h2 {
+  margin: 0.8rem 0 0.3rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+}
+
+.stop-it {
+  margin: 1.2rem 0 0.4rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper-raised);
+}
+
+.stop-it p {
+  margin: 0;
+}
+
+.stop-it a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.gospel {
+  margin-top: 1.2rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: calc(var(--sticky-h) + 0.35rem);
+}
+
+.sermon {
+  margin: 0.45rem 0 0.8rem;
+}
+
+.sermon-title {
+  margin: 0.1rem 0;
+  font-weight: 600;
+}
+
+.sin-note a {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .theme-group .hymn-list {

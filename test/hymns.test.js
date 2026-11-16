@@ -24,11 +24,14 @@ import {
   titleSortKey,
   tuneCaution,
   youtubeEmbedSrc,
+  listSermons,
 } from "../hymn-model.js";
 
 const hymns = JSON.parse(readFileSync(new URL("../data/hymns.json", import.meta.url), "utf8"));
 const recordings = JSON.parse(readFileSync(new URL("../data/recordings.json", import.meta.url), "utf8"));
 const themes = JSON.parse(readFileSync(new URL("../data/themes.json", import.meta.url), "utf8"));
+const sins = JSON.parse(readFileSync(new URL("../data/sins.json", import.meta.url), "utf8"));
+const sermons = JSON.parse(readFileSync(new URL("../data/sermons.json", import.meta.url), "utf8"));
 const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
 
 function groups() {
@@ -280,6 +283,139 @@ test("recordings accept audio files and YouTube links", () => {
   assert.deepEqual(listRecordings(byNumber.get(203)), []);
 });
 
+test("sins page quotes the catechism and Scripture, and stays out of hymn search", () => {
+  assert.equal(sins.intro.catechism.number, 14);
+  assert.equal(sins.intro.catechism.question, "What is sin?");
+  assert.equal(
+    sins.intro.catechism.answer,
+    "Sin is any want of conformity unto, or transgression of, the law of God.",
+  );
+  const commandments = sins.groups.find((group) => group.id === "commandments");
+  assert.deepEqual(
+    commandments.items.map((item) => item.catechism.number),
+    [47, 51, 55, 61, 65, 69, 72, 75, 78, 81],
+  );
+  for (const item of commandments.items) {
+    assert.match(item.catechism.question, /^What is forbidden in the/);
+    assert.ok(item.scripture.length > 0, item.id);
+    assert.match(item.reference, /^Exodus 20:/);
+  }
+  const flesh = sins.groups.find((group) => group.id === "flesh");
+  assert.equal(flesh.reference, "Galatians 5:19-21");
+  assert.ok(flesh.items.includes("fornication"));
+  assert.ok(flesh.items.includes("revellings, and such like"));
+  assert.match(flesh.closing, /shall not inherit the kingdom of God/);
+  const hates = sins.groups.find((group) => group.id === "hates");
+  assert.equal(hates.items.length, 7);
+  assert.equal(hates.items[0], "A proud look");
+  assert.equal(hates.items[6], "he that soweth discord among brethren");
+  const heart = sins.groups
+    .find((group) => group.id === "heart-tongue")
+    .parts.find((part) => part.id === "heart");
+  assert.match(heart.scripture[0], /^For out of the heart proceed/);
+  assert.equal(sins.gospel.catechism.number, 87);
+  assert.match(sins.gospel.catechism.answer, /^Repentance unto life is a saving grace/);
+  assert.equal(sins.gospel.verses[0].reference, "1 John 1:9");
+  assert.match(sins.gospel.verses[0].text, /^If we confess our sins/);
+  assert.equal(sins.gospel.verses[1].reference, "1 Timothy 1:15");
+  assert.match(sins.gospel.verses[1].text, /Christ Jesus came into the world to save sinners/);
+
+  const linked = [
+    ...heart.hymns,
+    ...sins.gospel.hymns,
+  ];
+  assert.ok(linked.length > 0);
+  for (const number of linked) {
+    const hymn = byNumber.get(number);
+    assert.ok(hymn, String(number));
+    const words = hymn.stanzas.flat().join(" ");
+    assert.match(words, /sin|repent|pardon|grace|redeem|sinner/i, String(number));
+  }
+  assert.equal(
+    filterHymns(hymns, "any want of conformity").length,
+    0,
+  );
+  assert.deepEqual(sermons["proverbs-6"], []);
+  const pageSermons = listSermons(sermons, "page");
+  assert.deepEqual(
+    pageSermons.map((item) => item.title),
+    ["Confession of Sin", "The Father's Grace for Lost Sons, Near and Far"],
+  );
+  assert.equal(pageSermons[0].preacher, "Rev. Steven Nicoletti");
+  assert.equal(pageSermons[0].text, "2 Samuel 12:1-15a; Psalm 51");
+  assert.equal(pageSermons[0].url, "https://www.youtube.com/watch?v=QqLbMP9hiCU&t=708s");
+  assert.equal(pageSermons[0].embed, "https://www.youtube-nocookie.com/embed/QqLbMP9hiCU?start=708");
+  assert.equal(pageSermons[0].note, undefined);
+  assert.equal(pageSermons[0].service, undefined);
+  assert.equal(listSermons(sermons, "proverbs-6").length, 0);
+  assert.equal(
+    listSermons(sermons, "ten-commandments")[0].url,
+    "https://www.youtube.com/watch?v=u-wcjHgvM-w&t=2503s",
+  );
+  assert.equal(listSermons(sermons, "works-of-the-flesh")[0].text, "Galatians 5:13-26");
+  assert.equal(listSermons(sermons, "heart-and-tongue").length, 2);
+  const allowed = new Set([
+    "https://www.youtube.com/watch?v=QqLbMP9hiCU&t=708s",
+    "https://www.youtube.com/watch?v=pdh9xm-iSio&t=1990s",
+    "https://www.youtube.com/watch?v=u-wcjHgvM-w&t=2503s",
+    "https://www.youtube.com/watch?v=ytvEg1w_xRU&t=1844s",
+    "https://www.youtube.com/watch?v=ucdGQ4-Fl8I&t=2329s",
+    "https://www.youtube.com/watch?v=HelgRs0r2Pw&t=2134s",
+  ]);
+  for (const key of ["page", "ten-commandments", "works-of-the-flesh", "heart-and-tongue"]) {
+    for (const item of listSermons(sermons, key)) assert.ok(allowed.has(item.url), item.url);
+  }
+  const shown = listSermons(
+    {
+      page: [{ title: "Blank", url: "" }],
+      groups: {
+        gospel: [
+          {
+            title: "The gospel",
+            date: "2024-03-03",
+            preacher: "A preacher",
+            text: "1 John 1:9",
+            url: "https://www.youtube.com/watch?v=abcdefghijk",
+            start_seconds: 90,
+          },
+          { title: "Missing link" },
+          { title: "Bad", url: "javascript:alert(1)" },
+        ],
+      },
+    },
+    "gospel",
+  );
+  assert.equal(shown.length, 1);
+  assert.equal(shown[0].title, "The gospel");
+  assert.equal(shown[0].preacher, "A preacher");
+  assert.equal(shown[0].url, "https://www.youtube.com/watch?v=abcdefghijk&t=90s");
+  assert.equal(shown[0].embed, "https://www.youtube-nocookie.com/embed/abcdefghijk?start=90");
+  const pageOrder = listSermons(
+    {
+      page: [
+        { title: "First", url: "https://www.youtube.com/watch?v=abcdefghijk", date: "2020-01-01" },
+        { title: "Second", url: "https://www.youtube.com/watch?v=bcdefghijkl", date: "2024-01-01" },
+      ],
+    },
+    "page",
+  );
+  assert.deepEqual(
+    pageOrder.map((item) => item.title),
+    ["First", "Second"],
+  );
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.equal(appSource.includes("https://www.youtube.com/watch?v=aAhA7KfbJgg"), true);
+  assert.equal(
+    appSource.includes(
+      "Of course, we can't just stop it on our own. Repentance unto life is a saving grace (WSC Q. 87), and Christ came to save sinners (1 Timothy 1:15).",
+    ),
+    true,
+  );
+  assert.equal((appSource.match(/STOP IT!/g) || []).length, 0);
+  assert.equal(/\u2013|\u2014/.test(JSON.stringify(sins)), false);
+  assert.equal(/\u2013|\u2014/.test(JSON.stringify(sermons)), false);
+});
+
 test("install manifest, guide, and QR code", () => {
   const manifest = JSON.parse(readFileSync(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
   assert.equal(manifest.name, "Hark");
@@ -333,6 +469,8 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "docs/data.md",
     "docs/recordings.md",
     "data/themes.json",
+    "data/sins.json",
+    "data/sermons.json",
     ".github/workflows/pages.yml",
   ];
   const workflow = readFileSync(new URL("../.github/workflows/pages.yml", import.meta.url), "utf8");

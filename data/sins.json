@@ -1,0 +1,285 @@
+{
+  "intro": {
+    "source": "Westminster Shorter Catechism",
+    "catechism": {
+      "number": 14,
+      "question": "What is sin?",
+      "answer": "Sin is any want of conformity unto, or transgression of, the law of God."
+    },
+    "note": "Where a hymn in this book clearly speaks of sin, pardon, repentance, or grace, it is linked with that group."
+  },
+  "groups": [
+    {
+      "id": "commandments",
+      "title": "The Ten Commandments",
+      "reference": "Exodus 20:3-17",
+      "note": "Each commandment is given in the words of Exodus, then the sin the Shorter Catechism says it forbids.",
+      "items": [
+        {
+          "id": "commandment-1",
+          "title": "No other gods",
+          "reference": "Exodus 20:3",
+          "scripture": [
+            "Thou shalt have no other gods before me."
+          ],
+          "catechism": {
+            "number": 47,
+            "question": "What is forbidden in the first commandment?",
+            "answer": "The first commandment forbiddeth the denying, or not worshiping and glorifying the true God as God, and our God; and the giving of that worship and glory to any other, which is due to him alone."
+          }
+        },
+        {
+          "id": "commandment-2",
+          "title": "No graven image",
+          "reference": "Exodus 20:4-6",
+          "scripture": [
+            "Thou shalt not make unto thee any graven image, or any likeness of any thing that is in heaven above, or that is in the earth beneath, or that is in the water under the earth:",
+            "Thou shalt not bow down thyself to them, nor serve them: for I the LORD thy God am a jealous God, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me;",
+            "And shewing mercy unto thousands of them that love me, and keep my commandments."
+          ],
+          "catechism": {
+            "number": 51,
+            "question": "What is forbidden in the second commandment?",
+            "answer": "The second commandment forbiddeth the worshiping of God by images, or any other way not appointed in his word."
+          }
+        },
+        {
+          "id": "commandment-3",
+          "title": "God's name taken in vain",
+          "reference": "Exodus 20:7",
+          "scripture": [
+            "Thou shalt not take the name of the LORD thy God in vain; for the LORD will not hold him guiltless that taketh his name in vain."
+          ],
+          "catechism": {
+            "number": 55,
+            "question": "What is forbidden in the third commandment?",
+            "answer": "The third commandment forbiddeth all profaning or abusing of anything whereby God maketh himself known."
+          }
+        },
+        {
+          "id": "commandment-4",
+          "title": "The sabbath profaned",
+          "reference": "Exodus 20:8-11",
+          "scripture": [
+            "Remember the sabbath day, to keep it holy.",
+            "Six days shalt thou labour, and do all thy work:",
+            "But the seventh day is the sabbath of the LORD thy God: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates:",
+            "For in six days the LORD made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore the LORD blessed the sabbath day, and hallowed it."
+          ],
+          "catechism": {
+            "number": 61,
+            "question": "What is forbidden in the fourth commandment?",
+            "answer": "The fourth commandment forbiddeth the omission or careless performance of the duties required, and the profaning the day by idleness, or doing that which is in itself sinful, or by unnecessary thoughts, words or works, about our worldly employments or recreations."
+          }
+        },
+        {
+          "id": "commandment-5",
+          "title": "Honor and duty neglected",
+          "reference": "Exodus 20:12",
+          "scripture": [
+            "Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee."
+          ],
+          "catechism": {
+            "number": 65,
+            "question": "What is forbidden in the fifth commandment?",
+            "answer": "The fifth commandment forbiddeth the neglecting of, or doing anything against, the honor and duty which belongeth to every one in their several places and relations."
+          }
+        },
+        {
+          "id": "commandment-6",
+          "title": "Killing unjustly",
+          "reference": "Exodus 20:13",
+          "scripture": [
+            "Thou shalt not kill."
+          ],
+          "catechism": {
+            "number": 69,
+            "question": "What is forbidden in the sixth commandment?",
+            "answer": "The sixth commandment forbiddeth the taking away of our own life, or the life of our neighbor unjustly, or whatsoever tendeth thereunto."
+          }
+        },
+        {
+          "id": "commandment-7",
+          "title": "Unchaste thoughts, words, and actions",
+          "reference": "Exodus 20:14",
+          "scripture": [
+            "Thou shalt not commit adultery."
+          ],
+          "catechism": {
+            "number": 72,
+            "question": "What is forbidden in the seventh commandment?",
+            "answer": "The seventh commandment forbiddeth all unchaste thoughts, words and actions."
+          }
+        },
+        {
+          "id": "commandment-8",
+          "title": "Stealing",
+          "reference": "Exodus 20:15",
+          "scripture": [
+            "Thou shalt not steal."
+          ],
+          "catechism": {
+            "number": 75,
+            "question": "What is forbidden in the eighth commandment?",
+            "answer": "The eighth commandment forbiddeth whatsoever doth or may unjustly hinder our own or our neighbor's wealth or outward estate."
+          }
+        },
+        {
+          "id": "commandment-9",
+          "title": "False witness",
+          "reference": "Exodus 20:16",
+          "scripture": [
+            "Thou shalt not bear false witness against thy neighbour."
+          ],
+          "catechism": {
+            "number": 78,
+            "question": "What is forbidden in the ninth commandment?",
+            "answer": "The ninth commandment forbiddeth whatsoever is prejudicial to truth, or injurious to our own or our neighbor's good name."
+          }
+        },
+        {
+          "id": "commandment-10",
+          "title": "Coveting",
+          "reference": "Exodus 20:17",
+          "scripture": [
+            "Thou shalt not covet thy neighbour's house, thou shalt not covet thy neighbour's wife, nor his manservant, nor his maidservant, nor his ox, nor his ass, nor any thing that is thy neighbour's."
+          ],
+          "catechism": {
+            "number": 81,
+            "question": "What is forbidden in the tenth commandment?",
+            "answer": "The tenth commandment forbiddeth all discontentment with our own estate, envying or grieving at the good of our neighbor, and all inordinate motions and affections to anything that is his."
+          }
+        }
+      ]
+    },
+    {
+      "id": "flesh",
+      "title": "The works of the flesh",
+      "reference": "Galatians 5:19-21",
+      "scripture": [
+        "Now the works of the flesh are manifest, which are these;"
+      ],
+      "items": [
+        "Adultery",
+        "fornication",
+        "uncleanness",
+        "lasciviousness",
+        "Idolatry",
+        "witchcraft",
+        "hatred",
+        "variance",
+        "emulations",
+        "wrath",
+        "strife",
+        "seditions",
+        "heresies",
+        "Envyings",
+        "murders",
+        "drunkenness",
+        "revellings, and such like"
+      ],
+      "closing": "of the which I tell you before, as I have also told you in time past, that they which do such things shall not inherit the kingdom of God."
+    },
+    {
+      "id": "hates",
+      "title": "Seven things the Lord hates",
+      "reference": "Proverbs 6:16-19",
+      "scripture": [
+        "These six things doth the LORD hate: yea, seven are an abomination unto him:"
+      ],
+      "items": [
+        "A proud look",
+        "a lying tongue",
+        "hands that shed innocent blood",
+        "An heart that deviseth wicked imaginations",
+        "feet that be swift in running to mischief",
+        "A false witness that speaketh lies",
+        "he that soweth discord among brethren"
+      ]
+    },
+    {
+      "id": "heart-tongue",
+      "title": "Sins of the heart and tongue",
+      "parts": [
+        {
+          "id": "heart",
+          "title": "Out of the heart",
+          "reference": "Matthew 15:19",
+          "scripture": [
+            "For out of the heart proceed evil thoughts, murders, adulteries, fornications, thefts, false witness, blasphemies:"
+          ],
+          "hymns": [
+            201,
+            202,
+            197
+          ]
+        },
+        {
+          "id": "tongue",
+          "title": "The tongue",
+          "reference": "James 3:6, 8-10",
+          "scripture": [
+            "And the tongue is a fire, a world of iniquity: so is the tongue among our members, that it defileth the whole body, and setteth on fire the course of nature; and it is set on fire of hell.",
+            "But the tongue can no man tame; it is an unruly evil, full of deadly poison.",
+            "Therewith bless we God, even the Father; and therewith curse we men, which are made after the similitude of God.",
+            "Out of the same mouth proceedeth blessing and cursing. My brethren, these things ought not so to be."
+          ]
+        },
+        {
+          "id": "new-life",
+          "title": "Put away the old way",
+          "reference": "Ephesians 4:25-32",
+          "scripture": [
+            "Wherefore putting away lying, speak every man truth with his neighbour: for we are members one of another.",
+            "Be ye angry, and sin not: let not the sun go down upon your wrath:",
+            "Neither give place to the devil.",
+            "Let him that stole steal no more: but rather let him labour, working with his hands the thing which is good, that he may have to give to him that needeth.",
+            "Let no corrupt communication proceed out of your mouth, but that which is good to the use of edifying, that it may minister grace unto the hearers.",
+            "And grieve not the holy Spirit of God, whereby ye are sealed unto the day of redemption.",
+            "Let all bitterness, and wrath, and anger, and clamour, and evil speaking, be put away from you, with all malice:",
+            "And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you."
+          ]
+        }
+      ]
+    }
+  ],
+  "gospel": {
+    "id": "gospel",
+    "title": "The gospel",
+    "catechism": {
+      "number": 87,
+      "question": "What is repentance unto life?",
+      "answer": "Repentance unto life is a saving grace, whereby a sinner, out of a true sense of his sin, and apprehension of the mercy of God in Christ, doth, with grief and hatred of his sin, turn from it unto God, with full purpose of, and endeavor after, new obedience."
+    },
+    "verses": [
+      {
+        "reference": "1 John 1:9",
+        "text": "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness."
+      },
+      {
+        "reference": "1 Timothy 1:15",
+        "text": "This is a faithful saying, and worthy of all acceptation, that Christ Jesus came into the world to save sinners; of whom I am chief."
+      }
+    ],
+    "hymns": [
+      197,
+      196,
+      227,
+      220,
+      217,
+      221,
+      201,
+      202,
+      195,
+      203,
+      213,
+      226,
+      210,
+      209
+    ],
+    "theme": {
+      "id": "grace",
+      "title": "Grace and Redemption"
+    }
+  }
+}
