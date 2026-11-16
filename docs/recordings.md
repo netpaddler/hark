@@ -38,6 +38,7 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
   - **Hand-placed starts:** where the captions showed the hymn starts later than the first match, the start was moved by hand. These are noted per entry.
 - **Confidence.** Every entry is "medium". That means a caption match: an announcement, sung lyrics, or both.
 - **Choir or congregation.** The label says "congregation" when the announcement asks people to stand or sing together. Otherwise it says "unspecified". No choir-only performances were identified with confidence.
+- **Full congregation preferred.** Prefer the full congregation singing. A hymn sung during the Lord's Supper, when the singing is sparse, should be replaced only when another service has that hymn sung by the full congregation and the start time is verified from the captions. If no such recording is available, keep the existing entry. Do not drop a recording only because it was sung at communion. Do not guess a start time.
 - **Hymns sharing words.** Captions cannot tell which tune was used, so those recordings are listed under both numbers:
   - 201 and 202 (no recordings found)
   - 204 and 205
