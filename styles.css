@@ -1274,6 +1274,29 @@ main.has-jump {
   overflow: hidden;
 }
 
+.request-empty {
+  margin: 0.35rem 0 0.2rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.see-more {
+  margin: 0.15rem 0 0.4rem;
+  padding: 0.35rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.see-more:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 .request-card {
   padding: 0.8rem 0;
   border-top: 1px solid var(--line);

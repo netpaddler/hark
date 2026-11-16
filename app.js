@@ -1240,22 +1240,47 @@ function submissionCard(issue) {
   return card;
 }
 
+function pastHeading(host) {
+  const heading = host.previousElementSibling;
+  if (heading && heading.tagName === "H2" && heading.textContent === "Past submissions") return heading;
+  return null;
+}
+
+function showEmptyRequests(host) {
+  const heading = pastHeading(host);
+  if (heading) heading.remove();
+  host.replaceChildren(el("p", { class: "request-empty" }, "No requests yet."));
+}
+
+function showSubmissions(host, issues, shown) {
+  if (!pastHeading(host)) host.before(el("h2", {}, "Past submissions"));
+  const visible = issues.slice(0, shown);
+  const nodes = visible.map((issue) => submissionCard(issue));
+  if (shown < issues.length) {
+    const more = el("button", { type: "button", class: "see-more" }, "See more");
+    more.addEventListener("click", () => showSubmissions(host, issues, shown + 5));
+    nodes.push(more);
+  }
+  host.replaceChildren(...nodes);
+}
+
 async function loadSubmissions(host) {
   if (!host) return;
   if (!requestConfig.endpoint) {
-    host.replaceChildren(el("p", { class: "sin-note" }, "No comments yet."));
+    showEmptyRequests(host);
     return;
   }
-  host.replaceChildren(el("p", { class: "sin-note" }, "Loading past submissions..."));
+  host.replaceChildren(el("p", { class: "request-empty" }, "Loading past submissions..."));
   try {
     const response = await fetch(requestConfig.endpoint, { method: "GET", headers: { accept: "application/json" } });
     if (!response.ok) throw new Error(String(response.status));
     const issues = await response.json();
     if (!Array.isArray(issues) || !issues.length) {
-      host.replaceChildren(el("p", { class: "sin-note" }, "No comments yet."));
+      showEmptyRequests(host);
       return;
     }
-    host.replaceChildren(...issues.map((issue) => submissionCard(issue)));
+    issues.sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")));
+    showSubmissions(host, issues, 3);
   } catch {
     host.replaceChildren(el("p", { class: "sin-note" }, "The list did not load."));
   }
