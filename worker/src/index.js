@@ -1,6 +1,12 @@
 // Creates a public GitHub issue for each hymn comment or request, then adds a reply.
 // Secrets: GITHUB_TOKEN, TURNSTILE_SECRET
 // Vars: REPO, LABEL, ALLOWED_ORIGIN
+// Optional binding: RATE_LIMIT, a KV namespace. Without it the limit below
+// counts only what one isolate saw, which is easy to walk around.
+
+const LIMIT = 5;
+const WINDOW_MS = 60 * 60 * 1000;
+const MEMORY_KEYS = 5000;
 
 const hits = new Map();
 
@@ -29,7 +35,9 @@ function originAllowed(request, env) {
   const allowed = env.ALLOWED_ORIGIN || "*";
   if (allowed === "*") return true;
   const origin = request.headers.get("origin");
-  if (!origin) return true;
+  // A browser always sends Origin on a cross site POST, so a post without one
+  // did not come from the form. Reading the list stays open to anything.
+  if (!origin) return request.method !== "POST";
   return origin === allowed;
 }
 
@@ -98,11 +106,23 @@ async function cachedIssueList(env) {
   return response;
 }
 
-function allow(request) {
-  const ip = request.headers.get("cf-connecting-ip") || "unknown";
-  const now = Date.now();
-  const recent = (hits.get(ip) || []).filter((time) => now - time < 60 * 60 * 1000);
-  if (recent.length >= 5) {
+function recentTimes(times, now) {
+  return (Array.isArray(times) ? times : []).filter(
+    (time) => Number.isFinite(time) && now - time < WINDOW_MS,
+  );
+}
+
+// One isolate's own count, so this is a speed bump rather than a limit. It is
+// what runs until a KV namespace is bound as RATE_LIMIT. Quiet addresses are
+// swept out so a long lived isolate does not hold every caller it ever saw.
+function allowInMemory(ip, now) {
+  if (hits.size > MEMORY_KEYS) {
+    for (const [key, times] of hits) {
+      if (!recentTimes(times, now).length) hits.delete(key);
+    }
+  }
+  const recent = recentTimes(hits.get(ip), now);
+  if (recent.length >= LIMIT) {
     hits.set(ip, recent);
     return false;
   }
@@ -111,21 +131,59 @@ function allow(request) {
   return true;
 }
 
-async function turnstileOk(token, request, env) {
-  if (!env.TURNSTILE_SECRET) return true;
-  if (!token) return false;
+// Shared by every isolate, so the count is the real one. A KV read can lag a
+// moment behind a write, which at five an hour is not worth more machinery.
+async function allowInStore(store, ip, now) {
+  const key = `rate:${ip}`;
+  let saved;
+  try {
+    saved = JSON.parse((await store.get(key)) || "[]");
+  } catch {
+    saved = [];
+  }
+  const recent = recentTimes(saved, now);
+  if (recent.length >= LIMIT) return false;
+  recent.push(now);
+  await store.put(key, JSON.stringify(recent), { expirationTtl: WINDOW_MS / 1000 });
+  return true;
+}
+
+async function allow(request, env) {
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const now = Date.now();
+  if (env.RATE_LIMIT) {
+    try {
+      return await allowInStore(env.RATE_LIMIT, ip, now);
+    } catch {
+      /* KV is unreachable, so fall back to this isolate's own count */
+    }
+  }
+  return allowInMemory(ip, now);
+}
+
+// Answers "ok", "failed" or "unconfigured". A missing secret used to pass the
+// check, which left the form an open door: anything able to post JSON could
+// open issues on the repo under any name. A form that is briefly closed is the
+// better failure, and "unconfigured" is what tells the caller to stop retrying.
+async function turnstileCheck(token, request, env) {
+  if (!env.TURNSTILE_SECRET) return "unconfigured";
+  if (!token) return "failed";
   const body = new URLSearchParams();
   body.set("secret", env.TURNSTILE_SECRET);
   body.set("response", token);
   const ip = request.headers.get("cf-connecting-ip");
   if (ip) body.set("remoteip", ip);
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    body,
-  });
-  if (!response.ok) return false;
-  const data = await response.json();
-  return data.success === true;
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body,
+    });
+    if (!response.ok) return "failed";
+    const data = await response.json();
+    return data.success === true ? "ok" : "failed";
+  } catch {
+    return "failed";
+  }
 }
 
 async function github(env, path, options = {}) {
@@ -175,10 +233,16 @@ export default {
     const name = clip(payload.name, 80);
     const hymn = clip(payload.hymn, 120);
     if (!message) return cors(json({ error: "Write a comment or a hymn request." }, 400), env);
-    if (!(await turnstileOk(payload.turnstile, request, env))) {
-      return cors(json({ error: "The check failed. Try again." }, 400), env);
+    // The cheap count first, so a flood cannot make the Worker call Cloudflare
+    // once per request on its way to being turned away.
+    if (!(await allow(request, env))) {
+      return cors(json({ error: "Please wait a while, then try again." }, 429), env);
     }
-    if (!allow(request)) return cors(json({ error: "Please wait a while, then try again." }, 429), env);
+    const check = await turnstileCheck(payload.turnstile, request, env);
+    if (check === "unconfigured") {
+      return cors(json({ error: "Requests are not open yet." }, 503), env);
+    }
+    if (check !== "ok") return cors(json({ error: "The check failed. Try again." }, 400), env);
     if (!env.GITHUB_TOKEN) return cors(json({ error: "Requests are not open yet." }, 503), env);
 
     const repo = env.REPO || "netpaddler/hark";
