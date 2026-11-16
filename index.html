@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Read Advent and Christmas hymns from the Trinity Hymnal. Search by number, title, or a line of the text.">
+    <meta name="theme-color" id="theme-color" content="#f3eee4">
+    <meta name="color-scheme" content="light dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Hark">
+    <title>Hark</title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("hark-theme");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.dataset.themeChoice = stored ? "set" : "system";
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="preload" href="fonts/newsreader-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/newsreader-600.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to hymns</a>
+    <div class="app">
+      <header class="top" id="home-bar">
+        <div class="brand-row">
+          <div class="brand">
+            <h1>Hark</h1>
+            <p class="eyebrow">Trinity Hymnal</p>
+          </div>
+          <button type="button" class="icon-btn" id="theme-home" aria-label="Switch to dark mode"></button>
+        </div>
+        <form class="search" id="search-form" role="search">
+          <label class="visually-hidden" for="q">Search by number, title, or a line</label>
+          <input id="q" type="search" placeholder="Number, title, or a line" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+          <button type="button" class="icon-btn clear" id="clear" hidden aria-label="Clear search"></button>
+        </form>
+        <div class="chips" id="chips" role="toolbar" aria-label="Filter by section"></div>
+        <div class="tabs" id="tabs" role="tablist" aria-label="Browse hymns">
+          <button type="button" role="tab" id="tab-number" aria-controls="main" aria-selected="true">Number</button>
+          <button type="button" role="tab" id="tab-title" aria-controls="main" aria-selected="false" tabindex="-1">Title</button>
+          <button type="button" role="tab" id="tab-author" aria-controls="main" aria-selected="false" tabindex="-1">Author</button>
+        </div>
+        <p class="count" id="count" aria-live="polite"></p>
+      </header>
+
+      <header class="hymn-bar" id="hymn-bar" hidden>
+        <a class="text-btn" id="back-link" href="#/">Hymns</a>
+        <div class="pager">
+          <a class="icon-btn" id="prev-link" href="#/" aria-label="Previous hymn"></a>
+          <p class="pager-num" id="pager-num"></p>
+          <a class="icon-btn" id="next-link" href="#/" aria-label="Next hymn"></a>
+        </div>
+        <button type="button" class="icon-btn" id="theme-hymn" aria-label="Switch to dark mode"></button>
+      </header>
+
+      <main id="main" tabindex="-1">
+        <p class="empty">Opening the hymnal...</p>
+      </main>
+    </div>
+    <div class="jump-bubble" id="jump-bubble" hidden aria-hidden="true"></div>
+    <noscript>
+      <p class="notice">Hark needs JavaScript to open the hymnal.</p>
+    </noscript>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

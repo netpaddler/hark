@@ -1,1 +1,89 @@
-# hark
+# Hark
+
+Hark is a phone-first hymnal for reading the words of hymns from the Trinity Hymnal (1990), the hymnal of the PCA and OPC. It is meant for pulling up a number quickly, including from an Android home screen, and it can hold a choir recording on each hymn later.
+
+This copy has 42 Advent and Christmas hymns: nos. 193 to 233, plus no. 162. The wording in `data/hymns.json` is the text to sing. Do not edit it.
+
+## Run it locally
+
+The page loads the hymn file with `fetch`, so open it from a small web server rather than as a file on disk.
+
+```bash
+python3 -m http.server 8080
+```
+
+Then visit <http://localhost:8080>.
+
+Tests, with no install step:
+
+```bash
+node --test
+```
+
+## Browse
+
+The home screen has a search box, section chips, and three tabs.
+
+- **Number** keeps hymnal order. Each row shows the number, title, and tune.
+- **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.
+- **Author** groups hymns by author and by translator, filed under the surname. John Mason Neale is listed as "Neale, John Mason (tr.)". A paraphrase credit is marked "(para.)". A hymn can appear under more than one name.
+
+Search checks the number, title, any line of the text (including the refrain), and also the author, translator, and tune. The section chips and the search apply to whichever tab is open. Deep links look like `#/hymn/203`, `#/title`, and `#/author`.
+
+## Sections
+
+Filter chips are built from the `section` field. Nothing in the interface is hard-coded to Advent and Christmas. To add Lent, Easter, Thanksgiving, or a topic, add hymns to `data/hymns.json` with that `section` name. Preferred chip order is Advent, Christmas, Lent, Holy Week, Easter, Ascension, Pentecost, Thanksgiving. Any other name is added after those, in the order it first appears.
+
+## A hymn page
+
+The hymn page uses large type. It shows the number, the title, and a short credit line (author, translator, tune, composer). Stanzas use `stanza_numbers` when that list is present, so no. 196 is numbered 1 and 4 rather than 1 and 2. A refrain is printed after every stanza when `refrain_after_each_stanza` is true, and once after the stanzas otherwise.
+
+Previous and next follow hymnal number. Back returns to the list you came from.
+
+If `public_domain` is false, Hark shows the title, number, author, and `copyright_note`, and tells you to see the printed Trinity Hymnal. It does not show the words. If a public-domain hymn has a `copyright_note` or a gap in `stanza_numbers`, Hark says which stanzas are omitted and where they would have been.
+
+## Choir recordings
+
+Add an optional `recordings` array to a hymn. Each item needs a `label` and a `url`. The url can be an audio file or a YouTube link. Leave the array off, or leave it empty, and the page shows a quiet line that a recording is coming soon.
+
+```json
+"recordings": [
+  {
+    "label": "Choir rehearsal",
+    "url": "recordings/203.mp3"
+  },
+  {
+    "label": "Congregation",
+    "url": "https://www.youtube.com/watch?v=VIDEO_ID"
+  }
+]
+```
+
+Put audio files in the repo (for example `recordings/203.mp3`) and use a site-relative url, or point at a file you already host. `mp3`, `m4a`, `ogg`, `wav`, and similar addresses use an audio player. `mp4` and `webm` use a video player. YouTube and youtu.be links are embedded. Other web addresses are treated as audio.
+
+The words are cached for offline reading. A recording still needs a network connection unless the browser has already stored that file.
+
+## Install on Android
+
+1. Open the deployed site in Chrome (a local server on your own network works too).
+2. Use the Chrome menu and choose "Install app" or "Add to Home screen".
+3. Hark opens full screen. After the first visit online, the hymn words stay available offline.
+
+The install uses `manifest.webmanifest`, the icons in `icons/`, and `sw.js`.
+
+## Deploy to GitHub Pages
+
+The workflow in `.github/workflows/pages.yml` publishes the site on every push to `main`. It also runs `node --test` first. The repository can stay private while you use Hark locally. GitHub Pages from Actions on the free plan needs a public repository. When you are ready:
+
+1. Make this repository public.
+2. In Settings, open Pages. Under Build and deployment, set Source to GitHub Actions.
+3. Push to `main`, or run "Deploy GitHub Pages" by hand from the Actions tab.
+4. The site will be at <https://netpaddler.github.io/hark/>.
+
+Paths are relative, so the same files work at the domain root and on a project site.
+
+## Data and type
+
+Source notes, copyright, and caveats are in [docs/data.md](docs/data.md). The hymns are in [data/hymns.json](data/hymns.json).
+
+The reading face is [Newsreader](https://github.com/productiontype/Newsreader) by Production Type, under the SIL Open Font License. See [fonts/OFL.txt](fonts/OFL.txt).
