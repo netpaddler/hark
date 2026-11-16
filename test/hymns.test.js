@@ -756,6 +756,9 @@ test("shell files exist and UI copy has no en or em dashes", () => {
   assert.match(workflow, /workflow_dispatch/);
   assert.match(workflow, /branches:\s*\[main\]/);
   assert.match(workflow, /enablement:\s*true/);
+  // A pull request runs the tests. Only main reaches the deploy job.
+  assert.match(workflow, /pull_request:/);
+  assert.match(workflow, /if: github\.event_name != 'pull_request'/);
   for (const file of files) {
     const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
     assert.equal(/\u2013|\u2014/.test(text), false, file);
