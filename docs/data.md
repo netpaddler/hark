@@ -69,3 +69,58 @@ A hymn may have more than one topic. A topic is used only when the words clearly
 Lent, Holy Week, Easter, Ascension, Pentecost, and Thanksgiving are not listed while no hymn uses them. Add the id under `seasons`, and on the hymns that belong there, and the Themes tab will show the new group.
 
 Each group has a link, `#/theme/` plus the id. For example, `#/theme/incarnation`.
+
+## Music
+
+Scores are ABC files in `data/music/`, listed in `data/music.json`. Each one is a public domain setting from a book published before 1931, taken from the Open Hymnal Project, not from the Trinity Hymnal. The page says the harmony may differ from the Trinity Hymnal setting. The first Play may download a piano sound.
+
+### Scores
+
+- 162 DIVINUM MYSTERIUM (SATB). Plainsong melody. Four-part setting from The Church Hymnal, Revised and Enlarged (Episcopal), 1892, hymn 52, via the Open Hymnal Project.
+- 193 PICARDY (SATB). French melody. Four-part setting from The English Hymnal, 1906, hymn 318, via the Open Hymnal Project.
+- 194 VENI EMMANUEL (SATB). 15th century processional melody. Four-part setting from the Common Service Book (ULCA), 1917, hymn 1, via the Open Hymnal Project.
+- 196 HYFRYDOL (SATB). Rowland Hugh Pritchard, 1830. Four-part setting from The English Hymnal, 1906, hymn 563, via the Open Hymnal Project. That book does not credit Pritchard for the harmony.
+- 197 THIRSTING (melody). Melody from Trente Quatre Pseaumes de David, Geneva, 1551, via the Open Hymnal Project. The four-part setting in a 1931 book was not used.
+- 199 SEE AMID THE WINTER'S SNOW (SATB). John Goss, 1870, also called Humility. Four-part setting from The Children's Hymnal, with Tunes, 1875, hymn 233, via the Open Hymnal Project.
+- 200 CAROL (SATB). Richard Storrs Willis. Four-part setting from Order of Worship for the Reformed Church in the United States, 1866, hymn 63, via the Open Hymnal Project.
+- 204 MUELLER (SATB). James R. Murray, 1887. Four-part setting from Hymnal for American Youth, 1919, hymn 84, via the Open Hymnal Project.
+- 208 ADESTE FIDELES (SATB). John Francis Wade, 1743. Four-part setting from A Hymnal (Episcopal), 1916, hymn 72, via the Open Hymnal Project.
+- 211 GOD REST YOU MERRY (SATB). English melody. Four-part setting from Carols Old and Carols New, 1918, carol 722, via the Open Hymnal Project.
+- 217 WARUM SOLLT' ICH MICH DENN GRAMEN (SATB). Johann Georg Ebeling, 1666. Four-part setting from The Chorale Book for England, 1863, hymn 31, via the Open Hymnal Project.
+- 218 REGENT SQUARE (SATB). Henry Smart, 1867. Four-part setting from Psalms and Hymns for Divine Worship, 1867, hymn 58, via the Open Hymnal Project.
+- 220 VON HIMMEL HOCH (SATB). Melody from Schumann's Geistliche Lieder, Leipzig, 1539. Four-part setting from the Common Service Book with Hymnal (ULCA), 1918, hymn 19, via the Open Hymnal Project.
+- 221 ES IST EIN' ROS' ENTSPRUNGEN (SATB). German melody, Koln, 1599. Michael Praetorius, 1609. Four-part setting from The English Hymnal, 1906, hymn 19, via the Open Hymnal Project.
+- 226 DIX (SATB). Conrad Kocher, 1838, abridged by William Henry Monk, 1861. Four-part setting from The English Hymnal, 1906, hymn 39, via the Open Hymnal Project.
+- 229 TEMPUS ADEST FLORIDUM (SATB). Melody from Piae Cantiones, 1582. Four-part setting from Carols Old and Carols New, 1916, carol 415, via the Open Hymnal Project. This is not the Ernest MacMillan arrangement.
+- 401 TALLIS' CANON (SATB). Thomas Tallis, about 1567. Four-part setting from A Hymnal (Episcopal), 1916, hymn 25, via the Open Hymnal Project.
+
+### Left out
+
+- 108 WAS GOTT TUT. WAS GOTT TUT is attributed to Severus Gastorius (1681) and is old, but no engraved score with a recorded pre-1931 source was found.
+- 195 ANTIOCH. ANTIOCH is Lowell Mason's 1836 arrangement, but the only ABC score found lists Lutheran Worship (1982) as its music source. Notes from a copyrighted hymnal were not used.
+- 198 TRURO. TRURO is an 18th century tune, but no engraved score with a recorded pre-1931 source was found. Another setting of this text uses a different tune and was not substituted.
+- 201 ST. LOUIS. No engraved score with a recorded pre-1931 public domain source was found.
+- 202 CHRISTMAS CAROL. CHRISTMAS CAROL by Walford Davies is printed in the Trinity Hymnal by permission of Oxford University Press. That setting was not copied.
+- 203 MENDELSSOHN. MENDELSSOHN is the Cummings arrangement of Mendelssohn, but the only ABC score found lists Lutheran Worship (1982) as its music source. Notes from a copyrighted hymnal were not used.
+- 205 CRADLE SONG. CRADLE SONG by William J. Kirkpatrick (1895) is old, but no engraved score with a recorded pre-1931 source was found. A file that cites a 1993 hymnal was not used.
+- 206 MORNING STAR. MORNING STAR by James P. Harding is old, but no engraved score with a recorded pre-1931 source was found.
+- 207 IN DULCI JUBILO. IN DULCI JUBILO is a 14th century melody, but no engraved score with a recorded pre-1931 source was found.
+- 209 YORKSHIRE. YORKSHIRE by John Wainwright is old, but no engraved score with a recorded pre-1931 source was found.
+- 210 STILLE NACHT. No engraved score with a recorded pre-1931 public domain source was found.
+- 212 LORD OF LOVE. LORD OF LOVE is by Norman L. Warren (born 1934). The tune is still under copyright.
+- 213 GREENSLEEVES. No engraved score with a recorded pre-1931 public domain source was found.
+- 214 GLORIA. GLORIA is a French carol melody, but the Trinity Hymnal uses an arrangement from 1937. A score that also cites Lutheran Worship (1982) was not used.
+- 215 JUNGST. JUNGST is an arrangement by Hugo Jungst. No engraved score with a recorded pre-1931 source was found.
+- 216 W ZLOBIE LEZY. W ZLOBIE LEZY is a traditional Polish melody. The arrangement named in the hymn data is from a carol book whose date was not confirmed, and no pre-1931 score was found.
+- 219 CANONBURY. CANONBURY is from Robert Schumann and is old, but no engraved score with a recorded pre-1931 source was found.
+- 222 WINCHESTER OLD. WINCHESTER OLD is from Thomas Este, 1592, but the hymn data notes a 1990 alteration of the tune. No pre-1931 score of the unaltered tune was retrieved, so the 1990 form was not copied.
+- 223 CHRISTMAS. CHRISTMAS is Handel arranged by Lowell Mason and is old, but no engraved score with a recorded pre-1931 source was found.
+- 224 GO TELL IT. GO TELL IT is a spiritual. No engraved score was found that did not come from a modern copyrighted hymnal.
+- 225 IRBY. IRBY by Henry J. Gauntlett (1849) is old, but the score that was found cites a 1994 hymnal as its source and was not used.
+- 227 SUSSEX CAROL. SUSSEX CAROL is a traditional melody. The Trinity Hymnal uses an arrangement associated with Stainer and Bell. That arrangement was not copied, and no separate pre-1931 folk setting was found.
+- 228 CHARTRES. CHARTRES is a 15th century melody arranged by Charles Wood. No engraved score with a recorded pre-1931 source was found.
+- 230 QUELLE EST CETTE ODEUR AGREABLE. QUELLE EST CETTE ODEUR AGREABLE is a French carol. No engraved score with a recorded pre-1931 source was found, so the hymnal arrangement was not copied.
+- 231 BETHLEHEM (Johnson). BETHLEHEM (Johnson) is by David N. Johnson. The tune is copyright 1968.
+- 232 O JESULEIN SÜSS. O JESULEIN SUSS is associated with Johann Sebastian Bach and the melody is old, but no engraved score with a recorded pre-1931 source was found.
+- 233 I DO BELIEVE. I DO BELIEVE has no composer in the hymn data, and no engraved score with a recorded source was found.
+- 559 MORWELLHAM. MORWELLHAM is by Charles Steggall, who died in 1905, but no engraved score with a recorded pre-1931 source was retrieved.

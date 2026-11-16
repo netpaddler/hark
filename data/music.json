@@ -1,0 +1,305 @@
+{
+  "scores": {
+    "162": {
+      "tune": "DIVINUM MYSTERIUM",
+      "file": "DIVINUM_MYSTERIUM.abc",
+      "meter": "none",
+      "key": "F",
+      "harmony": "SATB",
+      "source": "Plainsong melody. Four-part setting from The Church Hymnal, Revised and Enlarged (Episcopal), 1892, hymn 52, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Of_The_Fathers_Love_Begotten/Of_The_Fathers_Love_Begotten-Divinum_Mysterium-Corde_Natus.abc",
+      "harmony_credit": "The Church Hymnal, Revised and Enlarged (Episcopal), 1892",
+      "unsure": false
+    },
+    "193": {
+      "tune": "PICARDY",
+      "file": "PICARDY.abc",
+      "meter": "4/4",
+      "key": "F",
+      "harmony": "SATB",
+      "source": "French melody. Four-part setting from The English Hymnal, 1906, hymn 318, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Let_All_Mortal_Flesh_Keep_Silence/Let_All_Mortal_Flesh_Keep_Silence-Picardy.abc",
+      "harmony_credit": "The English Hymnal, 1906",
+      "unsure": false
+    },
+    "194": {
+      "tune": "VENI EMMANUEL",
+      "file": "VENI_EMMANUEL.abc",
+      "meter": "4/4",
+      "key": "G",
+      "harmony": "SATB",
+      "source": "15th century processional melody. Four-part setting from the Common Service Book (ULCA), 1917, hymn 1, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/O_Come_O_Come_Emmanuel/O_Come_O_Come_Emmanuel-Veni_Emmanuel.abc",
+      "harmony_credit": "Common Service Book (ULCA), 1917",
+      "unsure": false
+    },
+    "196": {
+      "tune": "HYFRYDOL",
+      "file": "HYFRYDOL.abc",
+      "meter": "3/4",
+      "key": "F",
+      "harmony": "SATB",
+      "source": "Rowland Hugh Pritchard, 1830. Four-part setting from The English Hymnal, 1906, hymn 563, via the Open Hymnal Project. That book does not credit Pritchard for the harmony.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Alleluia_Sing_To_Jesus/Alleluia_Sing_To_Jesus-Hyfrydol.abc",
+      "harmony_credit": "The English Hymnal, 1906",
+      "unsure": false
+    },
+    "199": {
+      "tune": "SEE AMID THE WINTER'S SNOW",
+      "file": "SEE_AMID_THE_WINTERS_SNOW.abc",
+      "meter": "4/4",
+      "key": "G",
+      "harmony": "SATB",
+      "source": "John Goss, 1870, also called Humility. Four-part setting from The Children's Hymnal, with Tunes, 1875, hymn 233, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/See_Amid_The_Winters_Snow/See_Amid_The_Winters_Snow-Humility.abc",
+      "harmony_credit": "The Children's Hymnal, with Tunes, 1875",
+      "unsure": false
+    },
+    "200": {
+      "tune": "CAROL",
+      "file": "CAROL.abc",
+      "meter": "6/8",
+      "key": "Bb",
+      "harmony": "SATB",
+      "source": "Richard Storrs Willis. Four-part setting from Order of Worship for the Reformed Church in the United States, 1866, hymn 63, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/It_Came_Upon_A_Midnight_Clear/It_Came_Upon_A_Midnight_Clear-Carol.abc",
+      "harmony_credit": "Order of Worship for the Reformed Church in the United States, 1866",
+      "unsure": false
+    },
+    "204": {
+      "tune": "MUELLER",
+      "file": "MUELLER.abc",
+      "meter": "3/4",
+      "key": "F",
+      "harmony": "SATB",
+      "source": "James R. Murray, 1887. Four-part setting from Hymnal for American Youth, 1919, hymn 84, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Away_In_A_Manger/Away_In_A_Manger-Mueller.abc",
+      "harmony_credit": "Hymnal for American Youth, 1919",
+      "unsure": false
+    },
+    "208": {
+      "tune": "ADESTE FIDELES",
+      "file": "ADESTE_FIDELES.abc",
+      "meter": "4/4",
+      "key": "G",
+      "harmony": "SATB",
+      "source": "John Francis Wade, 1743. Four-part setting from A Hymnal (Episcopal), 1916, hymn 72, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/O_Come_All_Ye_Faithful/O_Come_All_Ye_Faithful-Adeste_Fideles-Portugese_Hymn.abc",
+      "harmony_credit": "A Hymnal (Episcopal), 1916",
+      "unsure": false
+    },
+    "211": {
+      "tune": "GOD REST YOU MERRY",
+      "file": "GOD_REST_YOU_MERRY.abc",
+      "meter": "4/4",
+      "key": "G",
+      "harmony": "SATB",
+      "source": "English melody. Four-part setting from Carols Old and Carols New, 1918, carol 722, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/God_Rest_Ye_Merry_Gentlemen/God_Rest_Ye_Merry_Gentlemen-God_Rest_Ye_Merry_Gentlemen.abc",
+      "harmony_credit": "Carols Old and Carols New, 1918",
+      "unsure": false
+    },
+    "217": {
+      "tune": "WARUM SOLLT' ICH MICH DENN GRAMEN",
+      "file": "WARUM_SOLLT_ICH_MICH_DENN_GRAMEN.abc",
+      "meter": "4/4",
+      "key": "G",
+      "harmony": "SATB",
+      "source": "Johann Georg Ebeling, 1666. Four-part setting from The Chorale Book for England, 1863, hymn 31, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/All_My_Heart_This_Night_Rejoices/All_My_Heart_This_Night_Rejoices-Ebeling-Bonn-Warum_Sollt_Ich-All_My_Heart_This_Night.abc",
+      "harmony_credit": "The Chorale Book for England, 1863",
+      "unsure": false
+    },
+    "218": {
+      "tune": "REGENT SQUARE",
+      "file": "REGENT_SQUARE.abc",
+      "meter": "4/4",
+      "key": "C",
+      "harmony": "SATB",
+      "source": "Henry Smart, 1867. Four-part setting from Psalms and Hymns for Divine Worship, 1867, hymn 58, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Angels_From_The_Realms_Of_Glory/Angels_From_The_Realms_Of_Glory-Regent_Square.abc",
+      "harmony_credit": "Psalms and Hymns for Divine Worship, 1867",
+      "unsure": false
+    },
+    "220": {
+      "tune": "VON HIMMEL HOCH",
+      "file": "VON_HIMMEL_HOCH.abc",
+      "meter": "4/4",
+      "key": "D",
+      "harmony": "SATB",
+      "source": "Melody from Schumann's Geistliche Lieder, Leipzig, 1539. Four-part setting from the Common Service Book with Hymnal (ULCA), 1918, hymn 19, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/From_Heaven_Above/From_Heaven_Above-Vom_Himmel_Hoch.abc",
+      "harmony_credit": "Common Service Book with Hymnal (ULCA), 1918",
+      "unsure": false
+    },
+    "221": {
+      "tune": "ES IST EIN' ROS' ENTSPRUNGEN",
+      "file": "ES_IST_EIN_ROS_ENTSPRUNGEN.abc",
+      "meter": "none",
+      "key": "F",
+      "harmony": "SATB",
+      "source": "German melody, Koln, 1599. Michael Praetorius, 1609. Four-part setting from The English Hymnal, 1906, hymn 19, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Lo_How_A_Rose_Eer_Blooming/Lo_How_A_Rose_Eer_Blooming-Es_Ist_Ein_Ros_Entsprungen.abc",
+      "harmony_credit": "The English Hymnal, 1906",
+      "unsure": false
+    },
+    "226": {
+      "tune": "DIX",
+      "file": "DIX.abc",
+      "meter": "4/4",
+      "key": "G",
+      "harmony": "SATB",
+      "source": "Conrad Kocher, 1838, abridged by William Henry Monk, 1861. Four-part setting from The English Hymnal, 1906, hymn 39, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/As_With_Gladness_Men_Of_Old/As_With_Gladness_Men_Of_Old-Dix.abc",
+      "harmony_credit": "The English Hymnal, 1906",
+      "unsure": false
+    },
+    "229": {
+      "tune": "TEMPUS ADEST FLORIDUM",
+      "file": "TEMPUS_ADEST_FLORIDUM.abc",
+      "meter": "4/4",
+      "key": "A",
+      "harmony": "SATB",
+      "source": "Melody from Piae Cantiones, 1582. Four-part setting from Carols Old and Carols New, 1916, carol 415, via the Open Hymnal Project. This is not the Ernest MacMillan arrangement.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Gentle_Mary_Laid_Her_Child/Gentle_Mary_Laid_Her_Child-Tempus_Adest_Floridum.abc",
+      "harmony_credit": "Carols Old and Carols New, 1916",
+      "unsure": false
+    },
+    "197": {
+      "tune": "THIRSTING",
+      "file": "THIRSTING.abc",
+      "meter": "6/4",
+      "key": "F",
+      "harmony": "melody",
+      "source": "Melody from Trente Quatre Pseaumes de David, Geneva, 1551, via the Open Hymnal Project. The four-part setting in a 1931 book was not used.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/Comfort_Comfort_Ye_My_People/Comfort_Comfort_Ye_My_People-Freu_dich_sehr_o_meine_Seele.abc",
+      "harmony_credit": "melody only, Genevan Psalter, 1551",
+      "unsure": true
+    },
+    "401": {
+      "tune": "TALLIS' CANON",
+      "file": "TALLIS_CANON.abc",
+      "meter": "4/4",
+      "key": "G",
+      "harmony": "SATB",
+      "source": "Thomas Tallis, about 1567. Four-part setting from A Hymnal (Episcopal), 1916, hymn 25, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/All_Praise_To_Thee_My_God_This_Night/All_Praise_To_Thee_My_God_This_Night-Tallis_Canon.abc",
+      "harmony_credit": "A Hymnal (Episcopal), 1916",
+      "unsure": false
+    }
+  },
+  "omitted": {
+    "198": {
+      "tune": "TRURO",
+      "reason": "TRURO is an 18th century tune, but no engraved score with a recorded pre-1931 source was found. Another setting of this text uses a different tune and was not substituted."
+    },
+    "202": {
+      "tune": "CHRISTMAS CAROL",
+      "reason": "CHRISTMAS CAROL by Walford Davies is printed in the Trinity Hymnal by permission of Oxford University Press. That setting was not copied."
+    },
+    "195": {
+      "tune": "ANTIOCH",
+      "reason": "ANTIOCH is Lowell Mason's 1836 arrangement, but the only ABC score found lists Lutheran Worship (1982) as its music source. Notes from a copyrighted hymnal were not used."
+    },
+    "203": {
+      "tune": "MENDELSSOHN",
+      "reason": "MENDELSSOHN is the Cummings arrangement of Mendelssohn, but the only ABC score found lists Lutheran Worship (1982) as its music source. Notes from a copyrighted hymnal were not used."
+    },
+    "205": {
+      "tune": "CRADLE SONG",
+      "reason": "CRADLE SONG by William J. Kirkpatrick (1895) is old, but no engraved score with a recorded pre-1931 source was found. A file that cites a 1993 hymnal was not used."
+    },
+    "206": {
+      "tune": "MORNING STAR",
+      "reason": "MORNING STAR by James P. Harding is old, but no engraved score with a recorded pre-1931 source was found."
+    },
+    "207": {
+      "tune": "IN DULCI JUBILO",
+      "reason": "IN DULCI JUBILO is a 14th century melody, but no engraved score with a recorded pre-1931 source was found."
+    },
+    "209": {
+      "tune": "YORKSHIRE",
+      "reason": "YORKSHIRE by John Wainwright is old, but no engraved score with a recorded pre-1931 source was found."
+    },
+    "212": {
+      "tune": "LORD OF LOVE",
+      "reason": "LORD OF LOVE is by Norman L. Warren (born 1934). The tune is still under copyright."
+    },
+    "214": {
+      "tune": "GLORIA",
+      "reason": "GLORIA is a French carol melody, but the Trinity Hymnal uses an arrangement from 1937. A score that also cites Lutheran Worship (1982) was not used."
+    },
+    "215": {
+      "tune": "JUNGST",
+      "reason": "JUNGST is an arrangement by Hugo Jungst. No engraved score with a recorded pre-1931 source was found."
+    },
+    "216": {
+      "tune": "W ZLOBIE LEZY",
+      "reason": "W ZLOBIE LEZY is a traditional Polish melody. The arrangement named in the hymn data is from a carol book whose date was not confirmed, and no pre-1931 score was found."
+    },
+    "219": {
+      "tune": "CANONBURY",
+      "reason": "CANONBURY is from Robert Schumann and is old, but no engraved score with a recorded pre-1931 source was found."
+    },
+    "222": {
+      "tune": "WINCHESTER OLD",
+      "reason": "WINCHESTER OLD is from Thomas Este, 1592, but the hymn data notes a 1990 alteration of the tune. No pre-1931 score of the unaltered tune was retrieved, so the 1990 form was not copied."
+    },
+    "223": {
+      "tune": "CHRISTMAS",
+      "reason": "CHRISTMAS is Handel arranged by Lowell Mason and is old, but no engraved score with a recorded pre-1931 source was found."
+    },
+    "224": {
+      "tune": "GO TELL IT",
+      "reason": "GO TELL IT is a spiritual. No engraved score was found that did not come from a modern copyrighted hymnal."
+    },
+    "225": {
+      "tune": "IRBY",
+      "reason": "IRBY by Henry J. Gauntlett (1849) is old, but the score that was found cites a 1994 hymnal as its source and was not used."
+    },
+    "227": {
+      "tune": "SUSSEX CAROL",
+      "reason": "SUSSEX CAROL is a traditional melody. The Trinity Hymnal uses an arrangement associated with Stainer and Bell. That arrangement was not copied, and no separate pre-1931 folk setting was found."
+    },
+    "228": {
+      "tune": "CHARTRES",
+      "reason": "CHARTRES is a 15th century melody arranged by Charles Wood. No engraved score with a recorded pre-1931 source was found."
+    },
+    "230": {
+      "tune": "QUELLE EST CETTE ODEUR AGREABLE",
+      "reason": "QUELLE EST CETTE ODEUR AGREABLE is a French carol. No engraved score with a recorded pre-1931 source was found, so the hymnal arrangement was not copied."
+    },
+    "231": {
+      "tune": "BETHLEHEM (Johnson)",
+      "reason": "BETHLEHEM (Johnson) is by David N. Johnson. The tune is copyright 1968."
+    },
+    "232": {
+      "tune": "O JESULEIN S\u00dcSS",
+      "reason": "O JESULEIN SUSS is associated with Johann Sebastian Bach and the melody is old, but no engraved score with a recorded pre-1931 source was found."
+    },
+    "233": {
+      "tune": "I DO BELIEVE",
+      "reason": "I DO BELIEVE has no composer in the hymn data, and no engraved score with a recorded source was found."
+    },
+    "201": {
+      "tune": "ST. LOUIS",
+      "reason": "No engraved score with a recorded pre-1931 public domain source was found."
+    },
+    "210": {
+      "tune": "STILLE NACHT",
+      "reason": "No engraved score with a recorded pre-1931 public domain source was found."
+    },
+    "213": {
+      "tune": "GREENSLEEVES",
+      "reason": "No engraved score with a recorded pre-1931 public domain source was found."
+    },
+    "108": {
+      "tune": "WAS GOTT TUT",
+      "reason": "WAS GOTT TUT is attributed to Severus Gastorius (1681) and is old, but no engraved score with a recorded pre-1931 source was found."
+    },
+    "559": {
+      "tune": "MORWELLHAM",
+      "reason": "MORWELLHAM is by Charles Steggall, who died in 1905, but no engraved score with a recorded pre-1931 source was retrieved."
+    }
+  }
+}
