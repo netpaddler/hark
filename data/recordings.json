@@ -1,4 +1,42 @@
 {
+  "108": [
+    {
+      "label": "Sunday Evening Worship, Dec 14, 2025, congregation",
+      "video_title": "Sunday Evening Worship - December 14, 2025",
+      "video_date": "2025-12-14",
+      "url": "https://www.youtube.com/watch?v=wKzOyIFC2Es&t=3304s",
+      "start_seconds": 3304,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Auto captions spell the title as 'What air my God ordains is right.'"
+    },
+    {
+      "label": "Sunday Morning Worship, May 25, 2025, congregation",
+      "video_title": "Sunday Morning Worship - May 25, 2025",
+      "video_date": "2025-05-25",
+      "url": "https://www.youtube.com/watch?v=sZcUYLSvt0E&t=4279s",
+      "start_seconds": 4279,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+    },
+    {
+      "label": "Sunday Evening Worship, Jul 14, 2024, congregation",
+      "video_title": "Sunday Evening Worship - July 14, 2024",
+      "video_date": "2024-07-14",
+      "url": "https://www.youtube.com/watch?v=xNCn_0_Fdyc&t=3773s",
+      "start_seconds": 3773,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+    },
+    {
+      "label": "Sunday Evening Worship, Apr 16, 2023, unspecified",
+      "video_title": "Sunday Evening Worship - April 16, 2023",
+      "video_date": "2023-04-16",
+      "url": "https://www.youtube.com/watch?v=cnO9MDO9YrA&t=950s",
+      "start_seconds": 950,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. The announcement does not clearly ask the congregation to stand. Auto captions write 'him 108' for 'hymn 108.'"
+    }
+  ],
   "162": [
     {
       "label": "Sunday Evening Worship, Apr 26, 2026, congregation",
@@ -1185,6 +1223,46 @@
       "start_seconds": 2861,
       "confidence": "medium",
       "notes": "Found by sung lyrics in the auto captions (no spoken announcement caught); start estimated from stanza 1 line 2."
+    }
+  ],
+  "401": [
+    {
+      "label": "Sunday Evening Worship, Jan 4, 2026, congregation",
+      "video_title": "Sunday Evening Worship - January 4, 2026",
+      "video_date": "2026-01-04",
+      "url": "https://www.youtube.com/watch?v=in68OvOYOpI&t=4109s",
+      "start_seconds": 4109,
+      "confidence": "medium",
+      "notes": "The hymn is announced at 4069s as 'all praise to thee, my God, this night.' The start is placed later, at 4109s, just before the congregation stands, because brief singing instructions come between the announcement and the hymn. Sung lines, including the doxology stanza, follow."
+    }
+  ],
+  "559": [
+    {
+      "label": "Sunday Evening Worship, Jul 19, 2026, congregation",
+      "video_title": "Sunday Evening Worship - July 19, 2026",
+      "video_date": "2026-07-19",
+      "url": "https://www.youtube.com/watch?v=_2SvYytmHnA&t=4253s",
+      "start_seconds": 4253,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+    },
+    {
+      "label": "Sunday Evening Worship, Feb 9, 2025, congregation",
+      "video_title": "Sunday Evening Worship - February 9, 2025",
+      "video_date": "2025-02-09",
+      "url": "https://www.youtube.com/watch?v=xYFFVR5qDnQ&t=2994s",
+      "start_seconds": 2994,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of hymn 559; music follows until the benediction. The auto captions do not clearly catch the title or sung lines. Check by ear."
+    },
+    {
+      "label": "Sunday Morning Worship, Jan 15, 2023, congregation",
+      "video_title": "Sunday Morning Worship - January 15, 2023",
+      "video_date": "2023-01-15",
+      "url": "https://www.youtube.com/watch?v=IUjkqAlB7R0&t=2056s",
+      "start_seconds": 2056,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Auto captions say 'him 539 father I know that all my life.' 539 in the Trinity Hymnal is Jerusalem the Golden, so 539 is treated as a mishearing of 559."
     }
   ]
 }

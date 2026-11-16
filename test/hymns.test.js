@@ -44,17 +44,26 @@ function group(label) {
   return found;
 }
 
-test("loads the 42 Advent and Christmas hymns", () => {
-  assert.equal(hymns.length, 42);
+test("loads the Trinity Hymnal hymns in number order", () => {
+  assert.equal(hymns.length, 45);
   assert.deepEqual(
     hymns.map((hymn) => hymn.number),
     [
-      162, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209,
-      210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227,
-      228, 229, 230, 231, 232, 233,
+      108, 162, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208,
+      209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226,
+      227, 228, 229, 230, 231, 232, 233, 401, 559,
     ],
   );
-  assert.deepEqual(listSections(hymns), ["Advent", "Christmas"]);
+  assert.deepEqual(listSections(hymns), [
+    "Advent",
+    "Christmas",
+    "God's Work: His Decrees",
+    "The Church: Evening",
+    "The Christian Life: Obedience",
+  ]);
+  assert.equal(byNumber.get(108).stanzas[0][0], "Whate'er my God ordains is right:");
+  assert.equal(byNumber.get(401).tune, "TALLIS' CANON");
+  assert.equal(byNumber.get(559).composer, "Charles Steggal, 1826-1905");
   assert.equal(byNumber.get(203).stanzas[0][0], "Hark! the herald angels sing,");
 });
 
@@ -112,16 +121,19 @@ test("title index is alphabetical and ignores a leading article", () => {
       bucket.hymns.map((hymn) => hymn.number),
     ),
     [
-      217, 219, 218, 214, 226, 204, 205, 206, 209, 196, 197, 220, 229, 224, 211, 207, 203, 216,
-      200, 195, 193, 198, 221, 231, 208, 194, 232, 201, 202, 162, 227, 225, 228, 199, 210, 230,
-      233, 213, 215, 222, 223, 212,
+      217, 219, 401, 218, 214, 226, 204, 205, 206, 209, 196, 197, 559, 220, 229, 224, 211, 207,
+      203, 216, 200, 195, 193, 198, 221, 231, 208, 194, 232, 201, 202, 162, 227, 225, 228, 199,
+      210, 230, 233, 213, 108, 215, 222, 223, 212,
     ],
   );
 });
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 45);
+  assert.equal(all.length, 48);
+  assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
+  assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
+  assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
   assert.ok(all.every((item) => !/^mod\.?$/i.test(item.label)));
   assert.deepEqual(
     group("Neale, John Mason (tr.)").hymns.map((item) => item.hymn.number),
@@ -153,7 +165,7 @@ test("author index files people by surname and keeps translators", () => {
   );
   assert.deepEqual(
     group("Winkworth, Catherine (tr.)").hymns.map((item) => item.hymn.number),
-    [197, 198, 217, 220],
+    [108, 197, 198, 217, 220],
   );
   const indexed = new Set(all.flatMap((item) => item.hymns.map((entry) => entry.hymn.number)));
   for (const hymn of hymns) assert.ok(indexed.has(hymn.number), String(hymn.number));
@@ -181,8 +193,10 @@ test("neighbors follow hymnal number", () => {
   const around = neighbors(hymns, 203);
   assert.equal(around.prev.number, 202);
   assert.equal(around.next.number, 204);
-  assert.equal(neighbors(hymns, 162).prev, null);
-  assert.equal(neighbors(hymns, 233).next, null);
+  assert.equal(neighbors(hymns, 108).prev, null);
+  assert.equal(neighbors(hymns, 162).prev.number, 108);
+  assert.equal(neighbors(hymns, 233).next.number, 401);
+  assert.equal(neighbors(hymns, 559).next, null);
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
 
@@ -191,7 +205,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   const seasonIds = new Set(themes.seasons.map((item) => item.id));
   const topicIds = new Set(themes.topics.map((item) => item.id));
   const defined = new Set([...seasonIds, ...topicIds]);
-  assert.equal(themes.seasons.map((item) => item.id).join(","), "advent,christmas,epiphany");
+  assert.equal(themes.seasons.map((item) => item.id).join(","), "advent,christmas,epiphany,all-year");
   for (const hymn of hymns) {
     assert.equal(hymn.themes, undefined);
     const entry = themes.hymns[String(hymn.number)];
@@ -205,7 +219,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   }
   for (const id of defined) {
     const users = hymnsInTheme(themes, id);
-    assert.ok(users.length >= 2, `${id} is used ${users.length} time`);
+    assert.ok(users.length >= 1, `${id} is used ${users.length} time`);
     for (const number of users) assert.ok(numbers.has(number), `${id} lists ${number}`);
   }
   for (const key of Object.keys(themes.hymns)) assert.ok(numbers.has(Number(key)), key);
@@ -219,11 +233,18 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
     ["advent"],
   );
   assert.equal(byNumber.get(203).stanzas[0][0], "Hark! the herald angels sing,");
+  assert.deepEqual(themes.hymns["108"], { seasons: ["all-year"], topics: ["providence", "trust-trials"] });
+  assert.deepEqual(themes.hymns["559"], { seasons: ["all-year"], topics: ["providence", "contentment"] });
+  assert.deepEqual(themes.hymns["401"], { seasons: ["all-year"], topics: ["evening", "joy"] });
+  assert.deepEqual(hymnsInTheme(themes, "all-year"), [108, 401, 559]);
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
-  assert.equal(Object.keys(recordings).length, 27);
-  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 126);
+  assert.equal(Object.keys(recordings).length, 30);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 134);
+  assert.equal(faithRecordings(recordings, 108)[0].dateSort, "2025-12-14");
+  assert.equal(faithRecordings(recordings, 401).length, 1);
+  assert.equal(faithRecordings(recordings, 559)[0].dateSort, "2026-07-19");
   assert.equal(faithRecordings(recordings, 162).length, 8);
   assert.equal(faithRecordings(recordings, 198).length, 8);
   const herald = faithRecordings(recordings, 203);

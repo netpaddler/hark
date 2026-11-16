@@ -1,5 +1,65 @@
 [
   {
+    "number": 108,
+    "title": "Whate'er My God Ordains Is Right",
+    "section": "God's Work: His Decrees",
+    "author": "Samuel Rodigast, 1649-1708",
+    "translator": "Catherine Winkworth",
+    "composer": "attrib. Severus Gastorius",
+    "tune": "WAS GOTT TUT",
+    "year_text": "German text 1675; tr. Winkworth 1863; Alt. 1961",
+    "public_domain": true,
+    "copyright_note": null,
+    "source_url": "https://hymnary.org/hymn/TH1990/108",
+    "stanzas": [
+      [
+        "Whate'er my God ordains is right:",
+        "his holy will abideth;",
+        "I will be still whate'er he doth,",
+        "and follow where he guideth.",
+        "He is my God: though dark my road,",
+        "he holds me that I shall not fall:",
+        "wherefore to him I leave it all."
+      ],
+      [
+        "Whate'er my God ordains is right:",
+        "he never will deceive me;",
+        "he leads me by the proper path;",
+        "I know he will not leave me.",
+        "I take, content, what he hath sent;",
+        "his hand can turn my griefs away,",
+        "and patiently I wait his day."
+      ],
+      [
+        "Whate'er my God ordains is right:",
+        "though now this cup, in drinking,",
+        "may bitter seem to my faint heart,",
+        "I take it, all unshrinking.",
+        "My God is true; each morn anew",
+        "sweet comfort yet shall fill my heart,",
+        "and pain and sorrow shall depart."
+      ],
+      [
+        "Whate'er my God ordains is right:",
+        "here shall my stand be taken;",
+        "though sorrow, need, or death be mine,",
+        "yet am I not forsaken.",
+        "My Father's care is round me there;",
+        "he holds me that I shall not fall:",
+        "and so to him I leave it all."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "refrain": null,
+    "refrain_after_each_stanza": false,
+    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page (https://web.archive.org/web/20241115041530/https://hymnary.org/hymn/TH1990/108); live hymnary.org blocked automated fetches. Section 'God's Work: His Decrees' follows the hymnary topic of that name; not checked against the printed table of contents. Translator credit on the instance page is Catherine Winkworth (1863; Alt. 1961). The 1961 alteration is treated as public domain, as with other 1961 alterations in hymns.json, but the copyright status of the alteration was not independently confirmed. All four stanzas are shown on the instance page with no copyright notice. The instance page credits the tune as 'Attributed to: Severus Gastorius' and does not name a year or a harmonizer (neither J. S. Bach nor Johann Pachelbel). The hymnary.org tune authority page for WAS GOTT TUT credits Severus Gastorius (1681) and notes Pachelbel as an alternate attribution; that year and alternate credit are not on the TH 1990 instance page. The hymnal meter is 8.7.8.7.4.5.8.8.; some short middle lines are printed together (for example, 'He is my God: though dark my road,')."
+  },
+  {
     "number": 162,
     "title": "Of the Father's Love Begotten",
     "section": "Christmas",
@@ -2257,5 +2317,123 @@
     "refrain": null,
     "refrain_after_each_stanza": false,
     "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Scottish Paraphrase (Isaiah 9:6-7). Stanza 4 spells 'Counsellor' while stanza 2 spells 'Counselor', as in the source. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
+  },
+  {
+    "number": 401,
+    "title": "All Praise to Thee, My God, This Night",
+    "section": "The Church: Evening",
+    "author": "Thomas Ken",
+    "translator": null,
+    "composer": "Thomas Tallis (ca. 1567)",
+    "tune": "TALLIS' CANON",
+    "year_text": "1695, 1709",
+    "public_domain": true,
+    "copyright_note": null,
+    "source_url": "https://hymnary.org/hymn/TH1990/401",
+    "stanzas": [
+      [
+        "All praise to thee, my God, this night,",
+        "for all the blessings of the light;",
+        "keep me, O keep me, King of kings,",
+        "beneath thine own almighty wings."
+      ],
+      [
+        "Forgive me, Lord, for thy dear Son,",
+        "the ills that I this day have done;",
+        "that with the world, myself, and thee,",
+        "I, ere I sleep, at peace may be."
+      ],
+      [
+        "O may my soul on thee repose,",
+        "and with sweet sleep mine eyelids close;",
+        "sleep that may me more vig'rous make",
+        "to serve my God when I awake."
+      ],
+      [
+        "When in the night I sleepless lie,",
+        "my soul with heav'nly thoughts supply;",
+        "let no ill dreams disturb my rest,",
+        "no pow'rs of darkness me molest."
+      ],
+      [
+        "O when shall I in endless day",
+        "forever chase dark sleep away,",
+        "and hymns with the supernal choir",
+        "incessant sing, and never tire!"
+      ],
+      [
+        "Praise God from whom all blessings flow;",
+        "praise him, all creatures here below;",
+        "praise him above, ye heav'nly host:",
+        "praise Father, Son, and Holy Ghost."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "refrain": null,
+    "refrain_after_each_stanza": false,
+    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page (https://web.archive.org/web/20241115032343/https://hymnary.org/hymn/TH1990/401); live hymnary.org blocked automated fetches. Section 'The Church: Evening' follows the hymnary topic of that name; the page also lists the topic Doxologies. Not checked against the printed table of contents. The instance page dates the text 1695, 1709 and the tune ca. 1567. Trinity Hymnal prints six stanzas. Stanza 6 is the Doxology, the same words used at nos. 731-733, included here as a numbered stanza of this hymn, not as a refrain."
+  },
+  {
+    "number": 559,
+    "title": "Father, I Know That All My Life",
+    "section": "The Christian Life: Obedience",
+    "author": "Anna Laetitia Waring",
+    "translator": null,
+    "composer": "Charles Steggal, 1826-1905",
+    "tune": "MORWELLHAM",
+    "year_text": "1850",
+    "public_domain": true,
+    "copyright_note": null,
+    "source_url": "https://hymnary.org/hymn/TH1990/559",
+    "stanzas": [
+      [
+        "Father, I know that all my life",
+        "is portioned out for me;",
+        "the changes that are sure to come,",
+        "I do not fear to see:",
+        "I ask thee for a present mind,",
+        "intent on pleasing thee."
+      ],
+      [
+        "I would not have the restless will",
+        "that hurries to and fro,",
+        "seeking for some great thing to do,",
+        "or secret thing to know;",
+        "I would be treated as a child,",
+        "and guided where I go."
+      ],
+      [
+        "I ask thee for the daily strength,",
+        "to none that ask denied,",
+        "a mind to blend with outward life,",
+        "while keeping at thy side,",
+        "content to fill a little space,",
+        "if thou be glorified."
+      ],
+      [
+        "In service which thy will appoints",
+        "there are no bonds for me;",
+        "my secret heart is taught the truth",
+        "that makes thy children free;",
+        "a life of self-renouncing love",
+        "is one of liberty."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "refrain": null,
+    "refrain_after_each_stanza": false,
+    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page (https://web.archive.org/web/20241203171555/https://hymnary.org/hymn/TH1990/559); live hymnary.org blocked automated fetches. Section 'The Christian Life: Obedience' follows the hymnary topic of that name; not checked against the printed table of contents. The instance page dates the text 1850 and shows four stanzas with no copyright notice; all four are included. The composer is printed as 'Charles Steggal, 1826-1905' (one l) on the instance page. Hymnary's person page slug is Steggall, the usual spelling of Charles Steggall (1826-1905)."
   }
 ]

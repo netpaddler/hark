@@ -2,7 +2,8 @@
   "seasons": [
     { "id": "advent", "title": "Advent" },
     { "id": "christmas", "title": "Christmas" },
-    { "id": "epiphany", "title": "Epiphany" }
+    { "id": "epiphany", "title": "Epiphany" },
+    { "id": "all-year", "title": "All Year" }
   ],
   "topics": [
     { "id": "incarnation", "title": "The Incarnation" },
@@ -16,7 +17,11 @@
     { "id": "angels", "title": "Angels and Shepherds" },
     { "id": "magi", "title": "The Magi and the Nations" },
     { "id": "proclaim", "title": "Proclaiming the Gospel" },
-    { "id": "grace", "title": "Grace and Redemption" }
+    { "id": "grace", "title": "Grace and Redemption" },
+    { "id": "providence", "title": "Providence" },
+    { "id": "trust-trials", "title": "Trusting God in Trials" },
+    { "id": "contentment", "title": "Contentment" },
+    { "id": "evening", "title": "Evening" }
   ],
   "hymns": {
     "162": {
@@ -186,6 +191,18 @@
     "233": {
       "seasons": ["christmas"],
       "topics": ["deity", "king", "longing", "peace", "magi"]
+    },
+    "108": {
+      "seasons": ["all-year"],
+      "topics": ["providence", "trust-trials"]
+    },
+    "401": {
+      "seasons": ["all-year"],
+      "topics": ["evening", "joy"]
+    },
+    "559": {
+      "seasons": ["all-year"],
+      "topics": ["providence", "contentment"]
     }
   }
 }
