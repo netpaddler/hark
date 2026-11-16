@@ -16,8 +16,9 @@ import {
   hymnsInTheme,
   tuneCaution,
   listSermons,
+  formatRecordingDate,
 } from "./hymn-model.js";
-import { giscusConfig, giscusReady, giscusTheme, hymnTerm } from "./config/giscus.js";
+import { requestConfig, requestsOpen } from "./config/requests.js";
 
 const homeBar = document.getElementById("home-bar");
 const hymnBar = document.getElementById("hymn-bar");
@@ -40,10 +41,10 @@ const TAB_IDS = [
   ["tab-author", "author"],
   ["tab-themes", "themes"],
   ["tab-sins", "sins"],
-  ["tab-comments", "comments"],
+  ["tab-requests", "requests"],
 ];
 
-const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0, comments: 0 };
+const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0, requests: 0 };
 let hymns = [];
 let recordingCatalog = {};
 let themeCatalog = { seasons: [], topics: [], hymns: {} };
@@ -123,13 +124,6 @@ function syncTheme() {
   const color = dark ? "#141210" : "#f3eee4";
   const meta = document.getElementById("theme-color");
   if (meta) meta.setAttribute("content", color);
-  const frame = document.querySelector("iframe.giscus-frame");
-  if (frame && frame.contentWindow) {
-    frame.contentWindow.postMessage(
-      { giscus: { setConfig: { theme: giscusTheme(dark ? "dark" : "light") } } },
-      "https://giscus.app",
-    );
-  }
 }
 
 function toggleTheme() {
@@ -151,7 +145,11 @@ function route() {
   if (path === "/author") return { view: "index", index: "author" };
   if (path === "/themes") return { view: "themes" };
   if (path === "/sins") return { view: "sins" };
-  if (path === "/comments") return { view: "comments" };
+  if (path === "/comments") {
+    location.replace("#/requests");
+    return { view: "requests" };
+  }
+  if (path === "/requests") return { view: "requests" };
   if (path === "/install") return { view: "install" };
   const themeMatch = path.match(/^\/theme\/([a-z0-9-]+)\/?$/);
   if (themeMatch) return { view: "theme", id: themeMatch[1] };
@@ -165,7 +163,7 @@ function indexHref(index) {
   if (index === "author") return "#/author";
   if (index === "themes") return "#/themes";
   if (index === "sins") return "#/sins";
-  if (index === "comments") return "#/comments";
+  if (index === "comments" || index === "requests") return "#/requests";
   if (typeof index === "string" && index.startsWith("theme:")) return `#/theme/${index.slice(6)}`;
   return "#/";
 }
@@ -177,13 +175,14 @@ function rememberScroll() {
 function storedIndex() {
   try {
     const stored = sessionStorage.getItem("hark-index");
+    if (stored === "comments") return "requests";
     if (
       stored === "title" ||
       stored === "author" ||
       stored === "number" ||
       stored === "themes" ||
       stored === "sins" ||
-      stored === "comments"
+      stored === "requests"
     ) {
       return stored;
     }
@@ -1029,11 +1028,11 @@ function renderHymn(number) {
   back.href = indexHref(listIndex);
   const fromThemes = listIndex === "themes" || (typeof listIndex === "string" && listIndex.startsWith("theme:"));
   const fromSins = listIndex === "sins";
-  const fromComments = listIndex === "comments";
-  const backLabel = fromComments ? "Comments" : fromSins ? "Sins" : fromThemes ? "Themes" : "Hymns";
+  const fromRequests = listIndex === "requests";
+  const backLabel = fromRequests ? "Comments/Requests" : fromSins ? "Sins" : fromThemes ? "Themes" : "Hymns";
   back.replaceChildren(icon("back"), document.createTextNode(backLabel));
-  const listName = fromComments
-    ? "comments"
+  const listName = fromRequests
+    ? "comments and requests"
     : fromSins
       ? "Sins page"
       : fromThemes
@@ -1132,7 +1131,6 @@ function renderHymn(number) {
     if (next) nav.append(next);
     if (previous || next) article.append(nav);
     article.append(el("p", { class: "colophon" }, "Trinity Hymnal, 1990"));
-    article.append(commentsSection(hymnTerm(hymn.number), giscusConfig.hymnComments));
     main.replaceChildren(article);
   }
 
@@ -1141,65 +1139,151 @@ function renderHymn(number) {
   if (heading) heading.focus({ preventScroll: true });
 }
 
-function mountGiscus(host, category, term) {
-  host.replaceChildren();
-  if (!giscusConfig.repoId || !giscusReady(category.categoryId)) {
-    host.append(el("p", { class: "coming" }, "Comments are coming soon."));
-    return;
+function requestField(id, label, control) {
+  const wrap = el("label", { class: "request-field", for: id });
+  wrap.append(el("span", {}, label), control);
+  return wrap;
+}
+
+function requestForm() {
+  const form = el("form", { class: "request-form" });
+  const name = el("input", { id: "request-name", name: "name", maxlength: "80", autocomplete: "name" });
+  const hymn = el("input", { id: "request-hymn", name: "hymn", maxlength: "120" });
+  const message = el("textarea", { id: "request-message", name: "message", required: true, maxlength: "2000", rows: "5" });
+  const honey = el("input", {
+    id: "request-company",
+    name: "company",
+    tabindex: "-1",
+    autocomplete: "off",
+  });
+  honey.setAttribute("aria-hidden", "true");
+  const honeyLabel = el("label", { class: "request-honey" }, ["Company", honey]);
+  const status = el("p", { class: "request-status", role: "status" });
+  const submit = el("button", { type: "submit" }, "Send");
+  form.append(
+    requestField("request-name", "Name (optional)", name),
+    requestField("request-hymn", "Hymn number or title (optional)", hymn),
+    requestField("request-message", "Comment or hymn request", message),
+    honeyLabel,
+    submit,
+    status,
+  );
+  if (requestConfig.turnstileSiteKey) {
+    const box = el("div", { class: "request-turnstile" });
+    form.insertBefore(box, submit);
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.onload = () => {
+      if (window.turnstile) {
+        form.dataset.turnstileId = window.turnstile.render(box, { sitekey: requestConfig.turnstileSiteKey });
+      }
+    };
+    document.head.append(script);
   }
-  const script = document.createElement("script");
-  script.src = "https://giscus.app/client.js";
-  script.async = true;
-  script.crossOrigin = "anonymous";
-  script.setAttribute("data-repo", giscusConfig.repo);
-  script.setAttribute("data-repo-id", giscusConfig.repoId);
-  script.setAttribute("data-category", category.category);
-  script.setAttribute("data-category-id", category.categoryId);
-  script.setAttribute("data-mapping", "specific");
-  script.setAttribute("data-term", term);
-  script.setAttribute("data-strict", "0");
-  script.setAttribute("data-reactions-enabled", "1");
-  script.setAttribute("data-emit-metadata", "0");
-  script.setAttribute("data-input-position", "bottom");
-  script.setAttribute("data-theme", giscusTheme(appliedTheme()));
-  script.setAttribute("data-lang", "en");
-  host.append(script);
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    status.textContent = "";
+    if (!requestsOpen()) {
+      status.textContent = "Comments/Requests open soon";
+      return;
+    }
+    const text = message.value.trim();
+    if (!text) {
+      status.textContent = "Write a comment or a hymn request.";
+      return;
+    }
+    submit.disabled = true;
+    try {
+      const response = await fetch(requestConfig.endpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: name.value.trim(),
+          hymn: hymn.value.trim(),
+          message: text,
+          company: honey.value,
+          turnstile: form.dataset.turnstileId && window.turnstile
+            ? window.turnstile.getResponse(form.dataset.turnstileId)
+            : "",
+        }),
+      });
+      if (!response.ok) throw new Error(String(response.status));
+      form.reset();
+      status.textContent = "Sent. It will show in the list below.";
+      loadSubmissions(form.parentElement.querySelector(".request-list"));
+    } catch {
+      status.textContent = "The message did not send. Try again.";
+    } finally {
+      submit.disabled = false;
+    }
+  });
+  return form;
 }
 
-function commentsSection(term, category) {
-  const section = el("section", { class: "hymn-comments" });
-  section.append(el("h2", {}, "Comments"));
-  const host = el("div", { class: "giscus-host" });
-  section.append(host);
-  mountGiscus(host, category, term);
-  return section;
+function submissionCard(issue, comments) {
+  const card = el("article", { class: "request-card" });
+  card.append(el("h3", {}, issue.title));
+  const when = formatRecordingDate(String(issue.created_at || "").slice(0, 10));
+  if (when) card.append(el("p", { class: "request-meta" }, when));
+  card.append(el("p", { class: "request-body" }, issue.body || ""));
+  if (comments.length) {
+    const replies = el("div", { class: "request-replies" });
+    replies.append(el("h4", {}, "Replies"));
+    for (const comment of comments) replies.append(el("p", {}, comment.body || ""));
+    card.append(replies);
+  }
+  return card;
 }
 
-function renderComments() {
+async function loadSubmissions(host) {
+  if (!host) return;
+  host.replaceChildren(el("p", { class: "sin-note" }, "Loading past submissions..."));
+  try {
+    const url = `https://api.github.com/repos/${requestConfig.repo}/issues?labels=${encodeURIComponent(requestConfig.label)}&state=all&per_page=20`;
+    const response = await fetch(url, { headers: { accept: "application/vnd.github+json" } });
+    if (!response.ok) throw new Error(String(response.status));
+    const issues = (await response.json()).filter((item) => !item.pull_request);
+    if (!issues.length) {
+      host.replaceChildren(el("p", { class: "sin-note" }, "No comments yet."));
+      return;
+    }
+    const comments = await Promise.all(
+      issues.map(async (issue) => {
+        if (!issue.comments) return [];
+        const reply = await fetch(issue.comments_url, { headers: { accept: "application/vnd.github+json" } });
+        if (!reply.ok) return [];
+        return reply.json();
+      }),
+    );
+    host.replaceChildren(...issues.map((issue, index) => submissionCard(issue, comments[index] || [])));
+  } catch {
+    host.replaceChildren(el("p", { class: "sin-note" }, "The list did not load."));
+  }
+}
+
+function renderRequests() {
   homeBar.hidden = false;
   hymnBar.hidden = true;
   setBrowseChrome(false);
-  activeIndex = "comments";
-  saveIndex("comments");
-  syncTabs("comments");
+  activeIndex = "requests";
+  saveIndex("requests");
+  syncTabs("requests");
   main.setAttribute("role", "tabpanel");
-  main.setAttribute("aria-labelledby", "tab-comments");
+  main.setAttribute("aria-labelledby", "tab-requests");
   main.classList.remove("has-jump");
-  document.title = "Comments and Requests · Hark";
+  document.title = "Comments/Requests · Hark";
   const page = el("article", { class: "comments-page" });
-  page.append(el("h2", {}, "Comments and Requests"));
-  page.append(
-    el(
-      "p",
-      {},
-      "Ask questions or request a hymn. Requests are limited to hymns in the Trinity Hymnal.",
-    ),
-  );
-  const host = el("div", { class: "giscus-host" });
-  page.append(host);
-  mountGiscus(host, giscusConfig.requests, giscusConfig.requests.term);
+  page.append(el("h2", {}, "Comments/Requests"));
+  page.append(el("p", { class: "sin-note" }, "Hymn requests are limited to the Trinity Hymnal."));
+  if (requestsOpen()) page.append(requestForm());
+  else page.append(el("p", { class: "coming" }, "Comments/Requests open soon"));
+  page.append(el("h2", {}, "Past submissions"));
+  const list = el("div", { class: "request-list" });
+  page.append(list);
   main.replaceChildren(page);
-  const y = scrollMemory.comments || 0;
+  loadSubmissions(list);
+  const y = scrollMemory.requests || 0;
   requestAnimationFrame(() => window.scrollTo(0, y));
 }
 
@@ -1211,7 +1295,7 @@ function render() {
   else if (current.view === "themes") renderThemes();
   else if (current.view === "theme") renderTheme(current.id);
   else if (current.view === "sins") renderSins();
-  else if (current.view === "comments") renderComments();
+  else if (current.view === "requests") renderRequests();
   else if (current.view === "install") renderInstall();
   else renderIndex(current.index);
   syncSticky();

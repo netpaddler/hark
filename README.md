@@ -28,7 +28,7 @@ The home screen has a search box, section chips, and tabs for Number, Title, Aut
 - **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.
 - **Author** groups hymns by author and by translator, filed under the surname. John Mason Neale is listed as "Neale, John Mason (tr.)". A paraphrase credit is marked "(para.)". A hymn can appear under more than one name.
 - **Themes** groups the same hymns by season and by topic. A season or topic opens as a list of numbers and titles. On a hymn, the same themes are small links, such as `#/theme/incarnation`.
-- **Comments and Requests** is `#/comments`. Ask a question or request a hymn from the Trinity Hymnal. Each hymn page also has its own comments at the bottom.
+- **Comments/Requests** is `#/requests`. Leave a comment or ask for a hymn in the Trinity Hymnal. The old address `#/comments` opens the same page.
 - **Sins** is a reading page, `#/sins`. It opens with the Westminster Shorter Catechism on what sin is, then the Ten Commandments, the works of the flesh, the seven things the Lord hates, and sins of the heart and tongue. It ends with repentance and the gospel. Hymn links appear only where the words already speak of sin, pardon, repentance, or grace.
 
 Search checks the number, title, any line of the text (including the refrain), and also the author, translator, and tune. The section chips and the search apply to the Number, Title, Author, and Themes tabs. The Sins tab stays out of that search. Deep links look like `#/hymn/203`, `#/title`, `#/author`, and `#/sins`.
@@ -119,20 +119,38 @@ Put audio files in the repo (for example `recordings/203.mp3`) and use a site-re
 
 The words are cached for offline reading. A recording still needs a network connection unless the browser has already stored that file.
 
-## Comments
+## Comments/Requests
 
-Comments use [giscus](https://giscus.app), which stores the conversation in GitHub Discussions on `netpaddler/hark`. The settings live in `config/giscus.js`.
+The page is `#/requests`. `#/comments` opens the same page. Visitors do not log in. The form posts to a Cloudflare Worker. The Worker opens a public GitHub issue and adds a reply. The page then reads those issues from the public GitHub API. No token is stored in the site.
 
-The general page, `#/comments`, uses the category Requests. Each hymn page uses the category Hymn Comments, with a term such as `TH 108`. The giscus script loads only on those screens. It follows the light or dark theme.
+GitHub Discussions are not used.
 
-Until the category ids are filled in, Hark shows "Comments are coming soon."
+Until `endpoint` in `config/requests.js` is an `https://` address, the page says "Comments/Requests open soon".
 
-Setup, in order:
+### What you set up
 
-1. On the repository, enable Discussions (Settings, General, Features, Discussions).
-2. Create two discussion categories. Both should be open, and neither should be an Announcement category. Name them `Requests` and `Hymn Comments`.
-3. Install the giscus GitHub app on this repository: https://github.com/apps/giscus
-4. Open https://giscus.app, choose this repository, and copy each category id into `config/giscus.js`. A category id starts with `DIC_`. The repository id is already filled in.
+1. A Cloudflare account on the free plan.
+2. A Turnstile widget (also free) for this site. Put the site key in `turnstileSiteKey` in `config/requests.js`. Keep the secret key for the Worker.
+3. A fine grained GitHub token:
+   - Resource owner: `netpaddler`
+   - Repository access: only `netpaddler/hark`
+   - Repository permission: Issues, Read and write
+   - No other repository permissions. Discussions permission is not required.
+4. Deploy the Worker in `worker/`:
+
+```bash
+cd worker
+npx wrangler login
+npx wrangler secret put GITHUB_TOKEN
+npx wrangler secret put TURNSTILE_SECRET
+npx wrangler deploy
+```
+
+5. Paste the Worker URL into `endpoint` in `config/requests.js`, then deploy the site again.
+
+The token user's name is the name on the public issue and the reply. A separate free GitHub account, added as a collaborator with that same Issues permission, keeps the reply off your personal account. That account is optional.
+
+The Worker allows 5 posts an hour from one address, drops a filled honeypot, and checks Turnstile when `TURNSTILE_SECRET` is set. The site loads Turnstile only when `turnstileSiteKey` is set.
 
 ## Install Hark
 
