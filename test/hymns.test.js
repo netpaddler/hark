@@ -527,6 +527,35 @@ test("install manifest, guide, and QR code", () => {
   assert.match(appSource, /beforeinstallprompt/);
 });
 
+test("install spends the saved prompt, opens the help dialog, and a first visit does not reload", () => {
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+
+  // A new worker claims the page on a first visit as well as on an update, so
+  // the reload has to know whether a worker was already running this page.
+  assert.match(appSource, /const hadController = Boolean\(navigator\.serviceWorker\.controller\)/);
+  assert.match(appSource, /if \(!hadController \|\| reloading\) return;/);
+
+  // beforeinstallprompt is saved, and the Install Hark link spends it.
+  assert.match(appSource, /beforeinstallprompt/);
+  assert.match(appSource, /saved\.prompt\(\)/);
+  assert.match(appSource, /await saved\.userChoice/);
+  assert.match(appSource, /installLink\.addEventListener\("click"/);
+
+  // The dialog in the shell is filled and opened when there is no native prompt.
+  assert.match(page, /<dialog[^>]*id="install-help"/);
+  assert.match(appSource, /function openInstallHelp\(\)/);
+  assert.match(appSource, /installHelp\.showModal\(\)/);
+  const fillUses = appSource.match(/fillInstallHelp\(\)/g) || [];
+  assert.ok(fillUses.length >= 2, "fillInstallHelp is defined and called");
+  const openUses = appSource.match(/openInstallHelp\(\)/g) || [];
+  assert.ok(openUses.length >= 2, "openInstallHelp is defined and called");
+
+  // The install page button has a style to match the other filled buttons.
+  assert.match(css, /\.install-now/);
+});
+
 test("comments and requests stay closed until an endpoint is set", () => {
   assert.equal(requestConfig.repo, "netpaddler/hark");
   assert.equal(requestConfig.label, "hymn-request");
@@ -693,7 +722,7 @@ test("the Hark title links home on the list and on a hymn", () => {
   assert.match(css, /\.brand-home\s*\{[^}]*color:\s*inherit/);
   assert.match(css, /\.brand-home:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--accent\)/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /hark-v15/);
+  assert.match(sw, /const CACHE = "hark-v\d+";/);
   assert.match(sw, /skipWaiting\(\)/);
   assert.match(sw, /clients\.claim\(\)/);
 });
