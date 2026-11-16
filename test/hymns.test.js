@@ -671,6 +671,137 @@ test("worker list strips html, drops pull requests, and caches for 60 seconds", 
   }
 });
 
+test("a missing Turnstile secret closes the form instead of opening it", async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls += 1;
+    return new Response("{}", { status: 200 });
+  };
+  try {
+    const worker = await import(`../worker/src/index.js?closed=${Date.now()}`);
+    const env = { GITHUB_TOKEN: "test-token", ALLOWED_ORIGIN: "https://netpaddler.github.io" };
+    const response = await worker.default.fetch(
+      new Request("https://hark-requests.example/", {
+        method: "POST",
+        headers: { "content-type": "application/json", origin: "https://netpaddler.github.io" },
+        body: JSON.stringify({ message: "Please add hymn 12", turnstile: "token" }),
+      }),
+      env,
+    );
+    assert.equal(response.status, 503);
+    assert.equal((await response.json()).error, "Requests are not open yet.");
+    assert.equal(calls, 0, "with no secret, nothing reaches Cloudflare or GitHub");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("a post needs an origin, and reading the list does not", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalCaches = globalThis.caches;
+  const cacheStore = new Map();
+  globalThis.caches = {
+    default: {
+      async match(key) {
+        return cacheStore.get(key.url);
+      },
+      async put(key, response) {
+        cacheStore.set(key.url, response);
+      },
+    },
+  };
+  globalThis.fetch = async () =>
+    new Response("[]", { status: 200, headers: { "content-type": "application/json" } });
+  try {
+    const worker = await import(`../worker/src/index.js?origin=${Date.now()}`);
+    const env = {
+      GITHUB_TOKEN: "test-token",
+      TURNSTILE_SECRET: "test-secret",
+      ALLOWED_ORIGIN: "https://netpaddler.github.io",
+    };
+    const posted = await worker.default.fetch(
+      new Request("https://hark-requests.example/", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ message: "Please add hymn 12", turnstile: "token" }),
+      }),
+      env,
+    );
+    assert.equal(posted.status, 403);
+    const listed = await worker.default.fetch(new Request("https://hark-requests.example/"), env);
+    assert.equal(listed.status, 200);
+  } finally {
+    globalThis.fetch = originalFetch;
+    globalThis.caches = originalCaches;
+  }
+});
+
+test("the rate limit counts in the bound store, and in the isolate without one", async () => {
+  const saved = new Map();
+  const store = {
+    async get(key) {
+      return saved.has(key) ? saved.get(key) : null;
+    },
+    async put(key, value) {
+      saved.set(key, value);
+    },
+  };
+  const originalFetch = globalThis.fetch;
+  let created = 0;
+  globalThis.fetch = async (url, options) => {
+    const href = String(url);
+    if (href.includes("challenges.cloudflare.com")) {
+      return new Response(JSON.stringify({ success: true }), { status: 200 });
+    }
+    if (href.endsWith("/issues") && options && options.method === "POST") {
+      created += 1;
+      return new Response(
+        JSON.stringify({ number: created, html_url: `https://github.com/netpaddler/hark/issues/${created}` }),
+        { status: 201 },
+      );
+    }
+    return new Response("{}", { status: 200 });
+  };
+  try {
+    const worker = await import(`../worker/src/index.js?limit=${Date.now()}`);
+    const base = {
+      GITHUB_TOKEN: "test-token",
+      TURNSTILE_SECRET: "test-secret",
+      ALLOWED_ORIGIN: "https://netpaddler.github.io",
+    };
+    const send = (ip, env) =>
+      worker.default.fetch(
+        new Request("https://hark-requests.example/", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            origin: "https://netpaddler.github.io",
+            "cf-connecting-ip": ip,
+          },
+          body: JSON.stringify({ message: "Please add hymn 12", turnstile: "token" }),
+        }),
+        env,
+      );
+    const shared = { ...base, RATE_LIMIT: store };
+    for (let round = 1; round <= 5; round += 1) {
+      assert.equal((await send("203.0.113.7", shared)).status, 200, `request ${round} should go through`);
+    }
+    assert.equal((await send("203.0.113.7", shared)).status, 429);
+    assert.equal(JSON.parse(saved.get("rate:203.0.113.7")).length, 5);
+    // A different address still has its own five.
+    assert.equal((await send("203.0.113.8", shared)).status, 200);
+    // With no namespace bound the isolate keeps the count itself.
+    for (let round = 1; round <= 5; round += 1) {
+      assert.equal((await send("198.51.100.4", base)).status, 200, `memory request ${round} should go through`);
+    }
+    assert.equal((await send("198.51.100.4", base)).status, 429);
+    assert.equal(created, 11, "neither sixth request reaches GitHub");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("every score parses, names its source, and matches a hymn", () => {
   const code = readFileSync(new URL("../vendor/abcjs-basic-min.js", import.meta.url), "utf8");
   const sandbox = { console, setTimeout, clearTimeout, navigator: { userAgent: "node" } };
