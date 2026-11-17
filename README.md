@@ -183,7 +183,16 @@ On the home screen, a small Install Hark link in the top right opens the install
 - The link is plain text in a muted color. It hides once Hark is installed or already open as an app.
 - The install page has the steps. On Android, use the three dot menu, then Add to Home screen or Install app. On iPhone, use Safari, tap Share, then Add to Home Screen.
 
-The QR code in `icons/hark-qr.svg` points at the live site. It is a file in the repo, not a link to an outside image service. There is no Play Store or App Store listing.
+The install link and the QR code in `icons/hark-qr.svg` both open the live site, the address in `INSTALL_URL` in `install.js`. The code is a file in the repo, not a link to an outside image service. There is no Play Store or App Store listing.
+
+To change the address, edit `INSTALL_URL`, then draw the code again on your own machine:
+
+```sh
+pip install segno==1.6.6
+python3 scripts/make_qr.py
+```
+
+The tests read the address back out of the picture and fail if it is not `INSTALL_URL`.
 
 The manifest uses a relative `start_url`, `scope`, and `id` of `./`, and icon paths of `./icons/...`, including maskable icons. The service worker is registered for the folder that contains the app, so the same files install at the domain root or in a subfolder.
 
