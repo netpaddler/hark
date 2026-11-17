@@ -509,9 +509,9 @@ test("install manifest, guide, and QR code", () => {
   const manifest = JSON.parse(readFileSync(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
   assert.equal(manifest.name, "Hark");
   assert.equal(manifest.short_name, "Hark");
-  assert.equal(manifest.start_url, "/hark/");
-  assert.equal(manifest.scope, "/hark/");
-  assert.equal(manifest.id, "/hark/");
+  assert.equal(manifest.start_url, "./");
+  assert.equal(manifest.scope, "./");
+  assert.equal(manifest.id, "./");
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.theme_color, "#f3eee4");
   assert.equal(manifest.background_color, "#f3eee4");
@@ -519,8 +519,8 @@ test("install manifest, guide, and QR code", () => {
     for (const purpose of ["any", "maskable"]) {
       const icon = manifest.icons.find((item) => item.sizes === size && item.purpose === purpose);
       assert.ok(icon, `${size} ${purpose}`);
-      assert.equal(icon.src.startsWith("/hark/icons/"), true);
-      const file = icon.src.slice("/hark/".length);
+      assert.equal(icon.src.startsWith("./icons/"), true);
+      const file = icon.src.slice("./".length);
       const bytes = readFileSync(new URL(`../${file}`, import.meta.url));
       const width = bytes.readUInt32BE(16);
       assert.equal(width, Number(size.slice(0, 3)));
