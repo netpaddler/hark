@@ -156,7 +156,7 @@ The Worker allows 5 posts an hour from one address, drops a filled honeypot, and
 
 ## Install Hark
 
-The live app is <https://netpaddler.github.io/hark/>. The install page, with steps and a QR code, is <https://netpaddler.github.io/hark/#/install>.
+The live app is <https://hymns.theweightofglory.com/>. <https://netpaddler.github.io/hark/> redirects there. The install page, with steps and a QR code, is <https://hymns.theweightofglory.com/#/install>.
 
 On the home screen, a small Install Hark link in the top right opens the install page.
 
@@ -165,7 +165,7 @@ On the home screen, a small Install Hark link in the top right opens the install
 
 The QR code in `icons/hark-qr.svg` points at the live site. It is a file in the repo, not a link to an outside image service. There is no Play Store or App Store listing.
 
-The manifest uses `start_url` and `scope` of `/hark/`, with 192 and 512 icons, including maskable icons. The service worker is registered for that same folder, so on GitHub Pages its scope is `/hark/`.
+The manifest uses a relative `start_url`, `scope`, and `id` of `./`, and icon paths of `./icons/...`, including maskable icons. The service worker is registered for the folder that contains the app, so the same files install at the domain root or in a subfolder.
 
 ## Deploy to GitHub Pages
 
@@ -174,7 +174,7 @@ The workflow in `.github/workflows/pages.yml` publishes the site on every push t
 1. Make this repository public.
 2. In Settings, open Pages. Under Build and deployment, set Source to GitHub Actions.
 3. Push to `main`, or run "Deploy GitHub Pages" by hand from the Actions tab. The workflow runs on every push to `main`, and you can start it yourself.
-4. The site will be at <https://netpaddler.github.io/hark/>.
+4. The site is at <https://hymns.theweightofglory.com/>. The old project address redirects there.
 
 If Pages is not turned on yet, the workflow tries to enable it and set the source to GitHub Actions. You can also turn that on yourself under Settings, Pages.
 
