@@ -26,7 +26,7 @@ import {
   formatRecordingDate,
   youtubeBlock,
 } from "./hymn-model.js";
-import { playbackStop, shuffleTracks, themeTracks } from "./playlist.js";
+import { nextEndingSong, playbackStop, shuffleTracks, songsWithEndings, themeTracks } from "./playlist.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
@@ -122,6 +122,7 @@ function icon(name) {
     sun: "M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4",
     back: "M15 5 8 12l7 7",
     prev: "M14.5 5.5 8 12l6.5 6.5",
+    pause: "M8 6v12M16 6v12",
     next: "M9.5 5.5 16 12l-6.5 6.5",
     close: "M7 7l10 10M17 7 7 17",
     arrow: "M5 12h14M13 6l6 6-6 6",
@@ -501,10 +502,43 @@ function playAllControls(themeId) {
   const row = el("p", { class: "play-all" });
   const all = el("button", { type: "button", class: "play-song" }, "Play all");
   const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
+  const auto = el(
+    "button",
+    {
+      type: "button",
+      class: "play-auto",
+      "aria-pressed": autoPlayAll() ? "true" : "false",
+    },
+    "Auto play all",
+  );
   all.addEventListener("click", () => beginSongs(tracks, "all"));
   shuffle.addEventListener("click", () => beginSongs(shuffleTracks(tracks), "all"));
-  row.append(all, shuffle);
+  auto.addEventListener("click", () => setAutoPlayAll(!autoPlayAll()));
+  row.append(all, shuffle, auto);
   return row;
+}
+
+function autoPlayAll() {
+  try {
+    return localStorage.getItem("hark-auto-play-all") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function setAutoPlayAll(on) {
+  try {
+    localStorage.setItem("hark-auto-play-all", on ? "1" : "0");
+  } catch {
+    /* storage can be blocked */
+  }
+  for (const button of document.querySelectorAll(".play-auto")) {
+    button.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+}
+
+function endingSongs() {
+  return songsWithEndings({ hymns, recordings: recordingCatalog });
 }
 
 function selectedThemeId() {
@@ -2343,7 +2377,7 @@ function paintSong() {
   songBar.hidden = false;
   document.documentElement.dataset.player = "on";
   songTitle.textContent = `${track.number}. ${track.title}`;
-  if (songToggle) songToggle.textContent = "Pause";
+  setToggleLabel(true);
 }
 
 function watchSong(track) {
@@ -2393,19 +2427,29 @@ function finishSong() {
   } catch {
     /* already stopped */
   }
+  if (autoPlayAll()) {
+    const following = nextEndingSong(endingSongs(), track.number, { wrap: true });
+    if (following) {
+      songMode = "catalog";
+      songQueue = [following];
+      songIndex = 0;
+      loadSong();
+      return;
+    }
+  }
   if (songMode === "all" && songIndex + 1 < songQueue.length) {
     songIndex += 1;
     loadSong();
     return;
   }
-  if (songToggle) songToggle.textContent = "Play";
+  setToggleLabel(false);
   if (songKeep) songKeep.hidden = false;
 }
 
 function onSongState(event) {
   if (!event || event.data !== 0) {
-    if (songToggle && event && event.data === 1) songToggle.textContent = "Pause";
-    if (songToggle && event && event.data === 2 && songKeep && songKeep.hidden) songToggle.textContent = "Play";
+    if (event && event.data === 1) setToggleLabel(true);
+    if (event && event.data === 2 && songKeep && songKeep.hidden) setToggleLabel(false);
     return;
   }
   finishSong();
@@ -2448,12 +2492,29 @@ function keepWatchingService() {
   songHolding = true;
   songMode = "one";
   if (songKeep) songKeep.hidden = true;
-  if (songToggle) songToggle.textContent = "Pause";
+  setToggleLabel(true);
   ytPlayer.loadVideoById({ videoId: track.videoId, startSeconds: track.end });
+}
+
+function playQueued(track, mode) {
+  if (!track) {
+    stopSongs();
+    return;
+  }
+  songMode = mode;
+  songQueue = [track];
+  songIndex = 0;
+  if (ytPlayer && typeof ytPlayer.loadVideoById === "function") loadSong();
+  else ensureSongPlayer().then(loadSong);
 }
 
 function stepSong(delta) {
   if (!songQueue.length) return;
+  const track = currentSong();
+  if (delta > 0 && autoPlayAll()) {
+    playQueued(nextEndingSong(endingSongs(), track ? track.number : 0, { wrap: true }), "catalog");
+    return;
+  }
   const next = songIndex + delta;
   if (next < 0) {
     songIndex = 0;
@@ -2461,24 +2522,38 @@ function stepSong(delta) {
     else ensureSongPlayer().then(loadSong);
     return;
   }
-  if (next >= songQueue.length) {
-    stopSongs();
+  if (next < songQueue.length) {
+    songIndex = next;
+    if (ytPlayer && typeof ytPlayer.loadVideoById === "function") loadSong();
+    else ensureSongPlayer().then(loadSong);
     return;
   }
-  songIndex = next;
-  if (ytPlayer && typeof ytPlayer.loadVideoById === "function") loadSong();
-  else ensureSongPlayer().then(loadSong);
+  if (delta > 0 && songMode === "one") {
+    const following = nextEndingSong(endingSongs(), track ? track.number : 0, { wrap: false });
+    if (following) {
+      playQueued(following, "one");
+      return;
+    }
+  }
+  // Last song of this list: the player stops and the bar closes.
+  stopSongs();
+}
+
+function setToggleLabel(playing) {
+  if (!songToggle) return;
+  songToggle.setAttribute("aria-label", playing ? "Pause" : "Play");
+  songToggle.replaceChildren(icon(playing ? "pause" : "play"));
 }
 
 function toggleSong() {
   if (!ytPlayer || typeof ytPlayer.getPlayerState !== "function") return;
   if (ytPlayer.getPlayerState() === 1) {
     ytPlayer.pauseVideo();
-    if (songToggle) songToggle.textContent = "Play";
+    setToggleLabel(false);
     return;
   }
   ytPlayer.playVideo();
-  if (songToggle) songToggle.textContent = "Pause";
+  setToggleLabel(true);
 }
 
 if (songTitle) {
@@ -2490,8 +2565,15 @@ if (songTitle) {
 const songPrev = document.getElementById("song-prev");
 const songNext = document.getElementById("song-next");
 const songStop = document.getElementById("song-stop");
-if (songPrev) songPrev.addEventListener("click", () => stepSong(-1));
+if (songPrev) {
+  songPrev.replaceChildren(icon("prev"));
+  songPrev.addEventListener("click", () => stepSong(-1));
+}
 if (songNext) songNext.addEventListener("click", () => stepSong(1));
+if (songStop) {
+  songStop.replaceChildren(icon("close"));
+}
+setToggleLabel(true);
 if (songToggle) songToggle.addEventListener("click", toggleSong);
 if (songStop) songStop.addEventListener("click", stopSongs);
 if (songKeep) songKeep.addEventListener("click", keepWatchingService);

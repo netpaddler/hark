@@ -2251,6 +2251,7 @@ html[data-installed="true"] .btn-install {
 }
 
 .play-song,
+.play-auto,
 .song-bar-controls button,
 .song-keep {
   border: 1px solid var(--line);
@@ -2317,8 +2318,56 @@ html[data-installed="true"] .btn-install {
 .song-bar-controls {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.35rem;
   margin-top: 0.35rem;
+}
+
+.song-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.song-icon .icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+#song-next {
+  flex: 1 1 8.5rem;
+}
+
+.play-auto {
+  background: var(--paper-raised);
+  color: var(--ink);
+}
+
+.play-auto[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: transparent;
+}
+
+@media (max-width: 420px) {
+  .song-bar {
+    grid-template-columns: 6.25rem 1fr;
+    gap: 0.4rem;
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+  }
+
+  .song-bar-controls button {
+    padding: 0.3rem 0.55rem;
+  }
+
+  .song-icon {
+    width: 2.1rem;
+    padding: 0;
+  }
 }
 
 .song-keep {
