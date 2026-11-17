@@ -1,6 +1,11 @@
 [
   {
     "date": "2026-11-17",
+    "hymns": [],
+    "note": "Play all the songs in a season. Each recording stops when the song ends."
+  },
+  {
+    "date": "2026-11-17",
     "hymns": [
       2,
       38,

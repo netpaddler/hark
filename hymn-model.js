@@ -403,6 +403,10 @@ function presentRecording(recording, fallbackLabel) {
     ...media,
     embed: media.kind === "youtube" ? youtubeEmbedSrc(media.id, start) : null,
   };
+  if (typeof recording.end_seconds === "number" && Number.isFinite(recording.end_seconds)) {
+    item.end = Math.floor(recording.end_seconds);
+  }
+  if (recording.end_source === "captions") item.endSource = "captions";
   if (recording.embeddable === false) item.embeddable = false;
   return item;
 }
