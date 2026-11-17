@@ -1,6 +1,6 @@
 // Creates a public GitHub issue for each hymn comment or request, then adds a reply.
 // Secrets: GITHUB_TOKEN, TURNSTILE_SECRET
-// Vars: REPO, LABEL, ALLOWED_ORIGIN
+// Vars: REPO, LABEL, ALLOWED_ORIGIN (one origin, or several separated by commas)
 // Optional binding: RATE_LIMIT, a KV namespace. Without it the limit below
 // counts only what one isolate saw, which is easy to walk around.
 
@@ -17,9 +17,25 @@ function json(body, status = 200) {
   });
 }
 
-function cors(response, env) {
+// Hark is served from more than one host: the custom domain, and the old
+// github.io address that redirects to it. A single allow-origin header cannot
+// name a list, so the matching origin is echoed back instead. The vary header
+// below is what keeps a cache from handing one site's header to the other.
+function allowedOrigins(env) {
+  return String(env.ALLOWED_ORIGIN || "*")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function cors(response, env, request) {
   const headers = new Headers(response.headers);
-  const origin = env.ALLOWED_ORIGIN || "*";
+  const allowed = allowedOrigins(env);
+  const sent = request && request.headers.get("origin");
+  let origin;
+  if (allowed.includes("*")) origin = "*";
+  else if (sent && allowed.includes(sent)) origin = sent;
+  else origin = allowed[0] || "*";
   headers.set("access-control-allow-origin", origin);
   headers.set("access-control-allow-methods", "GET, POST, OPTIONS");
   headers.set("access-control-allow-headers", "content-type");
@@ -32,13 +48,13 @@ function clip(value, max) {
 }
 
 function originAllowed(request, env) {
-  const allowed = env.ALLOWED_ORIGIN || "*";
-  if (allowed === "*") return true;
+  const allowed = allowedOrigins(env);
+  if (allowed.includes("*")) return true;
   const origin = request.headers.get("origin");
   // A browser always sends Origin on a cross site POST, so a post without one
   // did not come from the form. Reading the list stays open to anything.
   if (!origin) return request.method !== "POST";
-  return origin === allowed;
+  return allowed.includes(origin);
 }
 
 function plainText(value) {
@@ -219,31 +235,31 @@ async function ensureLabel(env) {
 export default {
   async fetch(request, env) {
     if (!originAllowed(request, env)) return json({ error: "This origin is not allowed." }, 403);
-    if (request.method === "OPTIONS") return cors(new Response(null, { status: 204 }), env);
-    if (request.method === "GET") return cors(await cachedIssueList(env), env);
-    if (request.method !== "POST") return cors(json({ error: "Send a POST request." }, 405), env);
+    if (request.method === "OPTIONS") return cors(new Response(null, { status: 204 }), env, request);
+    if (request.method === "GET") return cors(await cachedIssueList(env), env, request);
+    if (request.method !== "POST") return cors(json({ error: "Send a POST request." }, 405), env, request);
     let payload;
     try {
       payload = await request.json();
     } catch {
-      return cors(json({ error: "The form could not be read." }, 400), env);
+      return cors(json({ error: "The form could not be read." }, 400), env, request);
     }
-    if (clip(payload.company, 200)) return cors(json({ ok: true }), env);
+    if (clip(payload.company, 200)) return cors(json({ ok: true }), env, request);
     const message = clip(payload.message, 2000);
     const name = clip(payload.name, 80);
     const hymn = clip(payload.hymn, 120);
-    if (!message) return cors(json({ error: "Write a comment or a hymn request." }, 400), env);
+    if (!message) return cors(json({ error: "Write a comment or a hymn request." }, 400), env, request);
     // The cheap count first, so a flood cannot make the Worker call Cloudflare
     // once per request on its way to being turned away.
     if (!(await allow(request, env))) {
-      return cors(json({ error: "Please wait a while, then try again." }, 429), env);
+      return cors(json({ error: "Please wait a while, then try again." }, 429), env, request);
     }
     const check = await turnstileCheck(payload.turnstile, request, env);
     if (check === "unconfigured") {
-      return cors(json({ error: "Requests are not open yet." }, 503), env);
+      return cors(json({ error: "Requests are not open yet." }, 503), env, request);
     }
-    if (check !== "ok") return cors(json({ error: "The check failed. Try again." }, 400), env);
-    if (!env.GITHUB_TOKEN) return cors(json({ error: "Requests are not open yet." }, 503), env);
+    if (check !== "ok") return cors(json({ error: "The check failed. Try again." }, 400), env, request);
+    if (!env.GITHUB_TOKEN) return cors(json({ error: "Requests are not open yet." }, 503), env, request);
 
     const repo = env.REPO || "netpaddler/hark";
     const label = env.LABEL || "hymn-request";
@@ -254,7 +270,7 @@ export default {
       method: "POST",
       body: JSON.stringify({ title, body, labels: [label] }),
     });
-    if (!created.ok) return cors(json({ error: "The request did not go through." }, 502), env);
+    if (!created.ok) return cors(json({ error: "The request did not go through." }, 502), env, request);
     const issue = await created.json();
     await github(env, `/repos/${repo}/issues/${issue.number}/comments`, {
       method: "POST",
@@ -262,6 +278,6 @@ export default {
         body: "Thanks for writing! Hark will reply here soon.",
       }),
     });
-    return cors(json({ ok: true, url: issue.html_url }), env);
+    return cors(json({ ok: true, url: issue.html_url }), env, request);
   },
 };
