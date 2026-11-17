@@ -42,11 +42,12 @@ The choice is made by a small script in `index.html` before the first paint, so 
 
 ## Browse
 
-The hymn list has a search box, section chips, and tabs for Number, Title, Author, Themes, and Sins.
+The hymn list has a search box, section chips, and tabs for Number, Title, Author, Liked, Themes, and Sins.
 
 - **Number** keeps hymnal order. Each row shows the number, title, and tune.
 - **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.
 - **Author** groups hymns by author and by translator, filed under the surname. John Mason Neale is listed as "Neale, John Mason (tr.)". A paraphrase credit is marked "(para.)". A hymn can appear under more than one name.
+- **Liked** lists the hymns you have marked with the heart. The heart is on each hymn page. A small heart shows on a list row after you like it. Likes stay in this browser (`hark-likes` in local storage), including offline. There is no account. If you have not liked a hymn yet, the tab says so.
 - **Themes** groups the same hymns by season and by topic. A season or topic opens as a list of numbers and titles. On a hymn, the same themes are small links, such as `#/theme/incarnation`.
 - **Comments/Requests** is `#/requests`. Leave a comment or request any hymn. We read every one. The old address `#/comments` opens the same page.
 - **Sins** is a reading page, `#/sins`. It opens with the Westminster Shorter Catechism on what sin is, then the Ten Commandments, the works of the flesh, the seven things the Lord hates, and sins of the heart and tongue. It ends with repentance and the gospel. Hymn links appear only where the words already speak of sin, pardon, repentance, or grace.

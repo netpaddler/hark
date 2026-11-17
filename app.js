@@ -1,5 +1,11 @@
 import { INSTALL_URL, installGuide } from "./install.js";
 import {
+  isLiked,
+  likeButtonState,
+  likedHymns,
+  toggleLike,
+} from "./likes.js";
+import {
   attributionParts,
   browse,
   faithRecordings,
@@ -52,12 +58,13 @@ const TAB_IDS = [
   ["tab-number", "number"],
   ["tab-title", "title"],
   ["tab-author", "author"],
+  ["tab-liked", "liked"],
   ["tab-themes", "themes"],
   ["tab-sins", "sins"],
   ["tab-requests", "requests"],
 ];
 
-const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0, requests: 0, welcome: 0 };
+const scrollMemory = { number: 0, title: 0, author: 0, liked: 0, themes: 0, sins: 0, requests: 0, welcome: 0 };
 
 // Set in index.html before the first paint. The bare address keeps opening on
 // the same view for as long as this page is loaded, so Back from a hymn
@@ -121,6 +128,7 @@ function icon(name) {
     phone: "M8.5 3.5h7A1.5 1.5 0 0 1 17 5v14a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 7 19V5a1.5 1.5 0 0 1 1.5-1.5zM12 8v6.5M9.5 12l2.5 2.5 2.5-2.5",
     chat: "M5 5.5h14A1.5 1.5 0 0 1 20.5 7v8a1.5 1.5 0 0 1-1.5 1.5h-7L7.5 20v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z",
     seal: "M12 3.5 5.5 6v5.5c0 4 2.7 7.2 6.5 8.8 3.8-1.6 6.5-4.8 6.5-8.8V6zM9 12l2.2 2.2 3.9-4.2",
+    heart: "M12 20s-6.5-4.2-6.5-8.6C5.5 8.2 7.4 6.4 9.6 6.4c1.2 0 2.2.6 2.4 1.6.2-1 1.2-1.6 2.4-1.6 2.2 0 4.1 1.8 4.1 5C18.5 15.8 12 20 12 20z",
   };
   path.setAttribute("d", paths[name]);
   svg.append(path);
@@ -173,6 +181,7 @@ function route() {
   if (path === "/" || path === "/number") return { view: "index", index: "number" };
   if (path === "/title") return { view: "index", index: "title" };
   if (path === "/author") return { view: "index", index: "author" };
+  if (path === "/liked") return { view: "index", index: "liked" };
   if (path === "/themes") return { view: "themes" };
   if (path === "/sins") return { view: "sins" };
   if (path === "/comments") {
@@ -191,6 +200,7 @@ function route() {
 function indexHref(index) {
   if (index === "title") return "#/title";
   if (index === "author") return "#/author";
+  if (index === "liked") return "#/liked";
   if (index === "themes") return "#/themes";
   if (index === "sins") return "#/sins";
   if (index === "comments" || index === "requests") return "#/requests";
@@ -210,6 +220,7 @@ function storedIndex() {
     if (
       stored === "title" ||
       stored === "author" ||
+      stored === "liked" ||
       stored === "number" ||
       stored === "themes" ||
       stored === "sins" ||
@@ -283,12 +294,46 @@ function buildChips() {
   }
 }
 
+function likeIcon(filled) {
+  const svg = icon("heart");
+  const path = svg.querySelector("path");
+  path.setAttribute("fill", filled ? "currentColor" : "none");
+  return svg;
+}
+
+function likeMark(number) {
+  if (!isLiked(number)) return null;
+  const mark = el("span", { class: "like-pip" });
+  mark.append(likeIcon(true), el("span", { class: "visually-hidden" }, "Liked"));
+  return mark;
+}
+
+function paintLikeButton(button, number) {
+  const state = likeButtonState(isLiked(number));
+  button.setAttribute("aria-pressed", state.pressed ? "true" : "false");
+  button.setAttribute("aria-label", state.label);
+  button.classList.toggle("is-liked", state.pressed);
+  button.replaceChildren(likeIcon(state.pressed), el("span", {}, state.text));
+}
+
+function likeControl(number) {
+  const button = el("button", { type: "button", class: "like-btn" });
+  paintLikeButton(button, number);
+  button.addEventListener("click", () => {
+    toggleLike(number);
+    paintLikeButton(button, number);
+  });
+  return button;
+}
+
 function hymnRow(hymn, mark) {
   const link = el("a", { class: "hymn-link", href: `#/hymn/${hymn.number}` });
   link.append(el("span", { class: "num" }, String(hymn.number)));
   const text = el("span", { class: "hymn-link-text" });
   const title = el("span", { class: "title" }, hymn.title);
   if (mark) title.append(el("span", { class: "badge" }, mark));
+  const heart = likeMark(hymn.number);
+  if (heart) title.append(heart);
   text.append(title);
   const meta = [hymn.tune, hymn.section].filter(Boolean).join(" · ");
   if (meta) text.append(el("span", { class: "meta" }, meta));
@@ -312,6 +357,8 @@ function titleList(letters) {
       const link = el("a", { class: "toc-link", href: `#/hymn/${hymn.number}` });
       const text = el("span", { class: "toc-text" });
       text.append(el("span", { class: "toc-title" }, hymn.title));
+      const heart = likeMark(hymn.number);
+      if (heart) text.append(heart);
       if (hymn.tune) text.append(el("span", { class: "toc-tune" }, hymn.tune));
       link.append(text, el("span", { class: "toc-num" }, String(hymn.number)));
       return el("li", {}, link);
@@ -790,6 +837,25 @@ function renderIndex(index) {
   syncTabs(index);
   main.setAttribute("role", "tabpanel");
   main.setAttribute("aria-labelledby", `tab-${index}`);
+  if (index === "liked") {
+    const saved = likedHymns(hymns);
+    const list = filterHymns(saved, queryInput.value, section);
+    count.textContent = countLabel(list.length);
+    main.classList.remove("has-jump");
+    if (saved.length === 0) {
+      main.replaceChildren(
+        el("p", { class: "empty" }, "No liked hymns yet. Open a hymn and press the heart to keep it here."),
+      );
+    } else if (list.length === 0) {
+      main.replaceChildren(el("p", { class: "empty" }, "No hymns match that search."));
+    } else {
+      main.replaceChildren(numberList(list));
+    }
+    document.title = "Liked · Hark";
+    const y = scrollMemory.liked || 0;
+    requestAnimationFrame(() => window.scrollTo(0, y));
+    return;
+  }
   const result = browse(hymns, { query: queryInput.value, section, mode: index });
   count.textContent = countLabel(result.total);
   main.classList.toggle("has-jump", index !== "number" && result.total > 0);
@@ -1147,6 +1213,7 @@ function renderHymn(number) {
   else if (fromThemes) [backLabel, listName] = ["Themes", "themes"];
   else if (listIndex === "title") listName = "title index";
   else if (listIndex === "author") listName = "author index";
+  else if (listIndex === "liked") [backLabel, listName] = ["Liked", "liked hymns"];
   back.replaceChildren(icon("back"), document.createTextNode(backLabel));
   back.setAttribute("aria-label", `Back to the ${listName}`);
 
@@ -1171,7 +1238,9 @@ function renderHymn(number) {
     const article = el("article", { class: "hymn" });
     article.append(el("p", { class: "hymn-number" }, `No. ${hymn.number}`));
     const title = el("h1", { class: "hymn-title", id: "hymn-title", tabindex: "-1" }, hymn.title);
-    article.append(title);
+    const head = el("div", { class: "hymn-head" });
+    head.append(title, likeControl(hymn.number));
+    article.append(head);
     const credit = attributionParts(hymn);
     if (credit.people) article.append(el("p", { class: "attribution" }, credit.people));
     if (credit.music) article.append(el("p", { class: "attribution" }, credit.music));
