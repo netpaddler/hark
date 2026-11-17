@@ -838,6 +838,35 @@
       "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
     }
   ],
+  "201": [
+    {
+      "label": "Christmas Eve Candlelight Service, 9:00 pm, Dec 24, 2023, congregation",
+      "video_title": "Christmas Eve Candlelight Service - 9:00 pm",
+      "video_date": "2023-12-24",
+      "url": "https://www.youtube.com/watch?v=QBbNqTNJB_E&t=2223s",
+      "start_seconds": 2223,
+      "confidence": "medium",
+      "notes": "Christmas Eve Candlelight Service, 9:00 pm, Dec 24, 2023 (oEmbed 200). Same Lessons and Carols slot as the 4:00 pm service: after the nativity lesson (ends ~2217s), a brief silence, then music from 2223s to about 2466s. A whisper transcript of this window includes a line close to stanza 4, 'O holy Child of Bethlehem, descend to us, we pray'. Same 201-vs-202 tune caveat as the 4:00 pm recording; no CE bulletin found."
+    },
+    {
+      "label": "Christmas Eve Candlelight Service, 4:00 pm, Dec 24, 2023, congregation",
+      "video_title": "Christmas Eve Candlelight Service - 4:00 pm",
+      "video_date": "2023-12-24",
+      "url": "https://www.youtube.com/watch?v=GcyYETKpWVI&t=2040s",
+      "start_seconds": 2040,
+      "confidence": "medium",
+      "notes": "Christmas Eve Candlelight Service, 4:00 pm, Dec 24, 2023 (oEmbed 200). Sung after the Luke 2 nativity lesson (manger / no place in the inn). Auto captions and a base-model transcript of this window match the Brooks text shared by hymns 201 and 202: 'how still', 'everlasting light', 'hopes and fears', and especially 'how silently, how silently, the wondrous gift'. Music starts at 2040s and ends about 2268s, just before the shepherds lesson. No Christmas Eve bulletin was found, so the tune is not independently confirmed; 201 (ST. LOUIS) is the usual congregational setting and is the number printed when this text appears in an FPC Sunday bulletin. 202 (Walford Davies) was never found listed."
+    },
+    {
+      "label": "Sunday Morning Worship, Dec 19, 2021, congregation",
+      "video_title": "Sunday Morning Worship - December 19, 2021",
+      "video_date": "2021-12-19",
+      "url": "https://www.youtube.com/watch?v=Sw8wfS8jI68&t=5486s",
+      "start_seconds": 5486,
+      "confidence": "medium",
+      "notes": "Sunday morning Dec 19, 2021 (oEmbed 200). The AM bulletin lists Hymn 201, O Little Town of Bethlehem, as the congregational hymn at the Lord's table (full hymnal page printed). After the words of institution (~5264-5293s) the choir/organ sings Away in a Manger through about 5478s. New music begins at 5486s and runs until the final hymn, 195 Joy to the World, is announced at 5702s. Auto captions and CPU whisper barely pick up the lyrics (a possible 'still we see' fragment at 5640s), which is typical of this organ-and-congregation window."
+    }
+  ],
   "203": [
     {
       "label": "Sunday Morning Worship, Dec 28, 2025, congregation",
@@ -1450,6 +1479,17 @@
       "start_seconds": 3763,
       "confidence": "medium",
       "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. The leader says it will be sung to a different tune than the hymnal's and partly as a round."
+    }
+  ],
+  "221": [
+    {
+      "label": "Sunday Morning Worship, Dec 11, 2022, congregation",
+      "video_title": "Sunday Morning Worship - December 11, 2022",
+      "video_date": "2022-12-11",
+      "url": "https://www.youtube.com/watch?v=pThh6ak-Jfw&t=4794s",
+      "start_seconds": 4794,
+      "confidence": "medium",
+      "notes": "Sunday morning Dec 11, 2022 (oEmbed 200). The AM bulletin lists Hymn 221, Lo, How a Rose E'er Blooming, as the congregational hymn at the Lord's table. After the words of institution (~4568-4597s) the printed Irish/Wexford Carol is sung during the distribution (captions: 'to God with love this Christmas', 'prepare and go the angel said'), ending about 4792s. New, louder music begins at 4794s and continues until the final hymn, 203 Hark! the Herald Angels Sing, is announced at 5074s (about four and a half minutes, a fit for this slow chorale). Auto captions and CPU whisper did not clearly capture 'rose' or 'blooming' in this window."
     }
   ],
   "222": [
