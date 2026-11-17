@@ -16,15 +16,11 @@ These are the requested fields plus one extra, `stanza_numbers`. It gives the hy
 
 The text is Trinity Hymnal wording as hymnary.org shows it. It is not a scan of the printed book. Check against the printed hymnal before printing for congregational use.
 
-## Withheld for copyright
-`public_domain` is false and `stanzas` is empty for these:
-- 212 Within a Crib My Savior Lay. Text © 1968 Hope Publishing Co.
-- 230 Thou Who Wast Rich beyond All Splendor. Text by Frank Houghton (d. 1972), © CMF International (OMF).
-- 231 Lovely Child, Holy Child. Text and tune © 1968 Augsburg Publishing House (Augsburg Fortress).
-- 232 O Jesus Sweet, O Jesus Mild. Translation by Mark E. Hunt, © 1978 InterVarsity Christian Fellowship.
+## Copyright
+A hymn whose whole text is under copyright is not included.
 
 **Partial:**
-- 196 Come, Thou Long-Expected Jesus. Stanzas 2-3 are by Mark E. Hunt, © 1978 InterVarsity Christian Fellowship, and are omitted. Only Wesley's stanzas, which are hymnal stanzas 1 and 4, are included. The entry is marked `public_domain: true` and carries a `copyright_note`. The app should show a notice that stanzas are omitted.
+- 196 Come, Thou Long-Expected Jesus. Stanzas 1 and 4 are Charles Wesley, 1744, and are shown. Stanzas 2 and 3 are by Mark E. Hunt, text copyright 1978 InterVarsity Christian Fellowship, and each is replaced by a copyright note. The entry is marked `public_domain: true`.
 
 Licensed words can come from:
 - the printed Trinity Hymnal (Great Commission Publications);
@@ -64,7 +60,7 @@ Seasons follow the hymnal `section`, then the text:
 
 No. 108 is tagged Providence and Trusting God in Trials. No. 559 is tagged Providence and Contentment. No. 401 is tagged Evening and Joy and Praise.
 
-A hymn may have more than one topic. A topic is used only when the words clearly teach it. For the four copyright-withheld hymns, the season comes from the section. A topic is added only when the title itself states it. No. 230 is tagged The Incarnation for that reason. Nos. 212, 231, and 232 have a season and no topic.
+A hymn may have more than one topic. A topic is used only when the words clearly teach it.
 
 Lent, Holy Week, Easter, Ascension, Pentecost, and Thanksgiving are not listed while no hymn uses them. Add the id under `seasons`, and on the hymns that belong there, and the Themes tab will show the new group.
 
@@ -107,7 +103,6 @@ Scores are ABC files in `data/music/`, listed in `data/music.json`. Each one is 
 - 207 IN DULCI JUBILO. IN DULCI JUBILO is a 14th century melody, but no engraved score with a recorded pre-1931 source was found.
 - 209 YORKSHIRE. YORKSHIRE by John Wainwright is old, but no engraved score with a recorded pre-1931 source was found.
 - 210 STILLE NACHT. No engraved score with a recorded pre-1931 public domain source was found.
-- 212 LORD OF LOVE. LORD OF LOVE is by Norman L. Warren (born 1934). The tune is still under copyright.
 - 213 GREENSLEEVES. No engraved score with a recorded pre-1931 public domain source was found.
 - 214 GLORIA. GLORIA is a French carol melody, but the Trinity Hymnal uses an arrangement from 1937. A score that also cites Lutheran Worship (1982) was not used.
 - 215 JUNGST. JUNGST is an arrangement by Hugo Jungst. No engraved score with a recorded pre-1931 source was found.
@@ -119,8 +114,5 @@ Scores are ABC files in `data/music/`, listed in `data/music.json`. Each one is 
 - 225 IRBY. IRBY by Henry J. Gauntlett (1849) is old, but the score that was found cites a 1994 hymnal as its source and was not used.
 - 227 SUSSEX CAROL. SUSSEX CAROL is a traditional melody. The Trinity Hymnal uses an arrangement associated with Stainer and Bell. That arrangement was not copied, and no separate pre-1931 folk setting was found.
 - 228 CHARTRES. CHARTRES is a 15th century melody arranged by Charles Wood. No engraved score with a recorded pre-1931 source was found.
-- 230 QUELLE EST CETTE ODEUR AGREABLE. QUELLE EST CETTE ODEUR AGREABLE is a French carol. No engraved score with a recorded pre-1931 source was found, so the hymnal arrangement was not copied.
-- 231 BETHLEHEM (Johnson). BETHLEHEM (Johnson) is by David N. Johnson. The tune is copyright 1968.
-- 232 O JESULEIN SÜSS. O JESULEIN SUSS is associated with Johann Sebastian Bach and the melody is old, but no engraved score with a recorded pre-1931 source was found.
 - 233 I DO BELIEVE. I DO BELIEVE has no composer in the hymn data, and no engraved score with a recorded source was found.
 - 559 MORWELLHAM. MORWELLHAM is by Charles Steggall, who died in 1905, but no engraved score with a recorded pre-1931 source was retrieved.

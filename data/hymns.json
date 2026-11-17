@@ -625,9 +625,21 @@
       1,
       4
     ],
+    "copyright_stanzas": [
+      {
+        "number": 2,
+        "holder": "InterVarsity Christian Fellowship",
+        "year": "1978"
+      },
+      {
+        "number": 3,
+        "holder": "InterVarsity Christian Fellowship",
+        "year": "1978"
+      }
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Trinity Hymnal 196 shows no full text on hymnary.org because of the copyrighted stanzas. The two Wesley stanzas here (hymnal stanzas 1 and 4) come from Wesley's public domain 1744 text as given in the hymnary.org representative text (https://hymnary.org/text/come_thou_long_expected_jesus_born_to). Capitalization and punctuation may differ slightly from the printed Trinity Hymnal; check the hymnal before printing. Apps should label these as stanzas 1 and 4 (see stanza_numbers) and show a notice that stanzas 2 and 3 are omitted. Section 'Advent': hymnary topic 'Jesus Christ: His Advent'."
+    "notes": "Trinity Hymnal 196 shows no full text on hymnary.org because of the copyrighted stanzas. The two Wesley stanzas here (hymnal stanzas 1 and 4) come from Wesley's public domain 1744 text as given in the hymnary.org representative text (https://hymnary.org/text/come_thou_long_expected_jesus_born_to). Stanzas 2 and 3 are by Mark E. Hunt, text copyright 1978 InterVarsity Christian Fellowship. Capitalization and punctuation may differ slightly from the printed Trinity Hymnal; check the hymnal before printing. Section 'Advent': hymnary topic 'Jesus Christ: His Advent'."
   },
   {
     "number": 197,
@@ -1505,24 +1517,6 @@
     ],
     "refrain_after_each_stanza": true,
     "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Refrain follows each stanza. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
-    "number": 212,
-    "title": "Within a Crib My Savior Lay",
-    "section": "Christmas",
-    "author": "Timothy Dudley-Smith",
-    "translator": null,
-    "composer": "Norman L. Warren, b. 1934",
-    "tune": "LORD OF LOVE",
-    "year_text": "text 1968",
-    "public_domain": false,
-    "copyright_note": "Text by Timothy Dudley-Smith (1968), copyright 1968 Hope Publishing Co. Licensed words: Trinity Hymnal (1990) no. 212; Hope Publishing (hopepublishing.com); CCLI SongSelect or OneLicense for congregational reprint.",
-    "source_url": "https://hymnary.org/hymn/TH1990/212",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
   },
   {
     "number": 213,
@@ -2505,60 +2499,6 @@
     "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Joseph Simpson Cook text first published 1919, so public domain in the US. MacMillan's 1930 arrangement may be under copyright; the text is not. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
   },
   {
-    "number": 230,
-    "title": "Thou Who Wast Rich beyond All Splendor",
-    "section": "Christmas",
-    "author": "Frank Houghton, 1894-1972",
-    "translator": null,
-    "composer": "French carol melody; arr. Charles Herbert Kitson",
-    "tune": "QUELLE EST CETTE ODEUR AGREABLE",
-    "year_text": null,
-    "public_domain": false,
-    "copyright_note": "Text by Frank Houghton (1894-1972), copyright CMF International (OMF International). Licensed words: Trinity Hymnal (1990) no. 230; OMF International; CCLI SongSelect for reprint.",
-    "source_url": "https://hymnary.org/hymn/TH1990/230",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
-    "number": 231,
-    "title": "Lovely Child, Holy Child",
-    "section": "Christmas",
-    "author": "David N. Johnson",
-    "translator": null,
-    "composer": "Folk carol; arr. David N. Johnson",
-    "tune": "BETHLEHEM (Johnson)",
-    "year_text": "text 1968; Mod.",
-    "public_domain": false,
-    "copyright_note": "Text and tune by David N. Johnson, copyright 1968 Augsburg Publishing House (Augsburg Fortress). Licensed words: Trinity Hymnal (1990) no. 231; Augsburg Fortress; OneLicense for reprint.",
-    "source_url": "https://hymnary.org/hymn/TH1990/231",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
-    "number": 232,
-    "title": "O Jesus Sweet, O Jesus Mild",
-    "section": "Christmas",
-    "author": "Samuel Scheidt",
-    "translator": "Mark E. Hunt",
-    "composer": "Johann Sebastian Bach, 1685-1750",
-    "tune": "O JESULEIN SÜSS",
-    "year_text": "text 1650; tr. 1976; alt. 1990",
-    "public_domain": false,
-    "copyright_note": "Translation by Mark E. Hunt (1976, alt. 1990), copyright 1978 InterVarsity Christian Fellowship. Licensed words: Trinity Hymnal (1990) no. 232; permission from InterVarsity Christian Fellowship (or the Trinity Hymnal publisher, Great Commission Publications).",
-    "source_url": "https://hymnary.org/hymn/TH1990/232",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
     "number": 233,
     "title": "To Us a Child of Hope is Born",
     "section": "Christmas",
@@ -2664,19 +2604,66 @@
     "number": 301,
     "title": "Join All the Glorious Names",
     "section": null,
-    "author": null,
+    "author": "Isaac Watts",
     "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
+    "composer": "John Darwall (1770)",
+    "tune": "DARWALL",
+    "year_text": "1707",
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://hymnary.org/hymn/TH1990/301",
+    "stanzas": [
+      [
+        "Join all the glorious names",
+        "of wisdom, love, and pow'r,",
+        "that ever mortals knew,",
+        "that angels ever bore:",
+        "all are too poor to speak his worth,",
+        "too poor to set my Savior forth."
+      ],
+      [
+        "Great Prophet of my God,",
+        "my tongue would bless thy name:",
+        "by thee the joyful news",
+        "of our salvation came,",
+        "the joyful news of sins forgiv'n,",
+        "of hell subdued, and peace with heav'n."
+      ],
+      [
+        "Jesus, my great High Priest,",
+        "offered his blood and died;",
+        "my guilty conscience seeks",
+        "no sacrifice beside:",
+        "his pow'rful blood did once atone",
+        "and now it pleads before the throne."
+      ],
+      [
+        "Thou art my Counselor,",
+        "my pattern, and my Guide,",
+        "and thou my Shepherd art;",
+        "O keep me near thy side;",
+        "nor let my feet e'er turn astray",
+        "to wander in the crooked way."
+      ],
+      [
+        "My Savior and my Lord,",
+        "my Conqu'ror and my King,",
+        "thy scepter and thy sword,",
+        "thy reigning grace, I sing:",
+        "thine is the pow'r; behold I sit",
+        "in willing bonds beneath thy feet."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-09-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Trinity Hymnal (1990) instance page https://hymnary.org/hymn/TH1990/301. Isaac Watts, 1707. The page shows no alteration and no copyright notice. The Faith Presbyterian Tacoma bulletin for 2026-08-09-pm (https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf) prints the same five stanzas, with the same lines, and credits Isaac Watts, 1707."
   },
   {
     "number": 305,
@@ -2834,19 +2821,63 @@
     "number": 406,
     "title": "Now the Day Is Over",
     "section": null,
-    "author": null,
+    "author": "Sabine Baring-Gould",
     "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
+    "composer": "Joseph Barnby (1868)",
+    "tune": "MERRIAL",
+    "year_text": "1865",
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://hymnary.org/hymn/TH1990/406",
+    "stanzas": [
+      [
+        "Now the day is over,",
+        "night is drawing nigh,",
+        "shadows of the evening",
+        "steal across the sky."
+      ],
+      [
+        "Jesus, give the weary",
+        "calm and sweet repose;",
+        "with thy tend'rest blessing",
+        "may our eyelids close."
+      ],
+      [
+        "Grant to little children",
+        "visions bright of thee;",
+        "guard the sailors, tossing",
+        "on the deep blue sea."
+      ],
+      [
+        "Comfort ev'ry suff'rer",
+        "watching late in pain;",
+        "those who plan some evil",
+        "from their sin restrain."
+      ],
+      [
+        "Through the long night watches",
+        "may thine angels spread",
+        "their white wings above me,",
+        "watching round my bed."
+      ],
+      [
+        "Glory to the Father,",
+        "glory to the Son,",
+        "and to thee, blest Spirit,",
+        "whilst all ages run."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-23-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Trinity Hymnal (1990) instance page https://hymnary.org/hymn/TH1990/406. Sabine Baring-Gould, 1865. The page shows no alteration and no copyright notice. The Faith Presbyterian Tacoma bulletin for 2026-08-23-pm (https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf) prints the same six stanzas, with the same lines, and credits Sabine Baring-Gould, 1865."
   },
   {
     "number": 415,

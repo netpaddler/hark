@@ -221,10 +221,6 @@
       "tune": "YORKSHIRE",
       "reason": "YORKSHIRE by John Wainwright is old, but no engraved score with a recorded pre-1931 source was found."
     },
-    "212": {
-      "tune": "LORD OF LOVE",
-      "reason": "LORD OF LOVE is by Norman L. Warren (born 1934). The tune is still under copyright."
-    },
     "214": {
       "tune": "GLORIA",
       "reason": "GLORIA is a French carol melody, but the Trinity Hymnal uses an arrangement from 1937. A score that also cites Lutheran Worship (1982) was not used."
@@ -264,18 +260,6 @@
     "228": {
       "tune": "CHARTRES",
       "reason": "CHARTRES is a 15th century melody arranged by Charles Wood. No engraved score with a recorded pre-1931 source was found."
-    },
-    "230": {
-      "tune": "QUELLE EST CETTE ODEUR AGREABLE",
-      "reason": "QUELLE EST CETTE ODEUR AGREABLE is a French carol. No engraved score with a recorded pre-1931 source was found, so the hymnal arrangement was not copied."
-    },
-    "231": {
-      "tune": "BETHLEHEM (Johnson)",
-      "reason": "BETHLEHEM (Johnson) is by David N. Johnson. The tune is copyright 1968."
-    },
-    "232": {
-      "tune": "O JESULEIN SÜSS",
-      "reason": "O JESULEIN SUSS is associated with Johann Sebastian Bach and the melody is old, but no engraved score with a recorded pre-1931 source was found."
     },
     "233": {
       "tune": "I DO BELIEVE",

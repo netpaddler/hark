@@ -68,7 +68,6 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
 | 209 | Christians, Awake, Salute the Happy Morn | 2 |
 | 210 | Silent Night! Holy Night! | 1 |
 | 211 | God Rest You Merry, Gentlemen | 0 |
-| 212 | Within a Crib My Savior Lay | 0 |
 | 213 | What Child Is This | 6 |
 | 214 | Angels We Have Heard on High | 7 |
 | 215 | While by the Sheep we Watched at Night | 0 |
@@ -86,13 +85,9 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
 | 227 | On Christmas Night All Christians Sing | 4 |
 | 228 | Saw You Never, in the Twilight | 0 |
 | 229 | Gentle Mary Laid Her Child | 0 |
-| 230 | Thou Who Wast Rich beyond All Splendor | 0 |
-| 231 | Lovely Child, Holy Child | 0 |
-| 232 | O Jesus Sweet, O Jesus Mild | 0 |
 | 233 | To Us a Child of Hope is Born | 0 |
 
-None found: 200 It Came upon the Midnight Clear, 201 O Little Town of Bethlehem, 202 O Little Town of Bethlehem, 211 God Rest You Merry, Gentlemen, 212 Within a Crib My Savior Lay, 215 While by the Sheep we Watched at Night, 220 From Heaven High I Come to You, 221 Lo, How a Rose E'er Blooming, 224 Go, Tell It on the Mountain, 228 Saw You Never, in the Twilight, 229 Gentle Mary Laid Her Child, 230 Thou Who Wast Rich beyond All Splendor, 231 Lovely Child, Holy Child, 232 O Jesus Sweet, O Jesus Mild, 233 To Us a Child of Hope is Born.
-- 212, 230, 231 and 232 are copyright-withheld in hymns.json, so they have no lyrics to match. They were also not caught by title.
+None found: 200 It Came upon the Midnight Clear, 201 O Little Town of Bethlehem, 202 O Little Town of Bethlehem, 211 God Rest You Merry, Gentlemen, 215 While by the Sheep we Watched at Night, 220 From Heaven High I Come to You, 221 Lo, How a Rose E'er Blooming, 224 Go, Tell It on the Mountain, 228 Saw You Never, in the Twilight, 229 Gentle Mary Laid Her Child, 233 To Us a Child of Hope is Born.
 - Silent Night (210) has one entry, from Christmas Eve 2020 at 11:00 pm.
   - It is also announced for the close of Christmas Eve 2020 at 4:00 pm (video gyux6d9UtBM, roughly 3680s to 4160s) and 2023 at 4:00 pm (video GcyYETKpWVI, roughly 3365s to 3750s).
   - In both, the sung captions are too garbled to place a start, so they are not in `data/recordings.json`.

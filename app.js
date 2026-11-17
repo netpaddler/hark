@@ -4,7 +4,6 @@ import {
   browse,
   faithRecordings,
   filterHymns,
-  isWithheld,
   wordsPending,
   listRecordings,
   listSections,
@@ -1155,13 +1154,7 @@ function renderHymn(number) {
     const heard = faithSection(hymn);
     const choir = recordingSection(hymn);
 
-    if (isWithheld(hymn)) {
-      const notice = el("div", { class: "notice" });
-      notice.append(el("h2", {}, "These words are under copyright"));
-      if (hymn.copyright_note) notice.append(el("p", {}, hymn.copyright_note));
-      notice.append(el("p", {}, "See the printed Trinity Hymnal for the words."));
-      article.append(notice);
-    } else if (wordsPending(hymn)) {
+    if (wordsPending(hymn)) {
       // Listed from a bulletin so it can be found by number or title. Say that
       // plainly rather than showing an empty page.
       const notice = el("div", { class: "notice" });
@@ -1181,8 +1174,8 @@ function renderHymn(number) {
       }
       const text = el("div", { class: "text" });
       for (const block of stanzaPlan(hymn)) {
-        if (block.type === "gap") {
-          text.append(el("p", { class: "omitted" }, block.note));
+        if (block.type === "gap" || block.type === "copyright") {
+          text.append(el("p", { class: block.type === "copyright" ? "omitted copyright-stanza" : "omitted" }, block.note));
         } else if (block.type === "refrain") {
           const refrain = el("div", { class: "refrain" });
           refrain.append(el("p", { class: "refrain-label" }, "Refrain"));

@@ -50,7 +50,7 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 96);
+  assert.equal(hymns.length, 92);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
@@ -78,7 +78,7 @@ test("sections and copyright flags stay intact", () => {
   }
   assert.deepEqual(
     hymns.filter((hymn) => isWithheld(hymn)).map((hymn) => hymn.number),
-    [212, 230, 231, 232],
+    [],
   );
 });
 
@@ -118,7 +118,7 @@ test("title index is alphabetical and ignores a leading article", () => {
   assert.equal(titleLetter("A Mighty Fortress"), "M");
   assert.equal(titleLetter("An Upper Room"), "U");
   assert.equal(titleLetter("All Creatures of Our God and King"), "A");
-  assert.ok(titleSortKey("The First Noel") < titleSortKey("Thou Who Wast Rich"));
+  assert.ok(titleSortKey("The First Noel") < titleSortKey("While Shepherds Watched"));
   assert.equal(titleLetter("Hark! The Herald Angels Sing"), "H");
   const listed = browse(hymns, { mode: "title" }).letters.flatMap((bucket) =>
     bucket.hymns.map((hymn) => hymn.title),
@@ -134,7 +134,7 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 48);
+  assert.equal(all.length, 45);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
@@ -145,7 +145,7 @@ test("author index files people by surname and keeps translators", () => {
   );
   assert.deepEqual(
     group("Watts, Isaac").hymns.map((item) => item.hymn.number),
-    [195],
+    [195, 301],
   );
   assert.deepEqual(
     group("Wesley, Charles").hymns.map((item) => item.hymn.number),
@@ -158,10 +158,7 @@ test("author index files people by surname and keeps translators", () => {
   );
   assert.deepEqual(
     group("Hunt, Mark E.").hymns.map((item) => [item.hymn.number, item.mark]),
-    [
-      [196, null],
-      [232, "tr."],
-    ],
+    [[196, null]],
   );
   assert.equal(
     group("Anonymous").hymns.find((item) => item.hymn.number === 215).mark,
@@ -188,10 +185,15 @@ test("partial and withheld hymns describe what is missing", () => {
   const plan = stanzaPlan(byNumber.get(196));
   assert.deepEqual(
     plan.map((block) => (block.type === "stanza" ? block.number : block.note)),
-    [1, "Stanzas 2 and 3 are omitted.", 4],
+    [
+      1,
+      "Stanza 2. Words are under copyright and are not reproduced here. InterVarsity Christian Fellowship, 1978.",
+      "Stanza 3. Words are under copyright and are not reproduced here. InterVarsity Christian Fellowship, 1978.",
+      4,
+    ],
   );
   assert.match(partialNote(byNumber.get(196)), /^Stanzas 2 and 3 are by Mark E\. Hunt/);
-  assert.equal(partialNote(byNumber.get(212)), null);
+  assert.equal(partialNote(byNumber.get(108)), null);
   const emmanuel = stanzaPlan(byNumber.get(194));
   assert.equal(emmanuel.filter((block) => block.type === "refrain").length, 5);
   assert.deepEqual(
@@ -937,8 +939,8 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
   assert.equal(wordsPending(stub), true);
   assert.match(stub.notes, /Faith Presbyterian Tacoma bulletin/);
   // A hymn whose words are withheld for copyright is a different state.
-  assert.equal(wordsPending(byNumber.get(212)), false);
-  assert.equal(isWithheld(byNumber.get(212)), true);
+  assert.equal(wordsPending(byNumber.get(53)), true);
+  assert.equal(isWithheld(byNumber.get(53)), false);
   // A hymn with words is neither.
   assert.equal(wordsPending(byNumber.get(108)), false);
   assert.equal(isWithheld(byNumber.get(108)), false);
@@ -950,7 +952,7 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
 
   // Every bulletin hymn still needs a theme row and a music row.
   const pending = hymns.filter((hymn) => wordsPending(hymn) && !isWithheld(hymn));
-  assert.equal(pending.length, 51);
+  assert.equal(pending.length, 49);
   for (const hymn of pending) {
     assert.ok(themes.hymns[String(hymn.number)], `themes ${hymn.number}`);
     assert.ok(music.omitted[String(hymn.number)], `music ${hymn.number}`);
