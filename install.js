@@ -1,4 +1,4 @@
-export const INSTALL_URL = "https://hymns.theweightofglory.com/";
+export const INSTALL_URL = "https://hark.theweightofglory.com/";
 
 export const installGuide = {
   intro:

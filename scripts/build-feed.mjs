@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { changelogDateLabel, changelogPubDate } from "../changelog.js";
 
-export const SITE = "https://hymns.theweightofglory.com/";
+export const SITE = "https://hark.theweightofglory.com/";
 
 function xml(value) {
   return String(value)

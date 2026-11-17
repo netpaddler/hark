@@ -187,7 +187,7 @@ On iPhone, notifications work only after Hark is added to the Home Screen, and o
 
 ## Install Hark
 
-The live app is <https://hymns.theweightofglory.com/>. <https://netpaddler.github.io/hark/> redirects there. The install page, with steps and a QR code, is <https://hymns.theweightofglory.com/#/install>.
+The live app is <https://hark.theweightofglory.com/>. <https://netpaddler.github.io/hark/> redirects there. The install page, with steps and a QR code, is <https://hark.theweightofglory.com/#/install>.
 
 On the home screen, a small Install Hark link in the top right opens the install page.
 
@@ -214,7 +214,7 @@ The workflow in `.github/workflows/pages.yml` publishes the site on every push t
 1. Make this repository public.
 2. In Settings, open Pages. Under Build and deployment, set Source to GitHub Actions.
 3. Push to `main`, or run "Deploy GitHub Pages" by hand from the Actions tab. The workflow runs on every push to `main`, and you can start it yourself.
-4. The site is at <https://hymns.theweightofglory.com/>. The old project address redirects there.
+4. The site is at <https://hark.theweightofglory.com/>. The old project address redirects there.
 
 If Pages is not turned on yet, the workflow tries to enable it and set the source to GitHub Actions. You can also turn that on yourself under Settings, Pages.
 

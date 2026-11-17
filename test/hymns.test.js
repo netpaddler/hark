@@ -697,7 +697,7 @@ test("install manifest, guide, and QR code", () => {
   // The install link and the code both open the live site, not the old
   // project address, and the code really does hold the address it is
   // labelled with.
-  assert.equal(INSTALL_URL, "https://hymns.theweightofglory.com/");
+  assert.equal(INSTALL_URL, "https://hark.theweightofglory.com/");
   assert.equal(readQr(svg), INSTALL_URL);
   assert.ok(svg.includes(`<title>QR code for ${INSTALL_URL}</title>`));
   const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
@@ -858,7 +858,8 @@ test("worker list strips html, drops pull requests, and caches for 60 seconds", 
 });
 
 test("both hosts Hark is served from are allowed, and each gets its own header", async () => {
-  const LIVE = "https://hymns.theweightofglory.com";
+  const LIVE = "https://hark.theweightofglory.com";
+  const PREVIOUS = "https://hymns.theweightofglory.com";
   const OLD = "https://netpaddler.github.io";
   const originalFetch = globalThis.fetch;
   const originalCaches = globalThis.caches;
@@ -880,7 +881,7 @@ test("both hosts Hark is served from are allowed, and each gets its own header",
     const env = {
       GITHUB_TOKEN: "test-token",
       TURNSTILE_SECRET: "test-secret",
-      ALLOWED_ORIGIN: `${LIVE},${OLD}`,
+      ALLOWED_ORIGIN: `${LIVE},${PREVIOUS},${OLD}`,
     };
     const get = (origin) =>
       worker.default.fetch(
@@ -891,8 +892,12 @@ test("both hosts Hark is served from are allowed, and each gets its own header",
     const live = await get(LIVE);
     assert.equal(live.status, 200);
     assert.equal(live.headers.get("access-control-allow-origin"), LIVE);
+    // The previous name stays allowed while DNS and installed copies move.
+    const previous = await get(PREVIOUS);
+    assert.equal(previous.status, 200);
+    assert.equal(previous.headers.get("access-control-allow-origin"), PREVIOUS);
     // A list cannot go in the header, so each caller is told its own origin,
-    // and vary keeps a cache from mixing the two up.
+    // and vary keeps a cache from mixing them up.
     const old = await get(OLD);
     assert.equal(old.status, 200);
     assert.equal(old.headers.get("access-control-allow-origin"), OLD);
@@ -1799,7 +1804,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v36";/);
+  assert.match(sw, /const CACHE = "hark-v37";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -1908,14 +1913,14 @@ test("the worker stores a subscription and sends the notice", async () => {
   try {
     const worker = await import(`../worker/src/index.js?push=${Date.now()}`);
     const env = {
-      ALLOWED_ORIGIN: "https://hymns.theweightofglory.com",
+      ALLOWED_ORIGIN: "https://hark.theweightofglory.com",
       PUSH_SUBSCRIPTIONS: store,
       PUSH_NOTIFY_SECRET: "test-secret",
       VAPID_PRIVATE_JWK: JSON.stringify(jwk),
       VAPID_PUBLIC_KEY: bytesToBase64Url(vapidPublic),
       VAPID_SUBJECT: "mailto:hark@example.com",
     };
-    const origin = { origin: "https://hymns.theweightofglory.com", "content-type": "application/json" };
+    const origin = { origin: "https://hark.theweightofglory.com", "content-type": "application/json" };
     const post = (path, body, headers = origin) =>
       worker.default.fetch(
         new Request(`https://hark-requests.example${path}`, {
