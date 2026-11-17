@@ -9,7 +9,7 @@ import { isLiked, likeButtonState, likedHymns, readLikes, toggleLike } from "../
 import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
-import { captionEnd, estimatedEnd, nextEndingSong, playbackStop, shuffleTracks, songsWithEndings, themeTracks } from "../playlist.js";
+import { captionEnd, estimatedEnd, nextEndingSong, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "../playlist.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -1815,7 +1815,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v41";/);
+  assert.match(sw, /const CACHE = "hark-v42";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2085,6 +2085,50 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.equal(nextEndingSong(book, 4, { wrap: true }).number, 1);
   assert.match(appSource, /Auto play all/);
   assert.match(appSource, /hark-auto-play-all/);
-  assert.match(appSource, /nextEndingSong\(endingSongs\(\), track\.number, \{ wrap: true \}\)/);
-  assert.match(appSource, /nextEndingSong\(endingSongs\(\), track \? track\.number : 0, \{ wrap: false \}\)/);
+  assert.match(appSource, /nextPlay\(\{/);
+  assert.match(appSource, /function listPlayControls/);
+  assert.match(appSource, /listWithPlay\(numberList\(result\.hymns\), result\.hymns\)/);
+  assert.match(appSource, /listWithPlay\(titleList\(result\.letters\), shown\)/);
+  assert.match(appSource, /listWithPlay\(authorList\(result\.letters\), shown\)/);
+  assert.match(appSource, /listWithPlay\(numberList\(list\), list\)/);
+  assert.match(appSource, /hymnPlayControls\(hymn\)/);
+});
+
+test("a song started outside a theme continues through the book", () => {
+  const catalog = songsWithEndings({ hymns, recordings });
+  assert.ok(catalog.length > 5);
+  const started = nextPlay({ catalog, queue: [catalog[0]], index: 0, auto: true });
+  assert.equal(started.number, catalog[1].number);
+  const wrapped = nextPlay({
+    catalog,
+    queue: [catalog[catalog.length - 1]],
+    index: 0,
+    auto: true,
+  });
+  assert.equal(wrapped.number, catalog[0].number);
+  assert.equal(
+    nextPlay({
+      catalog,
+      queue: [catalog[catalog.length - 1]],
+      index: 0,
+      auto: false,
+      singleAdvance: true,
+    }),
+    null,
+  );
+  const picked = [catalog[3], catalog[1], catalog[5]].map((track) => byNumber.get(track.number));
+  const listed = tracksForHymns({ hymns: picked, recordings });
+  assert.deepEqual(
+    listed.map((track) => track.number),
+    picked.map((hymn) => hymn.number),
+  );
+  const fromSearch = nextPlay({ catalog, queue: listed, index: 0, auto: true });
+  assert.equal(fromSearch.number, nextEndingSong(catalog, listed[0].number, { wrap: true }).number);
+  assert.notEqual(fromSearch.number, listed[1].number);
+  const kept = nextPlay({ catalog, queue: listed, index: 0, auto: false });
+  assert.equal(kept.number, listed[1].number);
+  const fromHere = songsFromNumber(catalog, listed[0].number);
+  assert.equal(fromHere[0].number, listed[0].number);
+  assert.ok(fromHere.every((track) => track.number >= listed[0].number));
+  assert.ok(fromHere.length < catalog.length);
 });

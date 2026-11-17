@@ -2,6 +2,11 @@
   {
     "date": "2026-11-17",
     "hymns": [],
+    "note": "Play all and Auto play all are on the song list, on a search, and on each song. Auto play all follows hymn number from wherever a song was started."
+  },
+  {
+    "date": "2026-11-17",
+    "hymns": [],
     "note": "Play next song moves through the list. Auto play all keeps going through the book by number."
   },
   {

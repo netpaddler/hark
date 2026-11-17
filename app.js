@@ -26,7 +26,7 @@ import {
   formatRecordingDate,
   youtubeBlock,
 } from "./hymn-model.js";
-import { nextEndingSong, playbackStop, shuffleTracks, songsWithEndings, themeTracks } from "./playlist.js";
+import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
@@ -490,18 +490,7 @@ function themeHymnList(list) {
   );
 }
 
-function playAllControls(themeId) {
-  if (!themeId) return null;
-  const tracks = themeTracks({
-    hymns,
-    themes: themeCatalog,
-    recordings: recordingCatalog,
-    themeId,
-  });
-  if (!tracks.length) return null;
-  const row = el("p", { class: "play-all" });
-  const all = el("button", { type: "button", class: "play-song" }, "Play all");
-  const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
+function autoPlayButton() {
   const auto = el(
     "button",
     {
@@ -511,11 +500,60 @@ function playAllControls(themeId) {
     },
     "Auto play all",
   );
-  all.addEventListener("click", () => beginSongs(tracks, "all"));
-  shuffle.addEventListener("click", () => beginSongs(shuffleTracks(tracks), "all"));
   auto.addEventListener("click", () => setAutoPlayAll(!autoPlayAll()));
-  row.append(all, shuffle, auto);
+  return auto;
+}
+
+function playRow(tracks) {
+  const row = el("p", { class: "play-all" });
+  if (tracks.length) {
+    const all = el("button", { type: "button", class: "play-song" }, "Play all");
+    const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
+    all.addEventListener("click", () => beginSongs(tracks, "all"));
+    shuffle.addEventListener("click", () => beginSongs(shuffleTracks(tracks), "all"));
+    row.append(all, shuffle);
+  }
+  row.append(autoPlayButton());
   return row;
+}
+
+function playAllControls(themeId) {
+  if (!themeId) return null;
+  const tracks = themeTracks({
+    hymns,
+    themes: themeCatalog,
+    recordings: recordingCatalog,
+    themeId,
+  });
+  if (!tracks.length) return null;
+  return playRow(tracks);
+}
+
+function listPlayControls(hymnList) {
+  if (!hymnList || hymnList.length === 0) return null;
+  return playRow(tracksForHymns({ hymns: hymnList, recordings: recordingCatalog }));
+}
+
+function hymnPlayControls(hymn) {
+  return playRow(songsFromNumber(endingSongs(), hymn.number));
+}
+
+function hymnsOnScreen(index, result) {
+  if (index === "title") return result.letters.flatMap((bucket) => bucket.hymns);
+  if (index === "author") {
+    return result.letters.flatMap((bucket) =>
+      bucket.groups.flatMap((group) => group.hymns.map((item) => item.hymn)),
+    );
+  }
+  return result.hymns;
+}
+
+function listWithPlay(node, hymnList) {
+  const play = listPlayControls(hymnList);
+  if (!play) return node;
+  const wrap = el("div", { class: "list-play" });
+  wrap.append(play, node);
+  return wrap;
 }
 
 function autoPlayAll() {
@@ -924,7 +962,7 @@ function renderIndex(index) {
     } else if (list.length === 0) {
       main.replaceChildren(el("p", { class: "empty" }, "No songs match that search."));
     } else {
-      main.replaceChildren(numberList(list));
+      main.replaceChildren(listWithPlay(numberList(list), list));
     }
     document.title = "Liked · Hark";
     const y = scrollMemory.liked || 0;
@@ -937,11 +975,13 @@ function renderIndex(index) {
   if (result.total === 0) {
     main.replaceChildren(el("p", { class: "empty" }, "No songs match that search."));
   } else if (index === "title") {
-    main.replaceChildren(titleList(result.letters), jumpBar(result.letters));
+    const shown = hymnsOnScreen(index, result);
+    main.replaceChildren(listWithPlay(titleList(result.letters), shown), jumpBar(result.letters));
   } else if (index === "author") {
-    main.replaceChildren(authorList(result.letters), jumpBar(result.letters));
+    const shown = hymnsOnScreen(index, result);
+    main.replaceChildren(listWithPlay(authorList(result.letters), shown), jumpBar(result.letters));
   } else {
-    main.replaceChildren(numberList(result.hymns));
+    main.replaceChildren(listWithPlay(numberList(result.hymns), result.hymns));
   }
   document.title =
     index === "title" ? "Titles · Hark" : index === "author" ? "Authors · Hark" : "Hark";
@@ -1339,6 +1379,7 @@ function renderHymn(number) {
     if (credit.music) article.append(el("p", { class: "attribution" }, credit.music));
     const chipsForHymn = themeChips(hymn);
     if (chipsForHymn) article.append(chipsForHymn);
+    article.append(hymnPlayControls(hymn));
 
     const heard = faithSection(hymn);
     const choir = recordingSection(hymn);
@@ -2427,18 +2468,20 @@ function finishSong() {
   } catch {
     /* already stopped */
   }
-  if (autoPlayAll()) {
-    const following = nextEndingSong(endingSongs(), track.number, { wrap: true });
-    if (following) {
+  const following = nextPlay({
+    catalog: endingSongs(),
+    queue: songQueue,
+    index: songIndex,
+    auto: autoPlayAll(),
+  });
+  if (following) {
+    if (autoPlayAll()) {
       songMode = "catalog";
       songQueue = [following];
       songIndex = 0;
-      loadSong();
-      return;
+    } else {
+      songIndex += 1;
     }
-  }
-  if (songMode === "all" && songIndex + 1 < songQueue.length) {
-    songIndex += 1;
     loadSong();
     return;
   }
@@ -2510,10 +2553,24 @@ function playQueued(track, mode) {
 
 function stepSong(delta) {
   if (!songQueue.length) return;
-  const track = currentSong();
-  if (delta > 0 && autoPlayAll()) {
-    playQueued(nextEndingSong(endingSongs(), track ? track.number : 0, { wrap: true }), "catalog");
-    return;
+  if (delta > 0) {
+    const auto = autoPlayAll();
+    const atEnd = songIndex + 1 >= songQueue.length;
+    if (auto || (songMode === "one" && atEnd)) {
+      const following = nextPlay({
+        catalog: endingSongs(),
+        queue: songQueue,
+        index: songIndex,
+        auto,
+        singleAdvance: songMode === "one",
+      });
+      if (!following) {
+        stopSongs();
+        return;
+      }
+      playQueued(following, auto ? "catalog" : "one");
+      return;
+    }
   }
   const next = songIndex + delta;
   if (next < 0) {
@@ -2527,13 +2584,6 @@ function stepSong(delta) {
     if (ytPlayer && typeof ytPlayer.loadVideoById === "function") loadSong();
     else ensureSongPlayer().then(loadSong);
     return;
-  }
-  if (delta > 0 && songMode === "one") {
-    const following = nextEndingSong(endingSongs(), track ? track.number : 0, { wrap: false });
-    if (following) {
-      playQueued(following, "one");
-      return;
-    }
   }
   // Last song of this list: the player stops and the bar closes.
   stopSongs();
