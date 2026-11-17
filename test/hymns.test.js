@@ -962,6 +962,27 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
   assert.match(appSource, /Words not added yet/);
 });
 
+test("copyrighted hymns name the holder and do not print the words", () => {
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /Words are under copyright and are not reproduced here\./);
+  const expected = {
+    212: ["Hope Publishing Co.", "1968", "https://www.hopepublishing.com/"],
+    230: ["CMF International (OMF International)", null, "https://hymnary.org/hymn/TH1990/230"],
+    231: ["Augsburg Publishing House", "1968", "https://hymnary.org/hymn/TH1990/231"],
+    232: ["InterVarsity Christian Fellowship", "1978", "https://hymnary.org/hymn/TH1990/232"],
+  };
+  const withheld = hymns.filter((hymn) => isWithheld(hymn));
+  assert.deepEqual(withheld.map((hymn) => hymn.number), [212, 230, 231, 232]);
+  for (const hymn of withheld) {
+    const [holder, year, url] = expected[hymn.number];
+    assert.equal(hymn.stanzas.length, 0, String(hymn.number));
+    assert.equal(hymn.copyright_holder, holder);
+    assert.equal(hymn.copyright_year, year);
+    assert.equal(hymn.copyright_url, url);
+    assert.ok(hymn.author || hymn.translator, String(hymn.number));
+  }
+});
+
 test("the Hark title links home on the list and on a hymn", () => {
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");

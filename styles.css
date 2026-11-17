@@ -1140,6 +1140,15 @@ main.has-jump {
   margin-top: 0;
 }
 
+.notice a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.copyright-holder {
+  color: var(--muted);
+}
+
 .text {
   margin-top: 1rem;
   border-top: 1px solid var(--line);
