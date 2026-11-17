@@ -24,10 +24,7 @@
     { "id": "evening", "title": "Evening" }
   ],
   "hymns": {
-    "5": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
     "15": {
       "seasons": ["all-year"],
       "topics": []
@@ -40,18 +37,9 @@
       "seasons": ["all-year"],
       "topics": []
     },
-    "36": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
-    "46": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
-    "53": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
+
+
     "56": {
       "seasons": ["all-year"],
       "topics": []
@@ -72,26 +60,14 @@
       "seasons": ["all-year"],
       "topics": []
     },
-    "103": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
-    "168": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
+
     "172": {
       "seasons": ["all-year"],
       "topics": []
     },
-    "239": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
-    "257": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
+
     "271": {
       "seasons": ["all-year"],
       "topics": []
@@ -100,10 +76,7 @@
       "seasons": ["all-year"],
       "topics": []
     },
-    "305": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
     "338": {
       "seasons": ["all-year"],
       "topics": []
@@ -112,10 +85,7 @@
       "seasons": ["all-year"],
       "topics": []
     },
-    "363": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
     "398": {
       "seasons": ["all-year"],
       "topics": []
@@ -124,10 +94,7 @@
       "seasons": ["all-year"],
       "topics": []
     },
-    "415": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
     "429": {
       "seasons": ["all-year"],
       "topics": []
@@ -140,10 +107,7 @@
       "seasons": ["all-year"],
       "topics": []
     },
-    "469": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
     "485": {
       "seasons": ["all-year"],
       "topics": []
@@ -200,10 +164,7 @@
       "seasons": ["all-year"],
       "topics": []
     },
-    "689": {
-      "seasons": ["all-year"],
-      "topics": []
-    },
+
     "691": {
       "seasons": ["all-year"],
       "topics": []

@@ -17,7 +17,7 @@ These are the requested fields plus one extra, `stanza_numbers`. It gives the hy
 The text is Trinity Hymnal wording as hymnary.org shows it. It is not a scan of the printed book. Check against the printed hymnal before printing for congregational use.
 
 ## Copyright
-A hymn whose whole text is under copyright is not included. Nos. 125, 660, 703, and 719 are omitted on that rule.
+A hymn whose whole text is under copyright is not included. Nos. 5, 36, 46, 53, 103, 125, 168, 239, 257, 305, 363, 415, 469, 660, 689, 703, and 719 are omitted on that rule.
 
 ## Bulletin texts
 Some hymns take their words from a Faith Presbyterian Tacoma bulletin. `source_url` is that bulletin PDF. The printed wording is the text, including punctuation and hyphenation such as treasure-store. Syllable hyphens in a music underlay are joined into words. A credit line that shows a copyright, or a 1961 or 1990 alteration of the text, is not given words. An alteration dated on the tune only is not a text alteration.
