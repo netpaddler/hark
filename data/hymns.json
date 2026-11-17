@@ -625,9 +625,13 @@
       1,
       4
     ],
+    "copyright_stanzas": [
+      {"number": 2, "holder": "InterVarsity Christian Fellowship", "year": "1978"},
+      {"number": 3, "holder": "InterVarsity Christian Fellowship", "year": "1978"}
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Trinity Hymnal 196 shows no full text on hymnary.org because of the copyrighted stanzas. The two Wesley stanzas here (hymnal stanzas 1 and 4) come from Wesley's public domain 1744 text as given in the hymnary.org representative text (https://hymnary.org/text/come_thou_long_expected_jesus_born_to). Capitalization and punctuation may differ slightly from the printed Trinity Hymnal; check the hymnal before printing. Apps should label these as stanzas 1 and 4 (see stanza_numbers) and show a notice that stanzas 2 and 3 are omitted. Section 'Advent': hymnary topic 'Jesus Christ: His Advent'."
+    "notes": "Trinity Hymnal 196 shows no full text on hymnary.org because of the copyrighted stanzas. The two Wesley stanzas here (hymnal stanzas 1 and 4) come from Wesley's public domain 1744 text as given in the hymnary.org representative text (https://hymnary.org/text/come_thou_long_expected_jesus_born_to). Stanzas 2 and 3 are by Mark E. Hunt, text copyright 1978 InterVarsity Christian Fellowship. Capitalization and punctuation may differ slightly from the printed Trinity Hymnal; check the hymnal before printing. Section 'Advent': hymnary topic 'Jesus Christ: His Advent'."
   },
   {
     "number": 197,

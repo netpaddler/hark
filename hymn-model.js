@@ -265,6 +265,11 @@ export function gapNote(missing) {
   return `Stanzas ${head}, and ${missing[missing.length - 1]} are omitted.`;
 }
 
+export function copyrightStanzaNote(item) {
+  const who = [item.holder, item.year].filter(Boolean).join(", ");
+  return `Stanza ${item.number}. Words are under copyright and are not reproduced here. ${who}.`;
+}
+
 export function stanzaPlan(hymn) {
   const stanzas = Array.isArray(hymn.stanzas) ? hymn.stanzas : [];
   const numbers =
@@ -276,10 +281,24 @@ export function stanzaPlan(hymn) {
   const blocks = [];
   stanzas.forEach((lines, index) => {
     if (index > 0) {
-      const missing = [];
-      for (let n = numbers[index - 1] + 1; n < numbers[index]; n += 1) missing.push(n);
-      const note = gapNote(missing);
-      if (note) blocks.push({ type: "gap", note });
+      const claims = new Map(
+        (Array.isArray(hymn.copyright_stanzas) ? hymn.copyright_stanzas : []).map((item) => [item.number, item]),
+      );
+      const plain = [];
+      const flush = () => {
+        const note = gapNote(plain.splice(0, plain.length));
+        if (note) blocks.push({ type: "gap", note });
+      };
+      for (let n = numbers[index - 1] + 1; n < numbers[index]; n += 1) {
+        const claim = claims.get(n);
+        if (!claim) {
+          plain.push(n);
+          continue;
+        }
+        flush();
+        blocks.push({ type: "copyright", number: n, note: copyrightStanzaNote({ ...claim, number: n }) });
+      }
+      flush();
     }
     blocks.push({ type: "stanza", number: numbers[index], lines });
     if (afterEach) blocks.push({ type: "refrain", lines: refrain });

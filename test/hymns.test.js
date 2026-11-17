@@ -188,7 +188,12 @@ test("partial and withheld hymns describe what is missing", () => {
   const plan = stanzaPlan(byNumber.get(196));
   assert.deepEqual(
     plan.map((block) => (block.type === "stanza" ? block.number : block.note)),
-    [1, "Stanzas 2 and 3 are omitted.", 4],
+    [
+      1,
+      "Stanza 2. Words are under copyright and are not reproduced here. InterVarsity Christian Fellowship, 1978.",
+      "Stanza 3. Words are under copyright and are not reproduced here. InterVarsity Christian Fellowship, 1978.",
+      4,
+    ],
   );
   assert.match(partialNote(byNumber.get(196)), /^Stanzas 2 and 3 are by Mark E\. Hunt/);
   assert.equal(partialNote(byNumber.get(212)), null);
