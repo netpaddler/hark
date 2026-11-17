@@ -132,7 +132,11 @@
     <dialog class="install-help" id="install-help" aria-labelledby="install-help-title"></dialog>
     <!-- Outside #main on purpose. Opening another page replaces #main and leaves this player where it is. -->
     <div class="song-bar" id="song-bar" hidden>
-      <div class="song-bar-video"><div id="song-player-host"></div></div>
+      <div class="song-bar-video" id="song-stage">
+        <div id="song-player-host"></div>
+        <button type="button" id="song-float-hit" class="song-float-hit" aria-label="Open this song"></button>
+        <button type="button" id="song-float-close" class="song-float-close" aria-label="Stop"></button>
+      </div>
       <div class="song-bar-main">
         <button type="button" class="song-bar-title" id="song-bar-title"></button>
         <div class="song-bar-controls">

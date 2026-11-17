@@ -10,6 +10,7 @@ import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
 import { captionEnd, estimatedEnd, nextEndingSong, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "../playlist.js";
+import { stageCorner, stageMostlyOff } from "../stage.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -1815,7 +1816,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v43";/);
+  assert.match(sw, /const CACHE = "hark-v44";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2131,4 +2132,25 @@ test("a song started outside a theme continues through the book", () => {
   assert.equal(fromHere[0].number, listed[0].number);
   assert.ok(fromHere.every((track) => track.number >= listed[0].number));
   assert.ok(fromHere.length < catalog.length);
+});
+
+test("a floating player snaps to a corner and a swipe off dismisses it", () => {
+  const bounds = { left: 0, top: 0, right: 390, bottom: 700 };
+  const screen = { left: 0, top: 0, right: 390, bottom: 844 };
+  assert.equal(stageCorner({ left: 220, top: 560, width: 160, height: 90 }, bounds), "se");
+  assert.equal(stageCorner({ left: 12, top: 560, width: 160, height: 90 }, bounds), "sw");
+  assert.equal(stageCorner({ left: 220, top: 24, width: 160, height: 90 }, bounds), "ne");
+  assert.equal(stageCorner({ left: 12, top: 24, width: 160, height: 90 }, bounds), "nw");
+  assert.equal(stageMostlyOff({ left: 330, top: 40, width: 160, height: 90 }, screen), true);
+  assert.equal(stageMostlyOff({ left: 200, top: 600, width: 160, height: 90 }, screen), false);
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  assert.match(css, /width: min\(45vw, 17\.5rem\)/);
+  assert.match(css, /env\(safe-area-inset-right\)/);
+  assert.match(css, /env\(safe-area-inset-bottom\)/);
+  assert.match(css, /html\[data-stage="float"\]/);
+  assert.match(css, /html\[data-stage="inline"\]/);
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const hold = appSource.slice(appSource.indexOf("function holdPlayer("), appSource.indexOf("function songIsOpen("));
+  assert.equal(/\.append\(/.test(hold), false);
+  assert.match(appSource, /id: "song-dock"/);
 });

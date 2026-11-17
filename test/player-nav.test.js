@@ -136,8 +136,30 @@ class Element extends Node {
   }
 
   click() {
-    this.dispatchEvent({ type: "click", target: this, currentTarget: this, preventDefault() {} });
+    this.dispatchEvent({
+      type: "click",
+      target: this,
+      currentTarget: this,
+      preventDefault() {},
+      stopPropagation() {},
+    });
   }
+
+  getBoundingClientRect() {
+    return { top: 120, left: 16, width: 340, height: 191, right: 356, bottom: 311 };
+  }
+
+  closest(selector) {
+    let node = this;
+    while (node && node.nodeType === 1) {
+      if (selector.startsWith("#") && node.id === selector.slice(1)) return node;
+      if (selector.startsWith(".") && node.classes && node.classes.has(selector.slice(1))) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  setPointerCapture() {}
 
   focus() {}
 
@@ -307,9 +329,14 @@ test("navigation leaves the same player playing", async () => {
   bar.hidden = true;
   const video = document.createElement("div");
   video.className = "song-bar-video";
+  video.setAttribute("id", "song-stage");
   const host = document.createElement("div");
   host.setAttribute("id", "song-player-host");
-  video.append(host);
+  const hit = document.createElement("button");
+  hit.setAttribute("id", "song-float-hit");
+  const floatClose = document.createElement("button");
+  floatClose.setAttribute("id", "song-float-close");
+  video.append(host, hit, floatClose);
   for (const id of ["song-bar-title", "song-toggle", "song-keep", "song-prev", "song-next", "song-stop"]) {
     const control = document.createElement("button");
     control.setAttribute("id", id);
@@ -326,6 +353,8 @@ test("navigation leaves the same player playing", async () => {
     history: { scrollRestoration: "auto" },
     navigator: { userAgent: "node", platform: "test" },
     scrollY: 0,
+    innerWidth: 390,
+    innerHeight: 844,
     scrollTo() {},
     addEventListener(type, fn) {
       (windowListeners[type] || (windowListeners[type] = [])).push(fn);
@@ -465,6 +494,46 @@ test("navigation leaves the same player playing", async () => {
   assert.equal(FakePlayer.instances.length, 1);
   assert.deepEqual(player.calls.filter((call) => call === "pause" || call === "stop"), []);
   assert.ok(player.calls.includes("load"));
+
+  assert.equal(document.documentElement.dataset.stage, "float");
+  const playingNumber = Number(String(session.metadata.title).split(".")[0]);
+  hit.dispatchEvent({ type: "pointerdown", pointerId: 1, clientX: 20, clientY: 20, button: 0, target: hit });
+  hit.dispatchEvent({ type: "pointerup", pointerId: 1, clientX: 20, clientY: 22, button: 0, target: hit });
+  assert.equal(location.hash, `#/hymn/${playingNumber}`);
+  for (const fn of windowListeners.hashchange || []) fn();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  const dock = document.getElementById("song-dock");
+  const words = document.querySelector(".text");
+  assert.ok(dock);
+  assert.ok(words);
+  assert.ok(document.querySelector(".stanza-num"));
+  const order = [];
+  const walk = (node) => {
+    order.push(node);
+    for (const child of node.childNodes || []) walk(child);
+  };
+  walk(document.body);
+  assert.ok(order.indexOf(dock) < order.indexOf(words));
+  assert.equal(document.documentElement.dataset.stage, "inline");
+  assert.equal(host.parentNode, video);
+  const beforeFollow = location.hash;
+  session.handlers.nexttrack();
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  assert.notEqual(location.hash, beforeFollow);
+  assert.match(location.hash, /^#\/hymn\/\d+$/);
+  for (const fn of windowListeners.hashchange || []) fn();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.ok(document.getElementById("song-dock"));
+  assert.ok(document.querySelector(".stanza-num"));
+  assert.equal(document.getElementById("song-player-host"), host);
+  assert.equal(host.parentNode, video);
+  assert.equal(FakePlayer.instances.length, 1);
+  assert.deepEqual(player.calls.filter((call) => call === "pause" || call === "stop"), []);
+
+  floatClose.click();
+  assert.equal(document.getElementById("song-bar").hidden, true);
+  assert.ok(player.calls.includes("stop"));
+  assert.equal(host.parentNode, video);
 
   const source = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.equal(/new Audio\(/.test(source), false);
