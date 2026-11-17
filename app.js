@@ -36,6 +36,7 @@ import {
   featuredHymns,
   searchTarget,
   seasonLinks,
+  seasonOn,
   statItems,
   welcomeCopy,
   welcomeStats,
@@ -488,6 +489,32 @@ function themeHymnList(list) {
   );
 }
 
+function playAllControls(themeId) {
+  if (!themeId) return null;
+  const tracks = themeTracks({
+    hymns,
+    themes: themeCatalog,
+    recordings: recordingCatalog,
+    themeId,
+  });
+  if (!tracks.length) return null;
+  const row = el("p", { class: "play-all" });
+  const all = el("button", { type: "button", class: "play-song" }, "Play all");
+  const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
+  all.addEventListener("click", () => beginSongs(tracks, "all"));
+  shuffle.addEventListener("click", () => beginSongs(shuffleTracks(tracks), "all"));
+  row.append(all, shuffle);
+  return row;
+}
+
+function selectedThemeId() {
+  const seasons = themeCatalog.seasons || [];
+  const chosen = seasons.find((item) => item.id !== "all-year" && (item.title === section || item.id === section));
+  if (chosen) return chosen.id;
+  const now = seasonOn(new Date());
+  return now.id || "all-year";
+}
+
 function themeGroup(group, open) {
   const details = el("details", {
     class: "theme-group",
@@ -499,7 +526,10 @@ function themeGroup(group, open) {
     el("span", { class: "theme-name" }, group.title),
     el("span", { class: "theme-count" }, countLabel(group.hymns.length)),
   );
-  details.append(summary, themeHymnList(group.hymns));
+  details.append(summary);
+  const play = playAllControls(group.id);
+  if (play) details.append(play);
+  details.append(themeHymnList(group.hymns));
   return details;
 }
 
@@ -762,6 +792,8 @@ function renderThemes() {
     const root = el("div", { class: "themes" });
     const jumps = [...outline.seasons, ...outline.topics];
     if (jumps.length) root.append(themeJump(jumps));
+    const listed = playAllControls(selectedThemeId());
+    if (listed) root.append(listed);
     if (outline.seasons.length) {
       root.append(el("h2", { class: "theme-kind" }, "Seasons"));
       outline.seasons.forEach((group, index) => root.append(themeGroup(group, index === 0)));
@@ -808,21 +840,8 @@ function renderTheme(id) {
   const page = el("div", { class: "theme-page" });
   page.append(el("p", { class: "theme-back" }, el("a", { href: "#/themes" }, "All themes")));
   page.append(el("h2", { class: "theme-page-title" }, theme.title));
-  const straight = themeTracks({
-    hymns,
-    themes: themeCatalog,
-    recordings: recordingCatalog,
-    themeId: id,
-  });
-  if (straight.length) {
-    const row = el("p", { class: "play-all" });
-    const all = el("button", { type: "button", class: "play-song" }, "Play all");
-    const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
-    all.addEventListener("click", () => beginSongs(straight, "all"));
-    shuffle.addEventListener("click", () => beginSongs(shuffleTracks(straight), "all"));
-    row.append(all, shuffle);
-    page.append(row);
-  }
+  const straight = playAllControls(id);
+  if (straight) page.append(straight);
   if (list.length === 0) page.append(el("p", { class: "empty" }, "No songs match that search."));
   else page.append(themeHymnList(list));
   main.replaceChildren(page);
@@ -1664,12 +1683,15 @@ function welcomeFeatured(feature) {
         ? copy.yearHeading
         : copy.plainHeading;
   const head = el("div", { class: "section-head" });
-  head.append(
-    el("div", {}, [
-      el("p", { class: "kicker" }, kicker),
-      el("h2", { class: "section-title", id: "welcome-featured-title" }, heading),
-    ]),
-  );
+  const titleBlock = el("div", {}, [
+    el("p", { class: "kicker" }, kicker),
+    el("h2", { class: "section-title", id: "welcome-featured-title" }, heading),
+  ]);
+  if (feature.theme) {
+    const play = playAllControls(feature.theme.id);
+    if (play) titleBlock.append(play);
+  }
+  head.append(titleBlock);
   if (feature.theme) {
     const label = feature.kind === "season" ? copy.seasonLink(title) : copy.yearLink(title);
     head.append(arrowLink(`#/theme/${feature.theme.id}`, label));
@@ -2491,16 +2513,37 @@ if ("serviceWorker" in navigator) {
   // True only when a worker was already running this page, which means this is
   // an update. On a first visit the new worker claims the page and fires
   // controllerchange too, and reloading there throws away whatever the reader
-  // has already typed or opened.
+  // has already typed or opened. The stored flag stops a second reload if
+  // claiming the page fires the event again.
   const hadController = Boolean(navigator.serviceWorker.controller);
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (!hadController || reloading) return;
+    try {
+      if (sessionStorage.getItem("hark-sw-reload") === "1") {
+        sessionStorage.removeItem("hark-sw-reload");
+        return;
+      }
+      sessionStorage.setItem("hark-sw-reload", "1");
+    } catch {
+      /* storage can be blocked; the reloading flag still stops this page */
+    }
     reloading = true;
     window.location.reload();
   });
+  const checkForUpdate = (registration) => {
+    if (registration && registration.update) registration.update().catch(() => {});
+  };
   window.addEventListener("load", () => {
     const script = new URL("sw.js", import.meta.url);
     const scope = new URL("./", script);
-    navigator.serviceWorker.register(script, { scope: scope.href }).catch(() => {});
+    navigator.serviceWorker
+      .register(script, { scope: scope.href, updateViaCache: "none" })
+      .then((registration) => {
+        checkForUpdate(registration);
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") checkForUpdate(registration);
+        });
+      })
+      .catch(() => {});
   });
 }

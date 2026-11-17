@@ -1,4 +1,4 @@
-const CACHE = "hark-v39";
+const CACHE = "hark-v40";
 
 // vendor/abcjs-basic-min.js is deliberately absent. It is close to half a
 // megabyte, and precaching it meant every first visit paid for music the
@@ -108,13 +108,38 @@ self.addEventListener("notificationclick", (event) => {
   );
 });
 
+function isAppModule(url, request) {
+  if (request.mode === "navigate") return true;
+  return /\.(?:html|js|mjs|css)$/.test(url.pathname);
+}
+
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET" || request.headers.has("range")) return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  event.respondWith(staleWhileRevalidate(request));
+  event.respondWith(isAppModule(url, request) ? networkFirst(request) : staleWhileRevalidate(request));
 });
+
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE);
+  try {
+    const response = await fetch(request);
+    if (response && response.ok) cache.put(request, response.clone());
+    return response;
+  } catch {
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    if (request.mode === "navigate") {
+      const shell = await cache.match("./index.html");
+      if (shell) return shell;
+    }
+    return new Response("Offline", {
+      status: 503,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+}
 
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE);

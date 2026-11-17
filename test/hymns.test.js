@@ -1187,6 +1187,8 @@ test("the Hark title links home on the list and on a hymn", () => {
   assert.match(sw, /const CACHE = "hark-v\d+";/);
   assert.match(sw, /skipWaiting\(\)/);
   assert.match(sw, /clients\.claim\(\)/);
+  assert.match(sw, /function networkFirst/);
+  assert.match(sw, /isAppModule\(url, request\) \? networkFirst\(request\)/);
 });
 
 test("shell files exist and UI copy has no en or em dashes", () => {
@@ -1813,7 +1815,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v39";/);
+  assert.match(sw, /const CACHE = "hark-v40";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2028,7 +2030,15 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.equal(shuffled[shuffled.length - 1], christmas[0]);
 
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /function playAllControls/);
   assert.match(appSource, /Play all/);
+  assert.match(appSource, /playAllControls\(feature\.theme\.id\)/);
+  assert.match(appSource, /playAllControls\(selectedThemeId\(\)\)/);
+  assert.match(appSource, /playAllControls\(group\.id\)/);
+  assert.match(appSource, /updateViaCache: "none"/);
+  assert.match(appSource, /registration\.update\(\)/);
+  assert.match(appSource, /visibilitychange/);
+  assert.match(appSource, /hark-sw-reload/);
   assert.match(appSource, /getCurrentTime/);
   assert.match(appSource, /endSeconds: track\.end/);
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
