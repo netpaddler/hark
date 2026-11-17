@@ -2,6 +2,11 @@
   {
     "date": "2026-11-17",
     "hymns": [],
+    "note": "Moving the pointer over the small player does not drag it. A click opens the song, and it follows only while the button is down."
+  },
+  {
+    "date": "2026-11-17",
+    "hymns": [],
     "note": "Leave a song and a small player floats above the bar. Tap it to open that song, with the words under the video."
   },
   {

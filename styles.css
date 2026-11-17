@@ -2342,6 +2342,11 @@ html[data-stage="inline"] .song-bar-video {
   display: none;
 }
 
+html[data-stage="float"] .song-bar-video iframe,
+html[data-stage="float"] #song-player-host {
+  pointer-events: none;
+}
+
 html[data-stage="float"] .song-float-hit {
   display: block;
   position: absolute;
@@ -2352,6 +2357,7 @@ html[data-stage="float"] .song-float-hit {
   background: transparent;
   cursor: pointer;
   touch-action: none;
+  pointer-events: auto;
 }
 
 html[data-stage="float"] .song-float-close {

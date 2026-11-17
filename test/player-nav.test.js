@@ -159,7 +159,25 @@ class Element extends Node {
     return null;
   }
 
-  setPointerCapture() {}
+  setPointerCapture(id) {
+    this.captured = id;
+    this.captureLog = this.captureLog || [];
+    this.captureLog.push(["set", id]);
+  }
+
+  hasPointerCapture(id) {
+    return this.captured === id;
+  }
+
+  releasePointerCapture(id) {
+    this.captureLog = this.captureLog || [];
+    if (this.captured !== id) return;
+    this.captured = null;
+    this.captureLog.push(["release", id]);
+    for (const fn of this.listeners.lostpointercapture || []) {
+      fn({ type: "lostpointercapture", pointerId: id, target: this });
+    }
+  }
 
   focus() {}
 
@@ -497,9 +515,235 @@ test("navigation leaves the same player playing", async () => {
 
   assert.equal(document.documentElement.dataset.stage, "float");
   const playingNumber = Number(String(session.metadata.title).split(".")[0]);
-  hit.dispatchEvent({ type: "pointerdown", pointerId: 1, clientX: 20, clientY: 20, button: 0, target: hit });
-  hit.dispatchEvent({ type: "pointerup", pointerId: 1, clientX: 20, clientY: 22, button: 0, target: hit });
+  const hashBeforeGesture = location.hash;
+
+  hit.dispatchEvent({
+    type: "pointerdown",
+    pointerId: 3,
+    pointerType: "mouse",
+    buttons: 0,
+    button: 0,
+    clientX: 10,
+    clientY: 10,
+    target: hit,
+  });
+  assert.equal(hit.captured, undefined);
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 4,
+    pointerType: "mouse",
+    buttons: 0,
+    clientX: 180,
+    clientY: 160,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+  assert.equal(video.style.top, "");
+  assert.equal(document.documentElement.dataset.dragging, undefined);
+  assert.equal(location.hash, hashBeforeGesture);
+  assert.equal(hit.captured, undefined);
+
+  hit.dispatchEvent({
+    type: "pointerdown",
+    pointerId: 6,
+    pointerType: "mouse",
+    buttons: 1,
+    button: 0,
+    clientX: 40,
+    clientY: 40,
+    target: hit,
+  });
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 6,
+    pointerType: "mouse",
+    buttons: 1,
+    clientX: 80,
+    clientY: 60,
+    target: hit,
+  });
+  assert.equal(document.documentElement.dataset.dragging, "1");
+  assert.notEqual(video.style.left, "");
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 6,
+    pointerType: "mouse",
+    buttons: 0,
+    clientX: 220,
+    clientY: 180,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+  assert.equal(document.documentElement.dataset.dragging, undefined);
+  assert.equal(location.hash, hashBeforeGesture);
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 6,
+    pointerType: "mouse",
+    buttons: 0,
+    clientX: 260,
+    clientY: 200,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+
+  hit.dispatchEvent({
+    type: "pointerdown",
+    pointerId: 7,
+    pointerType: "mouse",
+    buttons: 1,
+    button: 0,
+    clientX: 40,
+    clientY: 40,
+    target: hit,
+  });
+  assert.equal(hit.captured, 7);
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 7,
+    pointerType: "mouse",
+    buttons: 1,
+    clientX: 44,
+    clientY: 42,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+  assert.equal(location.hash, hashBeforeGesture);
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 7,
+    pointerType: "mouse",
+    buttons: 1,
+    clientX: 90,
+    clientY: 70,
+    target: hit,
+  });
+  assert.equal(document.documentElement.dataset.dragging, "1");
+  assert.notEqual(video.style.left, "");
+  const draggedLeft = video.style.left;
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 7,
+    pointerType: "mouse",
+    buttons: 1,
+    clientX: 110,
+    clientY: 80,
+    target: hit,
+  });
+  assert.notEqual(video.style.left, draggedLeft);
+  hit.dispatchEvent({
+    type: "pointerup",
+    pointerId: 7,
+    pointerType: "mouse",
+    buttons: 0,
+    clientX: 110,
+    clientY: 80,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+  assert.equal(document.documentElement.dataset.dragging, undefined);
+  assert.equal(location.hash, hashBeforeGesture);
+  assert.equal(hit.captured, null);
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 7,
+    pointerType: "mouse",
+    buttons: 0,
+    clientX: 200,
+    clientY: 200,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+
+  hit.dispatchEvent({
+    type: "pointerdown",
+    pointerId: 8,
+    pointerType: "touch",
+    buttons: 0,
+    button: 0,
+    clientX: 30,
+    clientY: 30,
+    target: hit,
+  });
+  assert.equal(hit.captured, 8);
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 8,
+    pointerType: "touch",
+    buttons: 0,
+    clientX: 70,
+    clientY: 50,
+    target: hit,
+  });
+  assert.equal(document.documentElement.dataset.dragging, "1");
+  assert.notEqual(video.style.left, "");
+  hit.dispatchEvent({
+    type: "pointerup",
+    pointerId: 8,
+    pointerType: "touch",
+    buttons: 0,
+    clientX: 70,
+    clientY: 50,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+  assert.equal(location.hash, hashBeforeGesture);
+
+  hit.dispatchEvent({
+    type: "pointerdown",
+    pointerId: 9,
+    pointerType: "mouse",
+    buttons: 1,
+    button: 0,
+    clientX: 15,
+    clientY: 15,
+    target: hit,
+  });
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 9,
+    pointerType: "mouse",
+    buttons: 1,
+    clientX: 60,
+    clientY: 40,
+    target: hit,
+  });
+  assert.equal(document.documentElement.dataset.dragging, "1");
+  for (const fn of windowListeners.blur || []) fn();
+  assert.equal(video.style.left, "");
+  assert.equal(document.documentElement.dataset.dragging, undefined);
+  hit.dispatchEvent({
+    type: "pointermove",
+    pointerId: 9,
+    pointerType: "mouse",
+    buttons: 1,
+    clientX: 120,
+    clientY: 90,
+    target: hit,
+  });
+  assert.equal(video.style.left, "");
+
+  hit.dispatchEvent({
+    type: "pointerdown",
+    pointerId: 1,
+    pointerType: "mouse",
+    buttons: 1,
+    button: 0,
+    clientX: 20,
+    clientY: 20,
+    target: hit,
+  });
+  hit.dispatchEvent({
+    type: "pointerup",
+    pointerId: 1,
+    pointerType: "mouse",
+    buttons: 0,
+    clientX: 20,
+    clientY: 22,
+    target: hit,
+  });
   assert.equal(location.hash, `#/hymn/${playingNumber}`);
+  assert.ok(hit.captureLog.some((entry) => entry[0] === "set" && entry[1] === 1));
   for (const fn of windowListeners.hashchange || []) fn();
   await new Promise((resolve) => setTimeout(resolve, 0));
   const dock = document.getElementById("song-dock");

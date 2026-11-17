@@ -11,6 +11,17 @@ export function stageCorner(rect, bounds) {
   return `${cy >= midY ? "s" : "n"}${cx >= midX ? "e" : "w"}`;
 }
 
+export const STAGE_DRAG_SLOP = 8;
+
+// "up" means the mouse button is no longer down, so the gesture must end.
+// "drag" means the pointer has moved far enough to be a drag, not a tap.
+// "wait" means keep watching. Touch does not use the mouse button mask.
+export function stagePointerMove({ pointerType, buttons, distance }) {
+  if (pointerType === "mouse" && (Number(buttons) & 1) === 0) return "up";
+  if (Number(distance) > STAGE_DRAG_SLOP) return "drag";
+  return "wait";
+}
+
 // True when less than half of the window is still inside the screen.
 export function stageMostlyOff(rect, screen) {
   const width = Math.max(0, Number(rect && rect.width) || 0);

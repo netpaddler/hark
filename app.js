@@ -27,7 +27,7 @@ import {
   youtubeBlock,
 } from "./hymn-model.js";
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
-import { stageCorner, stageMostlyOff } from "./stage.js";
+import { stageCorner, stageMostlyOff, stagePointerMove } from "./stage.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
@@ -2828,16 +2828,29 @@ if (songFloatClose) {
   });
 }
 let stageDrag = null;
-function finishStageDrag(event) {
-  if (!stageDrag || !songStage || stageDrag.id !== event.pointerId) return;
+function releaseStageCapture(pointerId) {
+  if (!songFloatHit || pointerId == null || typeof songFloatHit.releasePointerCapture !== "function") return;
+  try {
+    if (typeof songFloatHit.hasPointerCapture === "function" && !songFloatHit.hasPointerCapture(pointerId)) return;
+    songFloatHit.releasePointerCapture(pointerId);
+  } catch {
+    /* the pointer was already released */
+  }
+}
+function finishStageDrag(event, { tap = true } = {}) {
+  if (!stageDrag || !songStage) return;
+  if (event && event.pointerId != null && stageDrag.id !== event.pointerId) return;
   const info = stageDrag;
+  const pointerId = info.id;
   stageDrag = null;
   delete document.documentElement.dataset.dragging;
-  if (!info.moved) {
+  releaseStageCapture(pointerId);
+  if (tap && !info.moved) {
     const track = currentSong();
     if (track) location.hash = `#/hymn/${track.number}`;
     return;
   }
+  if (!info.moved) return;
   const rect = songStage.getBoundingClientRect();
   if (stageMostlyOff(rect, stageScreen())) {
     stopSongs();
@@ -2850,29 +2863,45 @@ if (songFloatHit && songStage) {
   songFloatHit.addEventListener("pointerdown", (event) => {
     if (document.documentElement.dataset.stage !== "float") return;
     if (event.button != null && event.button !== 0) return;
+    if (event.pointerType === "mouse" && (Number(event.buttons) & 1) === 0) return;
     const rect = typeof songStage.getBoundingClientRect === "function" ? songStage.getBoundingClientRect() : { left: 0, top: 0 };
     stageDrag = {
       id: event.pointerId,
+      pointerType: event.pointerType || "",
       x: event.clientX,
       y: event.clientY,
       left: rect.left,
       top: rect.top,
       moved: false,
     };
-    if (typeof songStage.setPointerCapture === "function") {
+    if (typeof songFloatHit.setPointerCapture === "function") {
       try {
-        songStage.setPointerCapture(event.pointerId);
+        songFloatHit.setPointerCapture(event.pointerId);
       } catch {
         /* the pointer is already gone */
       }
     }
   });
   songFloatHit.addEventListener("pointermove", (event) => {
+    const pointerType = event.pointerType || (stageDrag && stageDrag.pointerType) || "";
     if (!stageDrag || stageDrag.id !== event.pointerId) return;
+    if (pointerType === "mouse" && (Number(event.buttons) & 1) === 0) {
+      finishStageDrag(event, { tap: false });
+      return;
+    }
     const dx = event.clientX - stageDrag.x;
     const dy = event.clientY - stageDrag.y;
-    if (Math.hypot(dx, dy) > 8) stageDrag.moved = true;
-    if (!stageDrag.moved) return;
+    const action = stagePointerMove({
+      pointerType,
+      buttons: event.buttons,
+      distance: Math.hypot(dx, dy),
+    });
+    if (action === "up") {
+      finishStageDrag(event, { tap: false });
+      return;
+    }
+    if (action !== "drag") return;
+    stageDrag.moved = true;
     document.documentElement.dataset.dragging = "1";
     songStage.style.left = `${stageDrag.left + dx}px`;
     songStage.style.top = `${stageDrag.top + dy}px`;
@@ -2881,7 +2910,14 @@ if (songFloatHit && songStage) {
   });
   songFloatHit.addEventListener("pointerup", finishStageDrag);
   songFloatHit.addEventListener("pointercancel", finishStageDrag);
+  songFloatHit.addEventListener("lostpointercapture", finishStageDrag);
 }
+window.addEventListener("pointerup", finishStageDrag);
+window.addEventListener("pointercancel", finishStageDrag);
+window.addEventListener("blur", () => {
+  if (!stageDrag) return;
+  finishStageDrag({ pointerId: stageDrag.id });
+});
 window.addEventListener("scroll", () => {
   if (document.documentElement.dataset.stage === "inline") syncInlineStage();
 });
