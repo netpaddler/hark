@@ -9,7 +9,7 @@ import { isLiked, likeButtonState, likedHymns, readLikes, toggleLike } from "../
 import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
-import { captionEnd, estimatedEnd, playbackStop, shuffleTracks, themeTracks } from "../playlist.js";
+import { captionEnd, estimatedEnd, nextEndingSong, playbackStop, shuffleTracks, songsWithEndings, themeTracks } from "../playlist.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -1815,7 +1815,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v40";/);
+  assert.match(sw, /const CACHE = "hark-v41";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2044,5 +2044,47 @@ test("play all keeps caption ends and every song still stops", () => {
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   assert.match(page, /id="song-bar"/);
   assert.match(page, /Keep watching the service/);
+  assert.match(page, /aria-label="Play next song"/);
+  assert.match(page, />Play next song</);
   assert.equal(/\u2013|\u2014/.test(page), false);
+
+  const book = songsWithEndings({
+    hymns: [
+      { number: 1, title: "One", stanzas: [["a"]] },
+      { number: 2, title: "Two", stanzas: [["b"]] },
+      { number: 4, title: "Four", stanzas: [["c"]] },
+    ],
+    recordings: {
+      1: [{
+        url: "https://www.youtube.com/watch?v=abcdefghijk&t=10s",
+        start_seconds: 10,
+        end_seconds: 40,
+        end_source: "captions",
+        video_date: "2026-01-01",
+        label: "One",
+      }],
+      2: [{
+        url: "https://www.youtube.com/watch?v=bcdefghijkl&t=5s",
+        start_seconds: 5,
+        video_date: "2026-01-02",
+        label: "Two",
+      }],
+      4: [{
+        url: "https://www.youtube.com/watch?v=cdefghijklm&t=8s",
+        start_seconds: 8,
+        end_seconds: 50,
+        end_source: "captions",
+        video_date: "2026-01-03",
+        label: "Four",
+      }],
+    },
+  });
+  assert.deepEqual(book.map((track) => track.number), [1, 4]);
+  assert.equal(nextEndingSong(book, 1, { wrap: false }).number, 4);
+  assert.equal(nextEndingSong(book, 4, { wrap: false }), null);
+  assert.equal(nextEndingSong(book, 4, { wrap: true }).number, 1);
+  assert.match(appSource, /Auto play all/);
+  assert.match(appSource, /hark-auto-play-all/);
+  assert.match(appSource, /nextEndingSong\(endingSongs\(\), track\.number, \{ wrap: true \}\)/);
+  assert.match(appSource, /nextEndingSong\(endingSongs\(\), track \? track\.number : 0, \{ wrap: false \}\)/);
 });

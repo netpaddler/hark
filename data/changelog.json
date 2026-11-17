@@ -2,6 +2,11 @@
   {
     "date": "2026-11-17",
     "hymns": [],
+    "note": "Play next song moves through the list. Auto play all keeps going through the book by number."
+  },
+  {
+    "date": "2026-11-17",
+    "hymns": [],
     "note": "Play all is on the home page and the themes list. A new copy of Hark loads as soon as it is published."
   },
   {

@@ -64,6 +64,33 @@ export function themeTracks({ hymns, themes, recordings, themeId }) {
   return tracks;
 }
 
+// Every song in the book that has a caption end, in hymn number order.
+export function songsWithEndings({ hymns, recordings }) {
+  const sorted = [...(hymns || [])].sort((a, b) => a.number - b.number);
+  const tracks = [];
+  for (const hymn of sorted) {
+    const chosen = faithRecordings(recordings, hymn.number).find(
+      (item) =>
+        item.kind === "youtube" &&
+        item.embeddable !== false &&
+        item.id &&
+        captionEnd(item) != null,
+    );
+    if (!chosen) continue;
+    tracks.push(trackFrom(hymn, chosen, playbackStop(chosen, hymn)));
+  }
+  return tracks;
+}
+
+// The next timed song after `number`. With wrap, the last song returns the first.
+export function nextEndingSong(tracks, number, { wrap = false } = {}) {
+  if (!Array.isArray(tracks) || tracks.length === 0) return null;
+  const found = tracks.find((track) => track.number > number);
+  if (found) return found;
+  if (!wrap) return null;
+  return tracks[0];
+}
+
 export function shuffleTracks(tracks, random = Math.random) {
   const copy = tracks.slice();
   for (let i = copy.length - 1; i > 0; i -= 1) {
