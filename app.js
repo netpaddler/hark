@@ -27,6 +27,7 @@ import {
   youtubeBlock,
 } from "./hymn-model.js";
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
+import { stageCorner, stageMostlyOff } from "./stage.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
@@ -1380,6 +1381,7 @@ function renderHymn(number) {
     const chipsForHymn = themeChips(hymn);
     if (chipsForHymn) article.append(chipsForHymn);
     article.append(hymnPlayControls(hymn));
+    if (songOnThisHymn(hymn)) article.append(el("div", { id: "song-dock", class: "song-dock" }));
 
     const heard = faithSection(hymn);
     const choir = recordingSection(hymn);
@@ -1942,10 +1944,111 @@ function render() {
 function holdPlayer() {
   if (!songBar || document.documentElement.dataset.player !== "on") return;
   songBar.hidden = false;
-  const host = document.getElementById("song-player-host");
-  if (!host || songBar.contains(host)) return;
-  const video = songBar.querySelector(".song-bar-video") || songBar;
-  video.append(host);
+  // The player node stays where it was built. Only its position changes.
+  placeStage();
+  if (songIsOpen()) revealDock();
+}
+
+function songIsOpen() {
+  const track = currentSong();
+  if (!track || document.documentElement.dataset.player !== "on") return false;
+  const current = route();
+  return current.view === "hymn" && current.number === track.number;
+}
+
+function songOnThisHymn(hymn) {
+  const track = currentSong();
+  return Boolean(track && hymn && track.number === hymn.number && document.documentElement.dataset.player === "on");
+}
+
+function clearStagePosition() {
+  if (!songStage) return;
+  songStage.style.left = "";
+  songStage.style.top = "";
+  songStage.style.right = "";
+  songStage.style.bottom = "";
+  songStage.style.width = "";
+  songStage.style.height = "";
+}
+
+function stickyOffset() {
+  if (typeof getComputedStyle !== "function") return 0;
+  try {
+    const value = getComputedStyle(document.documentElement).getPropertyValue("--sticky-h");
+    const parsed = parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function syncInlineStage() {
+  const dock = document.getElementById("song-dock");
+  if (!dock || !songStage || typeof dock.getBoundingClientRect !== "function") return;
+  const rect = dock.getBoundingClientRect();
+  songStage.style.left = `${rect.left}px`;
+  songStage.style.top = `${rect.top}px`;
+  songStage.style.width = `${rect.width}px`;
+  songStage.style.height = `${rect.height}px`;
+  songStage.style.right = "auto";
+  songStage.style.bottom = "auto";
+}
+
+function revealDock() {
+  const dock = document.getElementById("song-dock");
+  if (!dock || typeof dock.getBoundingClientRect !== "function") return;
+  const top = window.scrollY + dock.getBoundingClientRect().top - stickyOffset() - 8;
+  window.scrollTo(0, Math.max(0, top));
+  syncInlineStage();
+}
+
+function placeStage() {
+  if (!songStage || !songBar || document.documentElement.dataset.player !== "on") return;
+  songBar.hidden = false;
+  document.documentElement.style.setProperty("--song-bar-h", `${songBar.offsetHeight || 0}px`);
+  if (songIsOpen()) {
+    document.documentElement.dataset.stage = "inline";
+    clearStagePosition();
+    syncInlineStage();
+    return;
+  }
+  document.documentElement.dataset.stage = "float";
+  if (!document.documentElement.dataset.corner) document.documentElement.dataset.corner = "se";
+  if (document.documentElement.dataset.dragging !== "1") clearStagePosition();
+}
+
+function syncStageToSong() {
+  const track = currentSong();
+  if (!track || document.documentElement.dataset.player !== "on") return;
+  if (songIsOpen()) {
+    placeStage();
+    return;
+  }
+  if (document.documentElement.dataset.stage === "inline") {
+    location.hash = `#/hymn/${track.number}`;
+    return;
+  }
+  placeStage();
+}
+
+function stageScreen() {
+  return {
+    left: 0,
+    top: 0,
+    right: window.innerWidth || 0,
+    bottom: window.innerHeight || 0,
+  };
+}
+
+function stageSnapBounds() {
+  const screen = stageScreen();
+  const bar = songBar ? songBar.offsetHeight || 0 : 0;
+  return {
+    left: screen.left,
+    top: screen.top,
+    right: screen.right,
+    bottom: Math.max(screen.top, screen.bottom - bar - 8),
+  };
 }
 
 function showError() {
@@ -2368,6 +2471,9 @@ async function toggleNotify() {
 }
 
 const songBar = document.getElementById("song-bar");
+const songStage = document.getElementById("song-stage");
+const songFloatHit = document.getElementById("song-float-hit");
+const songFloatClose = document.getElementById("song-float-close");
 const songTitle = document.getElementById("song-bar-title");
 const songToggle = document.getElementById("song-toggle");
 const songKeep = document.getElementById("song-keep");
@@ -2520,6 +2626,7 @@ function loadSong() {
     endSeconds: track.end,
   });
   watchSong(track);
+  syncStageToSong();
 }
 
 function finishSong() {
@@ -2576,6 +2683,7 @@ function beginSongs(tracks, playMode) {
   songIndex = 0;
   songBar.hidden = false;
   document.documentElement.dataset.player = "on";
+  placeStage();
   const start = () => loadSong();
   if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
     start();
@@ -2592,6 +2700,10 @@ function stopSongs() {
   if (songKeep) songKeep.hidden = true;
   if (songBar) songBar.hidden = true;
   document.documentElement.dataset.player = "off";
+  document.documentElement.dataset.stage = "";
+  document.documentElement.dataset.corner = "";
+  delete document.documentElement.dataset.dragging;
+  clearStagePosition();
   clearNowPlaying();
   try {
     if (ytPlayer) ytPlayer.stopVideo();
@@ -2707,6 +2819,75 @@ setToggleLabel(true);
 if (songToggle) songToggle.addEventListener("click", toggleSong);
 if (songStop) songStop.addEventListener("click", stopSongs);
 if (songKeep) songKeep.addEventListener("click", keepWatchingService);
+if (songFloatClose) {
+  songFloatClose.replaceChildren(icon("close"));
+  songFloatClose.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    stopSongs();
+  });
+}
+let stageDrag = null;
+function finishStageDrag(event) {
+  if (!stageDrag || !songStage || stageDrag.id !== event.pointerId) return;
+  const info = stageDrag;
+  stageDrag = null;
+  delete document.documentElement.dataset.dragging;
+  if (!info.moved) {
+    const track = currentSong();
+    if (track) location.hash = `#/hymn/${track.number}`;
+    return;
+  }
+  const rect = songStage.getBoundingClientRect();
+  if (stageMostlyOff(rect, stageScreen())) {
+    stopSongs();
+    return;
+  }
+  document.documentElement.dataset.corner = stageCorner(rect, stageSnapBounds());
+  clearStagePosition();
+}
+if (songFloatHit && songStage) {
+  songFloatHit.addEventListener("pointerdown", (event) => {
+    if (document.documentElement.dataset.stage !== "float") return;
+    if (event.button != null && event.button !== 0) return;
+    const rect = typeof songStage.getBoundingClientRect === "function" ? songStage.getBoundingClientRect() : { left: 0, top: 0 };
+    stageDrag = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      left: rect.left,
+      top: rect.top,
+      moved: false,
+    };
+    if (typeof songStage.setPointerCapture === "function") {
+      try {
+        songStage.setPointerCapture(event.pointerId);
+      } catch {
+        /* the pointer is already gone */
+      }
+    }
+  });
+  songFloatHit.addEventListener("pointermove", (event) => {
+    if (!stageDrag || stageDrag.id !== event.pointerId) return;
+    const dx = event.clientX - stageDrag.x;
+    const dy = event.clientY - stageDrag.y;
+    if (Math.hypot(dx, dy) > 8) stageDrag.moved = true;
+    if (!stageDrag.moved) return;
+    document.documentElement.dataset.dragging = "1";
+    songStage.style.left = `${stageDrag.left + dx}px`;
+    songStage.style.top = `${stageDrag.top + dy}px`;
+    songStage.style.right = "auto";
+    songStage.style.bottom = "auto";
+  });
+  songFloatHit.addEventListener("pointerup", finishStageDrag);
+  songFloatHit.addEventListener("pointercancel", finishStageDrag);
+}
+window.addEventListener("scroll", () => {
+  if (document.documentElement.dataset.stage === "inline") syncInlineStage();
+});
+window.addEventListener("resize", () => {
+  if (document.documentElement.dataset.player === "on") placeStage();
+});
 loadYouTubeApi();
 
 if (installLink) installLink.addEventListener("click", installClick);

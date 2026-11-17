@@ -2,6 +2,11 @@
   {
     "date": "2026-11-17",
     "hymns": [],
+    "note": "Leave a song and a small player floats above the bar. Tap it to open that song, with the words under the video."
+  },
+  {
+    "date": "2026-11-17",
+    "hymns": [],
     "note": "A song keeps playing while you move around Hark, and the player bar stays up. Where the device allows it, the song title can show with play, pause, and next."
   },
   {
