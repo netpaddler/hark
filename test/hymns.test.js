@@ -73,13 +73,13 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 67);
+  assert.equal(hymns.length, 89);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
   // The 1990 Trinity Hymnal runs to 742.
   for (const number of numbers) assert.ok(number >= 1 && number <= 742, String(number));
-  assert.deepEqual(numbers.slice(0, 6), [15, 31, 34, 56, 57, 76]);
+  assert.deepEqual(numbers.slice(0, 6), [2, 15, 31, 34, 38, 56]);
   assert.deepEqual(numbers.slice(-4), [652, 656, 691, 700]);
   assert.deepEqual(listSections(hymns), [
     "Advent",
@@ -157,7 +157,7 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 47);
+  assert.equal(all.length, 68);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
@@ -185,7 +185,7 @@ test("author index files people by surname and keeps translators", () => {
   );
   assert.deepEqual(
     group("Winkworth, Catherine (tr.)").hymns.map((item) => item.hymn.number),
-    [108, 197, 198, 217],
+    [108, 197, 198, 217, 602],
   );
   const indexed = new Set(all.flatMap((item) => item.hymns.map((entry) => entry.hymn.number)));
   // Hymns listed from a bulletin carry no author yet, so they are reachable by
@@ -227,10 +227,11 @@ test("neighbors follow hymnal number", () => {
   const around = neighbors(hymns, 203);
   assert.equal(around.prev.number, 201);
   assert.equal(around.next.number, 204);
-  assert.equal(neighbors(hymns, 15).prev, null, "15 is the lowest number held");
+  assert.equal(neighbors(hymns, 2).prev, null, "2 is the lowest number held");
+  assert.equal(neighbors(hymns, 15).prev.number, 2);
   assert.equal(neighbors(hymns, 108).prev.number, 99);
   assert.equal(neighbors(hymns, 162).prev.number, 108);
-  assert.equal(neighbors(hymns, 227).next.number, 271);
+  assert.equal(neighbors(hymns, 227).next.number, 253);
   assert.equal(neighbors(hymns, 700).next, null, "700 is the highest number held");
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
@@ -275,7 +276,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   for (const number of [108, 401, 559]) assert.ok(allYear.includes(number), String(number));
   // Bulletin hymns land here until someone sorts them into a season.
   assert.ok(allYear.includes(15) && allYear.includes(691));
-  assert.equal(allYear.length, 37);
+  assert.equal(allYear.length, 59);
 });
 
 test("every recording belongs to a hymn that is in the book", () => {
@@ -1115,7 +1116,7 @@ test("a hymn with no words yet is a different state from one that has them", () 
   // Every listed hymn now has words. The copyrighted numbers are gone.
   assert.equal(hymns.filter((hymn) => wordsPending(hymn)).length, 0);
   assert.equal(byNumber.get(53), undefined);
-  assert.deepEqual(filterHymns(hymns, "53").map((hymn) => hymn.number), [534, 535, 539]);
+  assert.deepEqual(filterHymns(hymns, "53").map((hymn) => hymn.number), [253, 353, 534, 535, 539]);
 
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.match(appSource, /wordsPending\(hymn\)/);
@@ -1798,7 +1799,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v34";/);
+  assert.match(sw, /const CACHE = "hark-v35";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
