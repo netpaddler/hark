@@ -62,14 +62,58 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "The God of Abraham praise, who reigns enthroned above,",
+        "Ancient of everlasting days and God of love.",
+        "Jehovah! Great I AM! by earth and heav'n confessed;",
+        "I bow and bless the sacred name, forever blest."
+      ],
+      [
+        "The God of Abraham praise, at whose supreme command",
+        "from earth I rise, and seek the joys at his right hand.",
+        "I all on earth forsake, its wisdom, fame, and pow'r,",
+        "and him my only portion make, my shield and tow'r."
+      ],
+      [
+        "He by himself hath sworn, I on his oath depend;",
+        "I shall, on eagles' wings upborne, to heav'n ascend.",
+        "I shall behold his face, I shall his pow'r adore,",
+        "and sing the wonders of his grace forevermore."
+      ],
+      [
+        "The goodly land I see, with peace and plenty blest,",
+        "a land of sacred liberty and endless rest.",
+        "There milk and honey flow, and oil and wine abound,",
+        "and trees of life forever grow, with mercy crowned."
+      ],
+      [
+        "There dwells the Lord our King, the Lord our Righteousness,",
+        "triumphant o'er the world and sin, the Prince of Peace.",
+        "On Zion's sacred height his kingdom he maintains,",
+        "and glorious with his saints in light forever reigns."
+      ],
+      [
+        "The whole triumphant host gives thanks to God on high;",
+        "\"Hail, Father, Son, and Holy Ghost! \" they ever cry.",
+        "Hail, Abraham's God and mine! I join the heav'nly lays;",
+        "all might and majesty are thine, and endless praise."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-10-25-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-pm-6x9-1.pdf. Credit: Thomas Olivers, 1770. Tune LEONI, Jewish melody, arr. Meyer Lyon, 1770. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 36,
@@ -181,21 +225,51 @@
   },
   {
     "number": 95,
-    "title": "Through Troubles Assail Us",
+    "title": "Though Troubles Assail Us",
     "section": null,
     "author": null,
     "translator": null,
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Though troubles assail us and dangers affright,",
+        "though friends should all fail us and foes all unite,",
+        "yet one thing secures us, whatever betide,",
+        "the promise assures us, \"The Lord will provide.\""
+      ],
+      [
+        "The birds, without garner or storehouse, are fed;",
+        "from them let us learn to trust God for our bread.",
+        "His saints what is fitting shall ne'er be denied",
+        "so long as 'tis written, \"The Lord will provide.\""
+      ],
+      [
+        "When Satan assails us to stop up our path,",
+        "and courage all fails us, we triumph by faith.",
+        "He cannot take from us, though oft he has tried,",
+        "this heart-cheering promise, \"The Lord will provide.\""
+      ],
+      [
+        "No strength of our own and no goodness we claim;",
+        "yet, since we have known of the Savior's great name,",
+        "in this our strong tower for safety we hide:",
+        "the Lord is our power, \"The Lord will provide.\""
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-10-11-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-pm-6x9-1.pdf. The order of service heading prints Through Troubles Assail Us. The hymn begins Though troubles assail us, so the title follows the hymn. Credit: John Newton, 1779; The New Christian Hymnal, 1929. Tune JOANNA (or ST. DENIO), traditional Welsh melody. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 99,
@@ -292,24 +366,6 @@
     "refrain": null,
     "refrain_after_each_stanza": false,
     "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page (https://web.archive.org/web/20241115041530/https://hymnary.org/hymn/TH1990/108); live hymnary.org blocked automated fetches. Section 'God's Work: His Decrees' follows the hymnary topic of that name; not checked against the printed table of contents. Translator credit on the instance page is Catherine Winkworth (1863; Alt. 1961). The 1961 alteration is treated as public domain, as with other 1961 alterations in hymns.json, but the copyright status of the alteration was not independently confirmed. All four stanzas are shown on the instance page with no copyright notice. The instance page credits the tune as 'Attributed to: Severus Gastorius' and does not name a year or a harmonizer (neither J. S. Bach nor Johann Pachelbel). The hymnary.org tune authority page for WAS GOTT TUT credits Severus Gastorius (1681) and notes Pachelbel as an alternate attribution; that year and alternate credit are not on the TH 1990 instance page. The hymnal meter is 8.7.8.7.4.5.8.8.; some short middle lines are printed together (for example, 'He is my God: though dark my road,')."
-  },
-  {
-    "number": 125,
-    "title": "Let All Things Now Living",
-    "section": null,
-    "author": null,
-    "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
-    "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-06-pm). Number and title only; the words have not been added."
   },
   {
     "number": 162,
@@ -2692,14 +2748,51 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Spirit of God, descend upon my heart;",
+        "wean it from earth, through all its pulses move;",
+        "stoop to my weakness, mighty as thou art,",
+        "and make me love thee as I ought to love."
+      ],
+      [
+        "I ask no dream, no prophet ecstasies,",
+        "no sudden rending of the veil of clay,",
+        "no angel visitant, no op'ning skies;",
+        "but take the dimness of my soul away."
+      ],
+      [
+        "Hast thou not bid us love thee, God and King?",
+        "All, all thine own, soul, heart, and strength and mind.",
+        "I see thy cross—there teach my heart to cling:",
+        "O let me seek thee, and O let me find."
+      ],
+      [
+        "Teach me to feel that thou art always nigh;",
+        "teach me the struggles of the soul to bear,",
+        "to check the rising doubt, the rebel sigh;",
+        "teach me the patience of unanswered prayer."
+      ],
+      [
+        "Teach me to love thee as thine angels love,",
+        "one holy passion filling all my frame;",
+        "the baptism of the heav'n-descended Dove,",
+        "my heart an altar, and thy love the flame."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-09-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf. Credit: George Croly, 1854. Tune MORECAMBE, Frederick C. Atkinson, 1870. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 343,
@@ -2710,14 +2803,61 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Christ is made the sure foundation,",
+        "Christ the head and cornerstone,",
+        "chosen of the Lord and precious,",
+        "binding all the church in one;",
+        "holy Zion's help forever,",
+        "and her confidence alone."
+      ],
+      [
+        "All that dedicated city,",
+        "dearly loved of God on high,",
+        "in exultant jubilation",
+        "pours perpetual melody;",
+        "God the One in Three adoring",
+        "in glad hymns eternally."
+      ],
+      [
+        "To this temple, where we call thee,",
+        "come, O Lord of hosts, today:",
+        "with thy wonted loving-kindness",
+        "hear thy people as they pray;",
+        "and thy fullest benediction",
+        "shed within its walls alway."
+      ],
+      [
+        "Here vouchsafe to all thy servants",
+        "what they ask of thee to gain,",
+        "what they gain from thee forever",
+        "with the blessed to retain,",
+        "and hereafter in thy glory",
+        "evermore with thee to reign."
+      ],
+      [
+        "Laud and honor to the Father,",
+        "laud and honor to the Son,",
+        "laud and honor to the Spirit,",
+        "ever Three and ever One,",
+        "One in might, and One in glory,",
+        "while unending ages run."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-27-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-am-6x9-1.pdf. Text credit: Latin, 7th cent.; tr. John Mason Neale, 1851; alt. in Hymns Ancient and Modern, 1861. Tune credit: WESTMINSTER ABBEY, Henry Purcell, 1659-1695, arr. Ernest Hawkins, 1802-1868; alt. 1990. The 1990 alteration is on the music. The text alteration is 1861, not 1961 or 1990. No copyright notice. Syllable hyphens in the music underlay are joined into words."
   },
   {
     "number": 363,
@@ -2746,14 +2886,43 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Christ, whose glory fills the skies,",
+        "Christ, the true, the only Light,",
+        "Sun of Righteousness, arise,",
+        "triumph o'er the shades of night;",
+        "Dayspring from on high, be near;",
+        "Daystar, in my heart appear."
+      ],
+      [
+        "Dark and cheerless is the morn",
+        "unaccompanied by thee;",
+        "joyless is the day's return",
+        "till thy mercy's beams I see;",
+        "till they inward light impart,",
+        "glad my eyes, and warm my heart."
+      ],
+      [
+        "Visit, then, this soul of mine;",
+        "pierce the gloom of sin and grief;",
+        "fill me, Radiancy divine;",
+        "scatter all my unbelief;",
+        "more and more thyself display,",
+        "shining to the perfect day."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-23-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-am-6x9-1.pdf. Credit: Charles Wesley, 1740. Tune LUX PRIMA, Charles F. Gounod, 1872. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 401,
@@ -2906,14 +3075,47 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-16-am). Number and title only; the words have not been added."
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Let thy blood in mercy poured,",
+        "let thy gracious body broken,",
+        "be to me, O gracious Lord,",
+        "of thy boundless love the token."
+      ],
+      [
+        "Thou didst die that I might live;",
+        "blessed Lord, thou cam'st to save me;",
+        "all that love of God could give,",
+        "Jesus by his sorrows gave me."
+      ],
+      [
+        "By the thorns that crowned thy brow,",
+        "by the spear wound and the nailing,",
+        "by the pain and death, I now",
+        "claim, O Christ, thy love unfailing."
+      ],
+      [
+        "Wilt thou own the gift I bring?",
+        "All my penitence I give thee;",
+        "thou art my exalted King,",
+        "of thy matchless love forgive me."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "refrain": [
+      "Thou didst give thyself for me,",
+      "now I give myself to thee."
+    ],
+    "refrain_after_each_stanza": true,
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-am-6x9-1.pdf. Credit: Greek hymn, tr. John Brownlie, 1907. Tune JESUS, MEINE ZUVERSICHT, Johann Cruger, 1653; arr. The page marks a refrain. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 457,
@@ -2924,14 +3126,49 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.6.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Come, thou fount of ev'ry blessing,",
+        "tune my heart to sing thy grace;",
+        "streams of mercy, never ceasing,",
+        "call for songs of loudest praise.",
+        "Teach me some melodious sonnet,",
+        "sung by flaming tongues above;",
+        "praise the mount! I'm fixed upon it,",
+        "mount of God's unchanging love."
+      ],
+      [
+        "Here I raise my Ebenezer;",
+        "hither by thy help I'm come;",
+        "and I hope, by thy good pleasure,",
+        "safely to arrive at home.",
+        "Jesus sought me when a stranger,",
+        "wand'ring from the fold of God:",
+        "he, to rescue me from danger,",
+        "interposed his precious blood."
+      ],
+      [
+        "O to grace how great a debtor",
+        "daily I'm constrained to be;",
+        "let that grace now, like a fetter,",
+        "bind my wand'ring heart to thee.",
+        "Prone to wander—Lord, I feel it—",
+        "prone to leave the God I love:",
+        "here's my heart, O take and seal it,",
+        "seal it for thy courts above."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-06-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.6.26Bulletin-am-6x9-1.pdf. Credit: Robert Robinson, 1758. Tune NETTLETON, Asahel Nettleton, 1825. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 460,
@@ -2942,14 +3179,58 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Amazing grace!—how sweet the sound—",
+        "that saved a wretch like me!",
+        "I once was lost, but now am found,",
+        "was blind, but now I see."
+      ],
+      [
+        "'Twas grace that taught my heart to fear,",
+        "and grace my fears relieved;",
+        "how precious did that grace appear",
+        "the hour I first believed!"
+      ],
+      [
+        "Thro' many dangers, toils, and snares,",
+        "I have already come;",
+        "'tis grace has brought me safe thus far,",
+        "and grace will lead me home."
+      ],
+      [
+        "The Lord has promised good to me,",
+        "his Word my hope secures;",
+        "he will my shield and portion be,",
+        "as long as life endures."
+      ],
+      [
+        "And when this flesh and heart shall fail,",
+        "and mortal life shall cease,",
+        "I shall possess within the veil",
+        "a life of joy and peace."
+      ],
+      [
+        "When we've been there ten thousand years,",
+        "bright shining as the sun,",
+        "we've no less days to sing God's praise",
+        "than when we've first begun."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-10-04-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-am-6x9-1.pdf. Credit: stanzas 1-5, John Newton, 1779; stanza 6, A Collection of Sacred Ballads, 1790. Tune AMAZING GRACE, traditional American melody, arr. Edwin O. Excell, 1900. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 469,
@@ -2978,14 +3259,58 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "O thou that hear'st when sinners cry,",
+        "though all my crimes before thee lie,",
+        "behold them not with angry look,",
+        "but blot their mem'ry from thy book."
+      ],
+      [
+        "Create my nature pure within,",
+        "and form my soul averse to sin;",
+        "let thy good Spirit ne'er depart,",
+        "nor hide thy presence from my heart."
+      ],
+      [
+        "I cannot live without thy light,",
+        "cast out and banished from thy sight;",
+        "thy holy joys, my God, restore,",
+        "and guard me, that I fall no more."
+      ],
+      [
+        "A broken heart, my God, my King,",
+        "is all the sacrifice I bring;",
+        "the God of grace will ne'er despise",
+        "a broken heart for sacrifice."
+      ],
+      [
+        "My soul lies humbled in the dust,",
+        "and owns thy dreadful sentence just:",
+        "look down, O Lord, with pitying eye,",
+        "and save the soul condemned to die."
+      ],
+      [
+        "Then will I teach the world thy ways;",
+        "sinners shall learn thy sovereign grace;",
+        "I'll lead them to my Savior's blood,",
+        "and they shall praise a pard'ning God."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-10-04-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-pm-6x9-1.pdf. Credit: from Psalm 51, Isaac Watts, 1719. Tune HAMBURG, Gregorian chant, arr. Lowell Mason, 1824. The bulletin heading is O Thou That Hear'st When Sinners Cry. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 501,
@@ -2996,14 +3321,58 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Just as I am, without one plea",
+        "but that thy blood was shed for me,",
+        "and that thou bidd'st me come to thee,",
+        "O Lamb of God, I come, I come."
+      ],
+      [
+        "Just as I am, and waiting not",
+        "to rid my soul of one dark blot,",
+        "to thee, whose blood can cleanse each spot,",
+        "O Lamb of God, I come, I come."
+      ],
+      [
+        "Just as I am, though tossed about",
+        "with many a conflict, many a doubt,",
+        "fightings and fears within, without,",
+        "O Lamb of God, I come, I come."
+      ],
+      [
+        "Just as I am, poor, wretched, blind;",
+        "sight, riches, healing of the mind,",
+        "yea, all I need, in thee to find,",
+        "O Lamb of God, I come, I come."
+      ],
+      [
+        "Just as I am, thou wilt receive,",
+        "wilt welcome, pardon, cleanse, relieve;",
+        "because thy promise I believe,",
+        "O Lamb of God, I come, I come."
+      ],
+      [
+        "Just as I am, thy love unknown",
+        "has broken ev'ry barrier down;",
+        "now, to be thine, yea, thine alone,",
+        "O Lamb of God, I come, I come."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-10-11-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf. Credit: Charlotte Elliott, 1836. Tune WOODWORTH, William B. Bradbury, 1849. The bulletin heading is Just As I Am, without One Plea. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 510,
@@ -3014,14 +3383,52 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Thou hidden source of calm repose,",
+        "thou all-sufficient love divine,",
+        "my help and refuge from my foes,",
+        "secure I am, if thou art mine:",
+        "and lo! from sin and grief and shame",
+        "I hide me, Jesus, in thy name."
+      ],
+      [
+        "Thy mighty name salvation is,",
+        "and keeps my happy soul above;",
+        "comfort it brings, and pow'r and peace,",
+        "and joy and everlasting love:",
+        "to me, with thy dear name, are giv'n",
+        "pardon and holiness and heav'n."
+      ],
+      [
+        "Jesus, my all in all thou art;",
+        "my rest in toil, my ease in pain,",
+        "the medicine of my broken heart,",
+        "in war my peace, in loss my gain,",
+        "my smile beneath the tyrant's frown,",
+        "in shame my glory and my crown:"
+      ],
+      [
+        "In want my plentiful supply,",
+        "in weakness my almighty pow'r,",
+        "in bonds my perfect liberty,",
+        "my light in Satan's darkest hour,",
+        "my help and stay whene'er I call,",
+        "my life in death, my heav'n, my all."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-23-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-am-6x9-1.pdf. Credit: Charles Wesley, 1749. Tune STELLA, arr. in Easy Hymn Tunes, 1851. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 528,
@@ -3032,14 +3439,56 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "My faith looks up to thee,",
+        "thou Lamb of Calvary,",
+        "Savior divine:",
+        "now hear me while I pray,",
+        "take all my guilt away,",
+        "O let me from this day",
+        "be wholly thine."
+      ],
+      [
+        "May thy rich grace impart",
+        "strength to my fainting heart,",
+        "my zeal inspire;",
+        "as thou hast died for me,",
+        "O may my love to thee",
+        "pure, warm, and changeless be,",
+        "a living fire."
+      ],
+      [
+        "While life's dark maze I tread,",
+        "and griefs around me spread,",
+        "be thou my guide;",
+        "bid darkness turn to day,",
+        "wipe sorrow's tears away,",
+        "nor let me ever stray",
+        "from thee aside."
+      ],
+      [
+        "When ends life's transient dream,",
+        "when death's cold, sullen stream",
+        "shall o'er me roll,",
+        "blest Savior, then, in love,",
+        "fear and distrust remove;",
+        "O bear me safe above,",
+        "a ransomed soul."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-09-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf. Credit: Ray Palmer, 1830. Tune OLIVET, Lowell Mason, 1832. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 534,
@@ -3050,14 +3499,44 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "O for a closer walk with God,",
+        "a calm and heav'nly frame,",
+        "a light to shine upon the road",
+        "that leads me to the Lamb!"
+      ],
+      [
+        "Return, O holy Dove, return,",
+        "sweet messenger of rest;",
+        "I hate the sins that made thee mourn,",
+        "and drove thee from my breast."
+      ],
+      [
+        "The dearest idol I have known,",
+        "whate'er that idol be,",
+        "help me to tear it from thy throne,",
+        "and worship only thee."
+      ],
+      [
+        "So shall my walk be close with God,",
+        "calm and serene my frame;",
+        "so purer light shall mark the road",
+        "that leads me to the Lamb."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-10-25-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-pm-6x9-1.pdf. Credit: William Cowper, 1779. Tune BEATITUDO, John B. Dykes, 1875. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 535,
@@ -3068,14 +3547,49 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "O the deep, deep love of Jesus!",
+        "Vast, unmeasured, boundless, free;",
+        "rolling as a mighty ocean",
+        "in its fullness over me.",
+        "Underneath me, all around me,",
+        "is the current of thy love;",
+        "leading onward, leading homeward,",
+        "to thy glorious rest above."
+      ],
+      [
+        "O the deep, deep love of Jesus!",
+        "Spread his praise from shore to shore;",
+        "how he loveth, ever loveth,",
+        "changeth never, nevermore;",
+        "how he watches o'er his loved ones,",
+        "died to call them all his own;",
+        "how for them he intercedeth,",
+        "watcheth o'er them from the throne."
+      ],
+      [
+        "O the deep, deep love of Jesus!",
+        "Love of ev'ry love the best:",
+        "'tis an ocean vast of blessing,",
+        "'tis a haven sweet of rest.",
+        "O the deep, deep love of Jesus!",
+        "'Tis a heav'n of heav'ns to me;",
+        "and it lifts me up to glory,",
+        "for it lifts me up to thee."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-20-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-am-6x9-1.pdf. Credit: Samuel Trevor Francis, 1834-1925. Tune EBENEZER (or TON-Y-BOTEL), Thomas John Williams, 1890. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 539,
@@ -3160,14 +3674,64 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.13.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Take my life, and let it be",
+        "consecrated, Lord, to thee.",
+        "Take my moments and my days;",
+        "let them flow in ceaseless praise,",
+        "let them flow in ceaseless praise."
+      ],
+      [
+        "Take my hands, and let them move",
+        "at the impulse of thy love.",
+        "Take my feet, and let them be",
+        "swift and beautiful for thee,",
+        "swift and beautiful for thee."
+      ],
+      [
+        "Take my voice, and let me sing,",
+        "always, only, for my King.",
+        "Take my lips, and let them be",
+        "filled with messages from thee,",
+        "filled with messages from thee."
+      ],
+      [
+        "Take my silver and my gold;",
+        "not a mite would I withhold.",
+        "Take my intellect, and use",
+        "ev'ry pow'r as thou shalt choose,",
+        "ev'ry pow'r as thou shalt choose."
+      ],
+      [
+        "Take my will, and make it thine;",
+        "it shall be no longer mine.",
+        "Take my heart, it is thine own;",
+        "it shall be thy royal throne,",
+        "it shall be thy royal throne."
+      ],
+      [
+        "Take my love; my Lord, I pour",
+        "at thy feet its treasure-store.",
+        "Take my self, and I will be",
+        "ever, only, all for thee,",
+        "ever, only, all for thee."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-13-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.13.26Bulletin-pm-6x9-1.pdf. Credit: Frances R. Havergal, 1874. Tune HENDON, Henri A. Cesar Malan, 1827. Stanza 6 prints treasure-store and Take my self. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 604,
@@ -3178,14 +3742,61 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-09-pm). Number and title only; the words have not been added."
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Rejoice, ye pure in heart,",
+        "rejoice, give thanks, and sing;",
+        "your festal banner wave on high,",
+        "the cross of Christ your King."
+      ],
+      [
+        "Bright youth and snow-crowned age,",
+        "strong men and maidens meek,",
+        "raise high your free, exulting song;",
+        "God's wondrous praises speak."
+      ],
+      [
+        "With all the angel choirs,",
+        "with all the saints on earth,",
+        "pour out the strains of joy and bliss,",
+        "true rapture, noblest mirth!"
+      ],
+      [
+        "Yes, on through life's long path,",
+        "still chanting as ye go,",
+        "from youth to age, by night and day,",
+        "in gladness and in woe."
+      ],
+      [
+        "At last the march shall end,",
+        "the wearied ones shall rest;",
+        "the pilgrims find their Father's house,",
+        "Jerusalem the blest."
+      ],
+      [
+        "Then on, ye pure in heart,",
+        "rejoice, give thanks, and sing;",
+        "your glorious banner wave on high,",
+        "the cross of Christ your King."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "refrain": [
+      "Rejoice, rejoice, rejoice, give thanks, and sing.",
+      "Rejoice, rejoice,"
+    ],
+    "refrain_after_each_stanza": true,
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf. Credit: Edward H. Plumptre, 1865. Tune MARION, Arthur H. Messiter, 1885. The page marks a refrain, and prints Rejoice, rejoice, again under the repeated notes. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 624,
@@ -3196,14 +3807,58 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.6.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Through all the changing scenes of life,",
+        "in trouble and in joy,",
+        "the praises of my God shall still",
+        "my heart and tongue employ."
+      ],
+      [
+        "Of his deliv'rance I will boast,",
+        "till all that are distressed",
+        "from my example comfort take,",
+        "and charm their griefs to rest."
+      ],
+      [
+        "O magnify the Lord with me,",
+        "with me exalt his name;",
+        "when in distress to him I called,",
+        "he to my rescue came."
+      ],
+      [
+        "The hosts of God encamp around",
+        "the dwellings of the just;",
+        "deliv'rance he affords to all",
+        "who on his succor trust."
+      ],
+      [
+        "O make but trial of his love;",
+        "experience will decide",
+        "how blest they are, and only they,",
+        "who in his truth confide."
+      ],
+      [
+        "Fear him, ye saints, and you will then",
+        "have nothing else to fear:",
+        "make you his service your delight;",
+        "he'll make your wants his care."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-06-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.6.26Bulletin-pm-6x9-1.pdf. Credit: from Psalm 34:1-4, 7-9, Tate and Brady's New Version, 1696, 1698. Tune DOWNS, Lowell Mason, 1832. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 644,
@@ -3214,14 +3869,51 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "May the mind of Christ my Savior",
+        "live in me from day to day,",
+        "by his love and pow'r controlling",
+        "all I do and say."
+      ],
+      [
+        "May the Word of God dwell richly",
+        "in my heart from hour to hour,",
+        "so that all may see I triumph",
+        "only through his pow'r."
+      ],
+      [
+        "May the peace of God my Father",
+        "rule my life in everything,",
+        "that I may be calm to comfort",
+        "sick and sorrowing."
+      ],
+      [
+        "May the love of Jesus fill me",
+        "as the waters fill the sea;",
+        "him exalting, self abasing,",
+        "this is victory."
+      ],
+      [
+        "May his beauty rest upon me",
+        "as I seek the lost to win,",
+        "and may they forget the channel,",
+        "seeing only him."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-11-15-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-pm-6x9-1.pdf. Text credit: Kate B. Wilkinson, 1925. Tune credit: ST. LEONARDS, A. Cyril Barham-Gould, 1925; alt. 1990. The 1990 alteration is on the music, not the text. No copyright notice. Syllable hyphens in the music underlay are joined into words."
   },
   {
     "number": 647,
@@ -3250,14 +3942,44 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Savior, teach me, day by day,",
+        "love's sweet lesson to obey;",
+        "sweeter lesson cannot be,",
+        "loving him who first loved me."
+      ],
+      [
+        "With a child's glad heart of love,",
+        "at thy bidding may I move;",
+        "prompt to serve and follow thee,",
+        "loving him who first loved me."
+      ],
+      [
+        "Teach me thus thy steps to trace,",
+        "strong to follow in thy grace;",
+        "learning how to love from thee,",
+        "loving him who first loved me."
+      ],
+      [
+        "Love in loving finds employ,",
+        "in obedience all her joy;",
+        "ever new that joy will be,",
+        "loving him who first loved me."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-23-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf. Credit: Jane E. Leeson, 1842. Tune POSEN, Georg C. Strattner, 1691, arr. J. A. Freylinghausen, 1705. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 656,
@@ -3268,32 +3990,76 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Jesus, priceless treasure,",
+        "source of purest pleasure,",
+        "truest Friend to me:",
+        "ah, how long in anguish",
+        "shall my spirit languish,",
+        "yearning, Lord, for thee?",
+        "Thine I am, O spotless Lamb!",
+        "I will suffer naught to hide thee,",
+        "naught I ask beside thee."
+      ],
+      [
+        "In thine arms I rest me;",
+        "foes who would molest me",
+        "cannot reach me here.",
+        "Though the earth be shaking,",
+        "ev'ry heart be quaking,",
+        "Jesus calms my fear.",
+        "Lightnings flash and thunders crash;",
+        "yet, though sin and hell assail me,",
+        "Jesus will not fail me."
+      ],
+      [
+        "Satan, I defy thee;",
+        "death, I now decry thee;",
+        "fear, I bid thee cease.",
+        "World, thou shalt not harm me",
+        "nor thy threats alarm me",
+        "while I sing of peace.",
+        "God's great pow'r guards ev'ry hour;",
+        "earth and all its depths adore him,",
+        "silent bow before him."
+      ],
+      [
+        "Hence with earthly treasure!",
+        "Thou art all my pleasure,",
+        "Jesus, all my choice.",
+        "Hence, thou empty glory!",
+        "Naught to me thy story,",
+        "told with tempting voice.",
+        "Pain or loss or shame or cross",
+        "shall not from my Savior move me,",
+        "since he deigns to love me."
+      ],
+      [
+        "Hence, all fear and sadness!",
+        "For the Lord of gladness,",
+        "Jesus, enters in.",
+        "Those who love the Father,",
+        "though the storms may gather,",
+        "still have peace within.",
+        "Yea, whate'er I here must bear,",
+        "thou art still my purest pleasure,",
+        "Jesus, priceless treasure."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-16-pm). Number and title only; the words have not been added."
-  },
-  {
-    "number": 660,
-    "title": "O God beyond All Praising",
-    "section": null,
-    "author": null,
-    "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
-    "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-30-am). Number and title only; the words have not been added."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-pm-6x9-1.pdf. Credit: Johann Franck, 1655, tr. Catherine Winkworth, 1863. Tune JESU, MEINE FREUDE, Johann Cruger, 1649. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 689,
@@ -3322,14 +4088,48 @@
     "composer": null,
     "tune": null,
     "year_text": null,
-    "public_domain": null,
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-11-15-am). Number and title only; the words have not been added."
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "When peace, like a river, attendeth my way,",
+        "when sorrows like sea billows roll;",
+        "whatever my lot, thou hast taught me to say,",
+        "\"It is well, it is well with my soul.\""
+      ],
+      [
+        "Though Satan should buffet, though trials should come,",
+        "let this blest assurance control,",
+        "that Christ has regarded my helpless estate,",
+        "and has shed his own blood for my soul."
+      ],
+      [
+        "My sin—O the bliss of this glorious thought!—",
+        "my sin, not in part, but the whole,",
+        "is nailed to the cross and I bear it no more;",
+        "praise the Lord, praise the Lord, O my soul!"
+      ],
+      [
+        "O Lord, haste the day when the faith shall be sight,",
+        "the clouds be rolled back as a scroll,",
+        "the trump shall resound and the Lord shall descend,",
+        "\"Even so\"—it is well with my soul."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "refrain": [
+      "It is well with my soul;",
+      "it is well, it is well with my soul.",
+      "with my soul;"
+    ],
+    "refrain_after_each_stanza": true,
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-am-6x9-1.pdf. Credit: Horatio G. Spafford, 1873. Tune VILLE DU HAVRE, Philip P. Bliss, 1876. The page marks a refrain, and prints with my soul; again under the repeated notes. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice and no 1961 or 1990 alteration of the text."
   },
   {
     "number": 700,
@@ -3348,41 +4148,5 @@
     "refrain": null,
     "refrain_after_each_stanza": false,
     "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-27-pm). Number and title only; the words have not been added."
-  },
-  {
-    "number": 703,
-    "title": "Loved with Everlasting Love",
-    "section": null,
-    "author": null,
-    "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
-    "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-09-27-pm). Number and title only; the words have not been added."
-  },
-  {
-    "number": 719,
-    "title": "A Christian Home",
-    "section": null,
-    "author": null,
-    "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
-    "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-10-25-pm). Number and title only; the words have not been added."
   }
 ]

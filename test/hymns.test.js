@@ -67,14 +67,14 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 92);
+  assert.equal(hymns.length, 88);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
   // The 1990 Trinity Hymnal runs to 742.
   for (const number of numbers) assert.ok(number >= 1 && number <= 742, String(number));
   assert.deepEqual(numbers.slice(0, 6), [5, 15, 31, 34, 36, 46]);
-  assert.deepEqual(numbers.slice(-4), [691, 700, 703, 719]);
+  assert.deepEqual(numbers.slice(-4), [656, 689, 691, 700]);
   assert.deepEqual(listSections(hymns), [
     "Advent",
     "Christmas",
@@ -227,9 +227,9 @@ test("neighbors follow hymnal number", () => {
   assert.equal(around.next.number, 204);
   assert.equal(neighbors(hymns, 5).prev, null, "5 is the lowest number held");
   assert.equal(neighbors(hymns, 108).prev.number, 103);
-  assert.equal(neighbors(hymns, 162).prev.number, 125);
+  assert.equal(neighbors(hymns, 162).prev.number, 108);
   assert.equal(neighbors(hymns, 233).next.number, 239);
-  assert.equal(neighbors(hymns, 719).next, null, "719 is the highest number held");
+  assert.equal(neighbors(hymns, 700).next, null, "700 is the highest number held");
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
 
@@ -273,7 +273,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   for (const number of [108, 401, 559]) assert.ok(allYear.includes(number), String(number));
   // Bulletin hymns land here until someone sorts them into a season.
   assert.ok(allYear.includes(53) && allYear.includes(691));
-  assert.equal(allYear.length, 54);
+  assert.equal(allYear.length, 50);
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
@@ -1089,7 +1089,7 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
 
   // Every bulletin hymn still needs a theme row and a music row.
   const pending = hymns.filter((hymn) => wordsPending(hymn) && !isWithheld(hymn));
-  assert.equal(pending.length, 49);
+  assert.equal(pending.length, 24);
   for (const hymn of pending) {
     assert.ok(themes.hymns[String(hymn.number)], `themes ${hymn.number}`);
     assert.ok(music.omitted[String(hymn.number)], `music ${hymn.number}`);
@@ -1099,6 +1099,42 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.match(appSource, /wordsPending\(hymn\)/);
   assert.match(appSource, /Words not added yet/);
+});
+
+test("bulletin hymns keep the printed words and drop fully copyrighted numbers", () => {
+  assert.equal(byNumber.get(125), undefined);
+  assert.equal(byNumber.get(660), undefined);
+  assert.equal(byNumber.get(703), undefined);
+  assert.equal(byNumber.get(719), undefined);
+  assert.equal(themes.hymns["125"], undefined);
+  assert.equal(music.omitted["719"], undefined);
+
+  const though = byNumber.get(95);
+  assert.equal(though.title, "Though Troubles Assail Us");
+  assert.equal(though.stanzas[0][0], "Though troubles assail us and dangers affright,");
+  assert.match(though.source_url, /10\.11\.26Bulletin-pm/);
+
+  const take = byNumber.get(585);
+  assert.equal(take.stanzas.length, 6);
+  assert.equal(take.stanzas[5][1], "at thy feet its treasure-store.");
+  assert.equal(take.stanzas[5][2], "Take my self, and I will be");
+  assert.match(take.source_url, /9\.13\.26Bulletin-pm/);
+
+  const grace = byNumber.get(460);
+  assert.equal(grace.stanzas.length, 6);
+  assert.match(grace.stanzas[0][0], /^Amazing grace!/);
+  assert.equal(grace.stanzas[2][2], "'tis grace has brought me safe thus far,");
+
+  const well = byNumber.get(691);
+  assert.equal(well.refrain_after_each_stanza, true);
+  assert.equal(well.refrain[0], "It is well with my soul;");
+  assert.equal(well.stanzas.length, 4);
+
+  // Held for review, still without words.
+  for (const number of [15, 31, 56, 5, 36, 53, 689]) {
+    assert.equal(wordsPending(byNumber.get(number)), true, String(number));
+    assert.equal(byNumber.get(number).source_url, null, String(number));
+  }
 });
 
 test("the Hark title links home on the list and on a hymn", () => {
