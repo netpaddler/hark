@@ -67,14 +67,14 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 88);
+  assert.equal(hymns.length, 75);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
   // The 1990 Trinity Hymnal runs to 742.
   for (const number of numbers) assert.ok(number >= 1 && number <= 742, String(number));
-  assert.deepEqual(numbers.slice(0, 6), [5, 15, 31, 34, 36, 46]);
-  assert.deepEqual(numbers.slice(-4), [656, 689, 691, 700]);
+  assert.deepEqual(numbers.slice(0, 6), [15, 31, 34, 56, 57, 76]);
+  assert.deepEqual(numbers.slice(-4), [652, 656, 691, 700]);
   assert.deepEqual(listSections(hymns), [
     "Advent",
     "Christmas",
@@ -151,18 +151,18 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 45);
+  assert.equal(all.length, 52);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
   assert.ok(all.every((item) => !/^mod\.?$/i.test(item.label)));
   assert.deepEqual(
     group("Neale, John Mason (tr.)").hymns.map((item) => item.hymn.number),
-    [162, 194, 207],
+    [162, 194, 207, 539],
   );
   assert.deepEqual(
     group("Watts, Isaac").hymns.map((item) => item.hymn.number),
-    [195, 301],
+    [31, 195, 301, 700],
   );
   assert.deepEqual(
     group("Wesley, Charles").hymns.map((item) => item.hymn.number),
@@ -225,10 +225,10 @@ test("neighbors follow hymnal number", () => {
   const around = neighbors(hymns, 203);
   assert.equal(around.prev.number, 202);
   assert.equal(around.next.number, 204);
-  assert.equal(neighbors(hymns, 5).prev, null, "5 is the lowest number held");
-  assert.equal(neighbors(hymns, 108).prev.number, 103);
+  assert.equal(neighbors(hymns, 15).prev, null, "15 is the lowest number held");
+  assert.equal(neighbors(hymns, 108).prev.number, 99);
   assert.equal(neighbors(hymns, 162).prev.number, 108);
-  assert.equal(neighbors(hymns, 233).next.number, 239);
+  assert.equal(neighbors(hymns, 233).next.number, 271);
   assert.equal(neighbors(hymns, 700).next, null, "700 is the highest number held");
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
@@ -272,8 +272,8 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   const allYear = hymnsInTheme(themes, "all-year");
   for (const number of [108, 401, 559]) assert.ok(allYear.includes(number), String(number));
   // Bulletin hymns land here until someone sorts them into a season.
-  assert.ok(allYear.includes(53) && allYear.includes(691));
-  assert.equal(allYear.length, 50);
+  assert.ok(allYear.includes(15) && allYear.includes(691));
+  assert.equal(allYear.length, 37);
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
@@ -1066,35 +1066,24 @@ test("abcjs loads when the music is opened, not on every page", () => {
   assert.match(appSource, /if \(!pending\) pending = buildScore\(\)/);
 });
 
-test("hymns listed from a bulletin are findable but say the words are missing", () => {
-  const stub = byNumber.get(53);
-  assert.equal(stub.title, "Praise to the Lord, the Almighty");
-  assert.deepEqual(stub.stanzas, []);
-  // Not withheld: no copyright claim is being made either way.
-  assert.equal(stub.public_domain, null);
+test("a hymn with no words yet is a different state from one that has them", () => {
+  const stub = {
+    number: 742,
+    title: "A Hymn Not Added Yet",
+    stanzas: [],
+    public_domain: null,
+    notes: "Listed in a Faith Presbyterian Tacoma bulletin.",
+  };
   assert.equal(isWithheld(stub), false);
   assert.equal(wordsPending(stub), true);
-  assert.match(stub.notes, /Faith Presbyterian Tacoma bulletin/);
-  // A hymn whose words are withheld for copyright is a different state.
-  assert.equal(wordsPending(byNumber.get(53)), true);
-  assert.equal(isWithheld(byNumber.get(53)), false);
-  // A hymn with words is neither.
+  assert.equal(stanzaPlan(stub).length, 0);
+  // A hymn with words is neither pending nor withheld.
   assert.equal(wordsPending(byNumber.get(108)), false);
   assert.equal(isWithheld(byNumber.get(108)), false);
-
-  // Findable by number and by title, even with no text to search.
-  assert.deepEqual(filterHymns(hymns, "53").map((hymn) => hymn.number), [53, 220, 534, 535, 539]);
-  assert.deepEqual(filterHymns(hymns, "Praise to the Lord").map((hymn) => hymn.number), [53]);
-  assert.equal(stanzaPlan(stub).length, 0);
-
-  // Every bulletin hymn still needs a theme row and a music row.
-  const pending = hymns.filter((hymn) => wordsPending(hymn) && !isWithheld(hymn));
-  assert.equal(pending.length, 24);
-  for (const hymn of pending) {
-    assert.ok(themes.hymns[String(hymn.number)], `themes ${hymn.number}`);
-    assert.ok(music.omitted[String(hymn.number)], `music ${hymn.number}`);
-    assert.equal(hymn.section, null);
-  }
+  // Every listed hymn now has words. The copyrighted numbers are gone.
+  assert.equal(hymns.filter((hymn) => wordsPending(hymn)).length, 0);
+  assert.equal(byNumber.get(53), undefined);
+  assert.deepEqual(filterHymns(hymns, "53").map((hymn) => hymn.number), [220, 534, 535, 539]);
 
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.match(appSource, /wordsPending\(hymn\)/);
@@ -1130,11 +1119,17 @@ test("bulletin hymns keep the printed words and drop fully copyrighted numbers",
   assert.equal(well.refrain[0], "It is well with my soul;");
   assert.equal(well.stanzas.length, 4);
 
-  // Held for review, still without words.
-  for (const number of [15, 31, 56, 5, 36, 53, 689]) {
-    assert.equal(wordsPending(byNumber.get(number)), true, String(number));
-    assert.equal(byNumber.get(number).source_url, null, String(number));
+  for (const number of [5, 36, 46, 53, 103, 168, 239, 257, 305, 363, 415, 469, 689]) {
+    assert.equal(byNumber.get(number), undefined, String(number));
+    assert.equal(themes.hymns[String(number)], undefined, String(number));
+    assert.equal(music.omitted[String(number)], undefined, String(number));
   }
+  const stand = byNumber.get(15);
+  assert.equal(stand.public_domain, true);
+  assert.equal(stand.stanzas[2][3], "and wing to heav'n our thought!");
+  assert.match(stand.notes, /James Montgomery, 1824, 1825; mod\./);
+  assert.equal(byNumber.get(700).stanzas[4][2], "we're marching through Immanuel's ground");
+  assert.equal(byNumber.get(647).stanzas[2][2], "my never-failing treas'ry filled");
 });
 
 test("the Hark title links home on the list and on a hymn", () => {
@@ -1257,7 +1252,7 @@ test("welcome counts are worked out from the data and leave withheld hymns out",
   const items = statItems(stats);
   assert.deepEqual(
     items.map((item) => item.id),
-    ["words", "pending", "recordings", "scores"],
+    ["words", "pending", "recordings", "scores"].filter((id) => stats[id] > 0),
   );
   assert.equal(items[0].value, stats.words);
   // A zero is left off the page, and one of a thing is not called "hymns".
