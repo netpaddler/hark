@@ -256,7 +256,7 @@ function syncSticky() {
 }
 
 function countLabel(total) {
-  return total === 1 ? "1 hymn" : `${total} hymns`;
+  return total === 1 ? "1 song" : `${total} songs`;
 }
 
 function syncTabs(index) {
@@ -756,7 +756,7 @@ function renderThemes() {
   count.textContent = countLabel(shown.size);
   document.title = "Themes · Hark";
   if (shown.size === 0) {
-    main.replaceChildren(el("p", { class: "empty" }, "No hymns match that search."));
+    main.replaceChildren(el("p", { class: "empty" }, "No songs match that search."));
   } else {
     const root = el("div", { class: "themes" });
     const jumps = [...outline.seasons, ...outline.topics];
@@ -807,7 +807,7 @@ function renderTheme(id) {
   const page = el("div", { class: "theme-page" });
   page.append(el("p", { class: "theme-back" }, el("a", { href: "#/themes" }, "All themes")));
   page.append(el("h2", { class: "theme-page-title" }, theme.title));
-  if (list.length === 0) page.append(el("p", { class: "empty" }, "No hymns match that search."));
+  if (list.length === 0) page.append(el("p", { class: "empty" }, "No songs match that search."));
   else page.append(themeHymnList(list));
   main.replaceChildren(page);
   const y = scrollMemory[key] || 0;
@@ -850,10 +850,10 @@ function renderIndex(index) {
     main.classList.remove("has-jump");
     if (saved.length === 0) {
       main.replaceChildren(
-        el("p", { class: "empty" }, "No liked hymns yet. Open a hymn and press the heart to keep it here."),
+        el("p", { class: "empty" }, "No liked songs yet. Open a song and press the heart to keep it here."),
       );
     } else if (list.length === 0) {
-      main.replaceChildren(el("p", { class: "empty" }, "No hymns match that search."));
+      main.replaceChildren(el("p", { class: "empty" }, "No songs match that search."));
     } else {
       main.replaceChildren(numberList(list));
     }
@@ -866,7 +866,7 @@ function renderIndex(index) {
   count.textContent = countLabel(result.total);
   main.classList.toggle("has-jump", index !== "number" && result.total > 0);
   if (result.total === 0) {
-    main.replaceChildren(el("p", { class: "empty" }, "No hymns match that search."));
+    main.replaceChildren(el("p", { class: "empty" }, "No songs match that search."));
   } else if (index === "title") {
     main.replaceChildren(titleList(result.letters), jumpBar(result.letters));
   } else if (index === "author") {
@@ -1211,15 +1211,15 @@ function renderHymn(number) {
   const back = document.getElementById("back-link");
   back.href = indexHref(listIndex);
   const fromThemes = listIndex === "themes" || (typeof listIndex === "string" && listIndex.startsWith("theme:"));
-  let backLabel = "Hymns";
-  let listName = "hymn list";
+  let backLabel = "Songs";
+  let listName = "song list";
   if (listIndex === "welcome") [backLabel, listName] = ["Welcome", "welcome page"];
   else if (listIndex === "requests") [backLabel, listName] = ["Comments/Requests", "comments and requests"];
   else if (listIndex === "sins") [backLabel, listName] = ["Sins", "Sins page"];
   else if (fromThemes) [backLabel, listName] = ["Themes", "themes"];
   else if (listIndex === "title") listName = "title index";
   else if (listIndex === "author") listName = "author index";
-  else if (listIndex === "liked") [backLabel, listName] = ["Liked", "liked hymns"];
+  else if (listIndex === "liked") [backLabel, listName] = ["Liked", "liked songs"];
   else if (listIndex === "whats-new") [backLabel, listName] = ["What's New", "What's New page"];
   back.replaceChildren(icon("back"), document.createTextNode(backLabel));
   back.setAttribute("aria-label", `Back to the ${listName}`);
@@ -1812,7 +1812,7 @@ function showError() {
   document.title = "Hark";
   main.replaceChildren(
     el("div", { class: "notice" }, [
-      el("h2", {}, "The hymnal did not open"),
+      el("h2", {}, "The songbook did not open"),
       el("p", {}, "Check your connection, then try again."),
       el(
         "button",
@@ -2015,7 +2015,7 @@ function renderWhatsNew() {
   count.textContent = "";
   document.title = "What's New · Hark";
   const page = el("article", { class: "whats-new" });
-  page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Hymns")));
+  page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Songs")));
   page.append(el("h2", {}, "What's New"));
   page.append(el("p", { class: "whats-new-lead" }, "Hymns added to Hark, newest first."));
   const actions = el("p", { class: "whats-new-actions" });
@@ -2064,7 +2064,7 @@ function renderInstall() {
   count.textContent = "";
   document.title = "Install Hark";
   const page = el("article", { class: "install-page" });
-  page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Hymns")));
+  page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Songs")));
   page.append(el("h2", {}, "Install Hark"));
   if (installEvent && !runningAsApp()) {
     const now = el("button", { type: "button", class: "install-now" }, "Install now");

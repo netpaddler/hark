@@ -1305,7 +1305,7 @@ test("welcome counts are worked out from the data and leave withheld hymns out",
   // A zero is left off the page, and one of a thing is not called "hymns".
   assert.deepEqual(
     statItems({ words: 1, pending: 0, recorded: 0, recordings: 0, scores: 0 }).map((item) => item.label),
-    ["hymn with its words"],
+    ["song with its words"],
   );
 
   // The page reads its numbers from welcomeStats, not from digits in the copy.
@@ -1733,7 +1733,7 @@ test("a like toggles and stays in storage", () => {
   assert.match(appSource, /aria-pressed/);
   assert.match(appSource, /aria-label", state\.label/);
   assert.match(appSource, /type: "button", class: "like-btn"/);
-  assert.match(appSource, /No liked hymns yet/);
+  assert.match(appSource, /No liked songs yet/);
   assert.match(appSource, /path === "\/liked"/);
 });
 
@@ -1804,7 +1804,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v37";/);
+  assert.match(sw, /const CACHE = "hark-v38";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));

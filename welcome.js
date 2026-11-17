@@ -36,23 +36,23 @@ const UPCOMING_DAYS = 28;
 
 export const welcomeCopy = {
   documentTitle: "Welcome · Hark",
-  title: "Hymns from the Trinity Hymnal, ready to sing.",
+  title: "Timeless songs of grace, ready to sing.",
   lead:
-    "Hark is a hymnal for your phone. Read the words of hymns from the Trinity Hymnal, the hymnal of the PCA and OPC, and hear them sung in worship at Faith Presbyterian Church in Tacoma.",
+    "Hark is a songbook for your phone. Read timeless songs of grace, and hear them sung in worship at Faith Presbyterian Church in Tacoma.",
   actions: {
-    browse: "Browse the hymns",
+    browse: "Browse the songs",
     seasons: "Browse by season",
     install: "Install Hark",
-    request: "Request a hymn",
+    request: "Request a song",
   },
   search: {
-    label: "Go to a hymn by number, title, or a line",
+    label: "Go to a song by number, title, or a line",
     placeholder: "Number, title, or a line",
     button: "Find",
   },
   stats: {
     heading: "Hark in numbers",
-    words: ["hymn with its words", "hymns with their words"],
+    words: ["song with its words", "songs with their words"],
     pending: ["more listed by number and title", "more listed by number and title"],
     recordings: ["recording from worship", "recordings from worship"],
     scores: ["tune with music to play", "tunes with music to play"],
@@ -63,20 +63,20 @@ export const welcomeCopy = {
       "Where a hymn has a newer stanza still under copyright, only its public domain stanzas are shown.",
   },
   today: {
-    kicker: "A hymn for today",
-    link: "Read the hymn",
+    kicker: "A song for today",
+    link: "Read the song",
   },
   featured: {
     seasonKicker: "This season",
-    seasonHeading: (title) => `Hymns for ${title}`,
+    seasonHeading: (title) => `Songs for ${title}`,
     yearKicker: "For any Sunday",
-    yearHeading: "Hymns for the whole year",
+    yearHeading: "Songs for the whole year",
     plainKicker: "To begin",
-    plainHeading: "Hymns to begin with",
-    seasonLink: (title) => `All ${title} hymns`,
-    yearLink: (title) => `${title} hymns`,
+    plainHeading: "Songs to begin with",
+    seasonLink: (title) => `All ${title} songs`,
+    yearLink: (title) => `${title} songs`,
     upcoming: (title, when) => `${title} begins ${when}.`,
-    upcomingLink: (title) => `See the ${title} hymns`,
+    upcomingLink: (title) => `See the ${title} songs`,
   },
   features: {
     heading: "What you will find",
@@ -86,8 +86,8 @@ export const welcomeCopy = {
         icon: "search",
         title: "The words, easy to read",
         text:
-          "Large type, with stanzas numbered as they are in the hymnal. Search by number, title, author, tune, or any line you remember.",
-        link: "Browse the hymns",
+          "Large type, with stanzas numbered as they are in the songbook. Search by number, title, author, tune, or any line you remember.",
+        link: "Browse the songs",
         href: "#/",
       },
       {
@@ -110,7 +110,7 @@ export const welcomeCopy = {
         id: "themes",
         icon: "star",
         title: "Seasons and themes",
-        text: "Hymns gathered by the season of the year and by what they teach.",
+        text: "Songs gathered by the season of the year and by what they teach.",
         link: "Browse the themes",
         href: "#/themes",
       },
@@ -139,12 +139,12 @@ export const welcomeCopy = {
     all: "All themes",
   },
   request: {
-    heading: "Is a hymn missing?",
-    text: "Leave a comment or request any hymn. No account is needed, and we read every one.",
-    button: "Request a hymn",
+    heading: "Is a song missing?",
+    text: "Leave a comment or request any song. No account is needed, and we read every one.",
+    button: "Request a song",
   },
   about:
-    "Hark was made for the people of Faith Presbyterian Church in Tacoma, and it is open to anyone who loves these hymns.",
+    "Hark was made for the people of Faith Presbyterian Church in Tacoma, and it is open to anyone who loves these songs.",
 };
 
 // A hymn whose words Hark actually shows.
