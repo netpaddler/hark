@@ -10,7 +10,7 @@ import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
 import { captionEnd, estimatedEnd, nextEndingSong, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "../playlist.js";
-import { stageCorner, stageMostlyOff } from "../stage.js";
+import { stageCorner, stageMostlyOff, stagePointerMove } from "../stage.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -1816,7 +1816,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v44";/);
+  assert.match(sw, /const CACHE = "hark-v45";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2143,6 +2143,11 @@ test("a floating player snaps to a corner and a swipe off dismisses it", () => {
   assert.equal(stageCorner({ left: 12, top: 24, width: 160, height: 90 }, bounds), "nw");
   assert.equal(stageMostlyOff({ left: 330, top: 40, width: 160, height: 90 }, screen), true);
   assert.equal(stageMostlyOff({ left: 200, top: 600, width: 160, height: 90 }, screen), false);
+  assert.equal(stagePointerMove({ pointerType: "mouse", buttons: 1, distance: 3 }), "wait");
+  assert.equal(stagePointerMove({ pointerType: "mouse", buttons: 1, distance: 12 }), "drag");
+  assert.equal(stagePointerMove({ pointerType: "mouse", buttons: 0, distance: 20 }), "up");
+  assert.equal(stagePointerMove({ pointerType: "touch", buttons: 0, distance: 4 }), "wait");
+  assert.equal(stagePointerMove({ pointerType: "touch", buttons: 0, distance: 12 }), "drag");
   const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
   assert.match(css, /width: min\(45vw, 17\.5rem\)/);
   assert.match(css, /env\(safe-area-inset-right\)/);
