@@ -1,8 +1,10 @@
 // Creates a public GitHub issue for each hymn comment or request, then adds a reply.
-// Secrets: GITHUB_TOKEN, TURNSTILE_SECRET
-// Vars: REPO, LABEL, ALLOWED_ORIGIN (one origin, or several separated by commas)
-// Optional binding: RATE_LIMIT, a KV namespace. Without it the limit below
-// counts only what one isolate saw, which is easy to walk around.
+// Also stores web push subscriptions and sends a notice when hymns are added.
+// Secrets: GITHUB_TOKEN, TURNSTILE_SECRET, VAPID_PRIVATE_JWK, PUSH_NOTIFY_SECRET
+// Vars: REPO, LABEL, ALLOWED_ORIGIN, VAPID_PUBLIC_KEY, VAPID_SUBJECT
+// Bindings: RATE_LIMIT (optional), PUSH_SUBSCRIPTIONS (push subscriptions only)
+
+import { handleNotify, handleSubscribe, handleUnsubscribe } from "./push-routes.js";
 
 const LIMIT = 5;
 const WINDOW_MS = 60 * 60 * 1000;
@@ -232,10 +234,49 @@ async function ensureLabel(env) {
   });
 }
 
+// Same window as hymn requests, but a separate counter, so turning on
+// notifications does not use up the five comments allowed in an hour.
+async function allowPush(request, env) {
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const now = Date.now();
+  if (env.RATE_LIMIT) {
+    try {
+      const key = `push-rate:${ip}`;
+      let saved;
+      try {
+        saved = JSON.parse((await env.RATE_LIMIT.get(key)) || "[]");
+      } catch {
+        saved = [];
+      }
+      const recent = recentTimes(saved, now);
+      if (recent.length >= LIMIT) return false;
+      recent.push(now);
+      await env.RATE_LIMIT.put(key, JSON.stringify(recent), { expirationTtl: WINDOW_MS / 1000 });
+      return true;
+    } catch {
+      /* KV is unreachable, so fall back to this isolate's own count */
+    }
+  }
+  return allowInMemory(`push:${ip}`, now);
+}
+
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+    // GitHub Actions calls this with a bearer secret and no browser Origin.
+    if (url.pathname === "/notify") return handleNotify(request, env);
     if (!originAllowed(request, env)) return json({ error: "This origin is not allowed." }, 403);
     if (request.method === "OPTIONS") return cors(new Response(null, { status: 204 }), env, request);
+    if (url.pathname === "/subscribe" || url.pathname === "/unsubscribe") {
+      if (request.method !== "POST") return cors(json({ error: "Send a POST request." }, 405), env, request);
+      if (!(await allowPush(request, env))) {
+        return cors(json({ error: "Please wait a while, then try again." }, 429), env, request);
+      }
+      const response = url.pathname === "/subscribe"
+        ? await handleSubscribe(request, env)
+        : await handleUnsubscribe(request, env);
+      return cors(response, env, request);
+    }
     if (request.method === "GET") return cors(await cachedIssueList(env), env, request);
     if (request.method !== "POST") return cors(json({ error: "Send a POST request." }, 405), env, request);
     let payload;

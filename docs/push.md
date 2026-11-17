@@ -1,28 +1,31 @@
 # Web push: Notify me
 
-This is a design note for a later change. Nothing in this file is built or deployed. There is no Cloudflare Worker, no KV namespace, and no VAPID key pair yet.
+A reader who presses Notify me gets a browser notification when hymns are added. The What's New page and the RSS feed list the same additions from `data/changelog.json`. The notice is a short sentence, such as "3 new hymns from Sunday's services", and it opens What's New. It does not include lyrics.
 
-A reader who presses Notify me should get a browser notification when hymns are added. The What's New page and the RSS feed already list those additions from `data/changelog.json`. Push is a second way to hear about the same list.
+The routes live on the existing requests Worker, `https://hark-requests.netpaddler.workers.dev`. A separate free KV namespace, `hark-push`, stores subscriptions and nothing else. The key is a hash of the push endpoint. The value is the subscription JSON and the time it was saved.
 
-## What has to exist before it can ship
+## Routes
 
-1. A VAPID key pair. The public key is safe to put in the page. The private key is a secret on the Worker only. Generate the pair locally. Do not commit the private key.
+- `POST /subscribe` stores a push subscription from the site. A body that is not a subscription is ignored. The same hourly limit as comments applies, on its own counter.
+- `POST /unsubscribe` deletes that subscription.
+- `POST /notify` checks `Authorization: Bearer` against the `PUSH_NOTIFY_SECRET` secret, then sends one Web Push message to each subscription. A push service answer of 404 or 410 deletes that subscription. The call can carry a `cursor` so a long list stays inside the free tier's subrequest limit.
 
-2. A Cloudflare Worker on the free plan. The page origin is `https://hymns.theweightofglory.com/`. The Worker can sit on a path of that host, or on a `workers.dev` host the page is allowed to call.
+GitHub Actions calls `/notify` with no browser Origin. The site calls the other two routes, and only the allowed origins are accepted.
 
-3. A KV namespace on the free plan. It stores push subscriptions and nothing else. The key is a hash of the subscription endpoint. The value is the subscription JSON (`endpoint`, `keys.p256dh`, `keys.auth`) and the time it was saved. No accounts, and no hymn text.
+## Keys
 
-4. Three Worker routes:
-   - `POST /subscribe` stores the subscription the page sends. Ignore a body that is not a push subscription.
-   - `POST /unsubscribe` deletes that subscription.
-   - `POST /notify` checks a secret header, then sends one Web Push message (RFC 8291) to each stored subscription, signed with the VAPID private key. Delete a subscription when the push service answers 404 or 410.
+The public VAPID key is in `config/push.js` and in `worker/wrangler.toml` as `VAPID_PUBLIC_KEY`. The private key is the Worker secret `VAPID_PRIVATE_JWK`. It is not in the repository. `VAPID_SUBJECT` is `mailto:netpaddler@gmail.com`.
 
-5. The page. A Notify me button asks for notification permission, then calls `pushManager.subscribe` with `userVisibleOnly: true` and the VAPID public key. It posts the resulting subscription to the Worker. The same control can turn the subscription off.
+`PUSH_NOTIFY_SECRET` is a Worker secret. The same value has to be the GitHub Actions secret `PUSH_NOTIFY_SECRET`, or the deploy step logs that it could not send and the site still publishes.
 
-6. The service worker. A `push` handler shows a notification. The payload is the date, the hymn numbers and titles, and the optional note. It does not include lyrics. A `notificationclick` handler opens `#/whats-new` or the hymn. Shipping that handler means a new cache name in `sw.js`, or installed copies keep the old worker.
+## When a notice goes out
 
-7. A sender. When the Monday bulletin routine appends a `data/changelog.json` entry, something must call `POST /notify`. A GitHub Action on `main` can do that, with the shared secret stored in the repository secrets. The payload stays small: date, numbers, titles, and the note. Web Push payloads are only a few kilobytes.
+The deploy workflow, after the site is published, runs `scripts/notify-push.mjs`. It compares `data/changelog.json` with the file in the previous commit (`github.event.before`). Each entry that is new is posted to `/notify`. A note that starts with "From" is woven into the sentence: three hymns and "From Sunday's services" become "3 new hymns from Sunday's services".
 
-## Limits
+If the previous commit cannot be read, nothing is sent. That keeps the hymns already in the book from being announced as new.
 
-The free Worker and KV quotas are enough for a short list of readers: one fan-out reads the subscriptions and writes the deletions. Do not put the hymnal in KV. Do not create the Worker, the namespace, or the keys until this design is accepted.
+## The page
+
+The button is on What's New and in the header. Pressing it again unsubscribes. On iPhone, web push works only from the Home Screen app, and only on iOS 16.4 or newer. In Safari itself the button explains that, and it does not ask for permission it cannot use.
+
+The service worker shows the notification and opens `#/whats-new` when it is tapped. Shipping that handler takes a new cache name in `sw.js`.

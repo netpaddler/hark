@@ -2,11 +2,14 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
+import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "../config/push.js";
 import { requestConfig, requestsOpen } from "../config/requests.js";
 import { INSTALL_URL, installGuide } from "../install.js";
 import { isLiked, likeButtonState, likedHymns, readLikes, toggleLike } from "../likes.js";
 import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
+import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
+import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
   browse,
@@ -1194,7 +1197,11 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "changelog.js",
     "welcome.js",
     "config/requests.js",
+    "config/push.js",
     "worker/src/index.js",
+    "worker/src/push-notice.js",
+    "worker/src/push-routes.js",
+    "worker/src/webpush.js",
     "sw.js",
     "manifest.webmanifest",
     "README.md",
@@ -1202,6 +1209,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "docs/recordings.md",
     "docs/push.md",
     "scripts/build-feed.mjs",
+    "scripts/notify-push.mjs",
     "data/themes.json",
     "data/sins.json",
     "data/sermons.json",
@@ -1790,13 +1798,185 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v33";/);
+  assert.match(sw, /const CACHE = "hark-v34";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
   const workflow = readFileSync(new URL("../.github/workflows/pages.yml", import.meta.url), "utf8");
   assert.ok(workflow.indexOf("node scripts/build-feed.mjs") < workflow.indexOf("rsync"));
+  assert.ok(workflow.indexOf("actions/deploy-pages") < workflow.indexOf("scripts/notify-push.mjs"));
   const docs = readFileSync(new URL("../docs/data.md", import.meta.url), "utf8");
   assert.match(docs, /Every hymn addition must append a `changelog\.json` entry/);
   assert.match(docs, /Monday bulletin routine/);
+});
+
+test("a notice reads like 3 new hymns from Sunday's services", () => {
+  assert.equal(
+    pushNotice({ hymns: [15, 31, 34], note: "From Sunday's services" }),
+    "3 new hymns from Sunday's services",
+  );
+  assert.equal(pushNotice({ hymns: [15], note: "From Sunday's services" }), "1 new hymn from Sunday's services");
+  assert.equal(pushNotice({ hymns: [15, 31] }), "2 new hymns");
+  assert.equal(
+    pushNotice({ hymns: [15], note: "Hymns the congregation sings." }),
+    "1 new hymn. Hymns the congregation sings.",
+  );
+  const older = { date: "2026-11-16", hymns: [15], note: "Initial collection" };
+  const newer = { date: "2026-11-17", hymns: [31, 34, 56], note: "From Sunday's services" };
+  assert.deepEqual(entriesToAnnounce([older, newer], [older], true), [newer]);
+  assert.deepEqual(entriesToAnnounce([older, newer], [], false), []);
+  assert.equal(/\u2013|\u2014/.test(pushNotice(newer)), false);
+});
+
+test("push ciphertext round trips, and an iPhone is told to install first", async () => {
+  const pair = await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, ["deriveBits"]);
+  const publicBytes = new Uint8Array(await crypto.subtle.exportKey("raw", pair.publicKey));
+  const auth = crypto.getRandomValues(new Uint8Array(16));
+  const notice = "3 new hymns from Sunday's services";
+  const body = await encryptPayload(notice, publicBytes, auth);
+  const plain = await decryptPayload(body, pair.privateKey, publicBytes, auth);
+  assert.equal(new TextDecoder().decode(plain), notice);
+  assert.equal(body[20], 65);
+
+  const iphone = {
+    userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)",
+    standalone: false,
+    serviceWorker: true,
+    pushManager: true,
+    notification: true,
+  };
+  assert.match(pushBlockReason(iphone), /Home Screen/);
+  assert.equal(pushBlockReason({ ...iphone, standalone: true }), "");
+  assert.match(pushBlockReason({ ...iphone, standalone: true, pushManager: false }), /16\.4/);
+  assert.match(
+    pushBlockReason({ userAgent: "Mozilla/5.0", serviceWorker: false, pushManager: false, notification: false }),
+    /cannot show notifications/,
+  );
+  assert.equal(pushOpen(), true);
+  assert.equal(pushOpen({ endpoint: "", vapidPublicKey: pushConfig.vapidPublicKey }), false);
+  assert.equal(urlBase64ToBytes(pushConfig.vapidPublicKey).length, 65);
+
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  assert.match(sw, /addEventListener\("push"/);
+  assert.match(sw, /addEventListener\("notificationclick"/);
+  assert.match(sw, /#\/whats-new/);
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /Notify me/);
+  assert.match(appSource, /Stop notifications/);
+  assert.match(appSource, /\/subscribe/);
+  assert.match(appSource, /\/unsubscribe/);
+});
+
+test("the worker stores a subscription and sends the notice", async () => {
+  const saved = new Map();
+  const store = {
+    async get(key) {
+      return saved.has(key) ? saved.get(key) : null;
+    },
+    async put(key, value) {
+      saved.set(key, value);
+    },
+    async delete(key) {
+      saved.delete(key);
+    },
+    async list() {
+      return { keys: [...saved.keys()].map((name) => ({ name })), list_complete: true };
+    },
+  };
+  const subscriber = await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, ["deriveBits"]);
+  const publicBytes = new Uint8Array(await crypto.subtle.exportKey("raw", subscriber.publicKey));
+  const auth = crypto.getRandomValues(new Uint8Array(16));
+  const vapid = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, ["sign"]);
+  const jwk = await crypto.subtle.exportKey("jwk", vapid.privateKey);
+  const vapidPublic = new Uint8Array(await crypto.subtle.exportKey("raw", vapid.publicKey));
+  const subscription = {
+    endpoint: "https://push.example/send/abc",
+    keys: { p256dh: bytesToBase64Url(publicBytes), auth: bytesToBase64Url(auth) },
+  };
+  const gone = {
+    endpoint: "https://push.example/gone",
+    keys: subscription.keys,
+  };
+  const originalFetch = globalThis.fetch;
+  const pushes = [];
+  globalThis.fetch = async (url, options) => {
+    pushes.push({ url: String(url), options });
+    if (String(url).endsWith("/gone")) return new Response("", { status: 410 });
+    return new Response("", { status: 201 });
+  };
+  try {
+    const worker = await import(`../worker/src/index.js?push=${Date.now()}`);
+    const env = {
+      ALLOWED_ORIGIN: "https://hymns.theweightofglory.com",
+      PUSH_SUBSCRIPTIONS: store,
+      PUSH_NOTIFY_SECRET: "test-secret",
+      VAPID_PRIVATE_JWK: JSON.stringify(jwk),
+      VAPID_PUBLIC_KEY: bytesToBase64Url(vapidPublic),
+      VAPID_SUBJECT: "mailto:hark@example.com",
+    };
+    const origin = { origin: "https://hymns.theweightofglory.com", "content-type": "application/json" };
+    const post = (path, body, headers = origin) =>
+      worker.default.fetch(
+        new Request(`https://hark-requests.example${path}`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(body),
+        }),
+        env,
+      );
+    assert.equal((await post("/subscribe", { hello: true })).status, 400);
+    assert.equal((await post("/subscribe", subscription, { "content-type": "application/json" })).status, 403);
+    assert.equal((await post("/subscribe", subscription)).status, 200);
+    assert.equal(saved.size, 1);
+    assert.equal((await post("/notify", { hymns: [1, 2, 3], note: "From Sunday's services" }, {
+      "content-type": "application/json",
+      authorization: "Bearer wrong",
+    })).status, 401);
+    const notified = await post("/notify", {
+      date: "2026-11-17",
+      hymns: [15, 31, 34],
+      note: "From Sunday's services",
+    }, {
+      "content-type": "application/json",
+      authorization: "Bearer test-secret",
+    });
+    assert.equal(notified.status, 200);
+    assert.equal((await notified.json()).sent, 1);
+    assert.equal(pushes.length, 1);
+    assert.equal(pushes[0].options.headers["content-encoding"], "aes128gcm");
+    assert.match(pushes[0].options.headers.authorization, /^vapid t=/);
+    const bytes = pushes[0].options.body instanceof Uint8Array
+      ? pushes[0].options.body
+      : new Uint8Array(await new Response(pushes[0].options.body).arrayBuffer());
+    const message = JSON.parse(new TextDecoder().decode(await decryptPayload(bytes, subscriber.privateKey, publicBytes, auth)));
+    assert.equal(message.title, "Hark");
+    assert.equal(message.body, "3 new hymns from Sunday's services");
+    assert.equal(message.url, "/#/whats-new");
+
+    assert.equal((await post("/subscribe", gone)).status, 200);
+    pushes.length = 0;
+    const expired = await post("/notify", { hymns: [15], note: "From Sunday's services" }, {
+      "content-type": "application/json",
+      authorization: "Bearer test-secret",
+    });
+    const expiredBody = await expired.json();
+    assert.equal(expiredBody.sent, 1);
+    assert.equal(expiredBody.removed, 1);
+    assert.equal(saved.size, 1);
+
+    assert.equal((await post("/unsubscribe", { endpoint: subscription.endpoint })).status, 200);
+    assert.equal(saved.size, 0);
+
+    const closed = await worker.default.fetch(
+      new Request("https://hark-requests.example/notify", {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: "Bearer test-secret" },
+        body: JSON.stringify({ hymns: [15] }),
+      }),
+      { ...env, PUSH_NOTIFY_SECRET: "" },
+    );
+    assert.equal(closed.status, 503);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });

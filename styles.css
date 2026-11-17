@@ -259,6 +259,29 @@ a {
   border-radius: 4px;
 }
 
+.notify-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.notify-link[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+.notify-link:focus-visible,
+.notify-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 .install-help {
   width: min(100% - 1.5rem, 26rem);
   max-height: calc(100dvh - 2rem);
@@ -2169,8 +2192,29 @@ html[data-installed="true"] .btn-install {
   color: var(--muted);
 }
 
-.whats-new-subscribe {
-  margin: 0 0 1.1rem;
+.whats-new-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  align-items: baseline;
+  margin: 0 0 0.45rem;
+}
+
+.notify-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.notify-status {
+  margin: 0 0 1rem;
+  color: var(--muted);
 }
 
 .whats-new h3 {

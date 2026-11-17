@@ -74,3 +74,14 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Tell subscribers about new hymns
+        env:
+          PUSH_NOTIFY_SECRET: ${{ secrets.PUSH_NOTIFY_SECRET }}
+          PUSH_NOTIFY_URL: https://hark-requests.netpaddler.workers.dev/notify
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$GITHUB_EVENT_BEFORE" ] && [ "$GITHUB_EVENT_BEFORE" != "0000000000000000000000000000000000000000" ]; then
+            git fetch --depth=1 origin "$GITHUB_EVENT_BEFORE" || true
+          fi
+          node scripts/notify-push.mjs

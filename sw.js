@@ -1,4 +1,4 @@
-const CACHE = "hark-v33";
+const CACHE = "hark-v34";
 
 // vendor/abcjs-basic-min.js is deliberately absent. It is close to half a
 // megabyte, and precaching it meant every first visit paid for music the
@@ -14,6 +14,7 @@ const PRECACHE = [
   "./likes.js",
   "./changelog.js",
   "./config/requests.js",
+  "./config/push.js",
   "./data/music.json",
   "./manifest.webmanifest",
   "./favicon.svg",
@@ -65,6 +66,44 @@ self.addEventListener("activate", (event) => {
       .keys()
       .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
       .then(() => self.clients.claim()),
+  );
+});
+
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = {};
+  }
+  const title = typeof data.title === "string" && data.title ? data.title : "Hark";
+  const body = typeof data.body === "string" && data.body ? data.body : "New hymns were added.";
+  const url = typeof data.url === "string" && data.url ? data.url : "/#/whats-new";
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: "./icons/icon-192.png",
+      badge: "./icons/favicon-32.png",
+      data: { url },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL(
+    (event.notification.data && event.notification.data.url) || "/#/whats-new",
+    self.location.origin,
+  ).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if (new URL(client.url).origin !== self.location.origin) continue;
+        if (client.navigate) return client.navigate(target).then((next) => (next || client).focus());
+        return client.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(target);
+    }),
   );
 });
 
