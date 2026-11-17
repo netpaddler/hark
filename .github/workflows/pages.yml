@@ -25,7 +25,7 @@ jobs:
           node-version: 22
 
       - name: Run tests
-        run: node --test test/hymns.test.js
+        run: node --test test/hymns.test.js test/player-nav.test.js
 
   deploy:
     needs: test

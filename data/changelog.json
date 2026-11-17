@@ -2,6 +2,11 @@
   {
     "date": "2026-11-17",
     "hymns": [],
+    "note": "A song keeps playing while you move around Hark, and the player bar stays up. Where the device allows it, the song title can show with play, pause, and next."
+  },
+  {
+    "date": "2026-11-17",
+    "hymns": [],
     "note": "Play all and Auto play all are on the song list, on a search, and on each song. Auto play all follows hymn number from wherever a song was started."
   },
   {
