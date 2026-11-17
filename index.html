@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="description" content="Read hymns from the Trinity Hymnal. Search by number, title, or a line of the text.">
+    <meta name="description" content="Timeless songs of grace, with the stories and Scripture behind them.">
     <meta name="theme-color" id="theme-color" content="#f3eee4">
     <meta name="color-scheme" content="light dark">
     <meta name="mobile-web-app-capable" content="yes">
@@ -75,13 +75,13 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <a class="skip" href="#main">Skip to hymns</a>
+    <a class="skip" href="#main">Skip to the songs</a>
     <div class="app">
       <header class="top" id="home-bar">
         <div class="brand-row">
           <div class="brand">
             <h1><a class="brand-home" href="#/" aria-label="Hark home">Hark</a></h1>
-            <p class="eyebrow">Trinity Hymnal</p>
+            <p class="eyebrow">Timeless songs of grace</p>
           </div>
           <div class="header-tools">
             <button type="button" class="notify-link" id="notify-link" aria-pressed="false">Notify me</button>
@@ -114,7 +114,7 @@
       </header>
 
       <header class="hymn-bar" id="hymn-bar" hidden>
-        <a class="text-btn" id="back-link" href="#/">Hymns</a>
+        <a class="text-btn" id="back-link" href="#/">Songs</a>
         <a class="brand-home" href="#/" aria-label="Hark home">Hark</a>
         <div class="pager">
           <a class="icon-btn" id="prev-link" href="#/" aria-label="Previous hymn"></a>
@@ -125,13 +125,13 @@
       </header>
 
       <main id="main" tabindex="-1">
-        <p class="empty">Opening the hymnal...</p>
+        <p class="empty">Opening the songbook...</p>
       </main>
     </div>
     <div class="jump-bubble" id="jump-bubble" hidden aria-hidden="true"></div>
     <dialog class="install-help" id="install-help" aria-labelledby="install-help-title"></dialog>
     <noscript>
-      <p class="notice">Hark needs JavaScript to open the hymnal.</p>
+      <p class="notice">Hark needs JavaScript to open the songbook.</p>
     </noscript>
     <!-- abcjs is loaded by app.js when someone opens the music on a hymn. -->
     <script type="module" src="app.js"></script>
