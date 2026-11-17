@@ -524,6 +524,119 @@ test("videos marked embeddable false never render an iframe", () => {
   assert.equal(youtubeBlock(listSermons(sermons, "page")[1]).type, "iframe");
 });
 
+// Reads the address back out of icons/hark-qr.svg, so the picture and
+// INSTALL_URL cannot drift apart. It reads an undamaged code only: it does no
+// error correction, and it knows versions 1 to 6 in byte mode, which is far
+// more room than a short address needs.
+const QR_DATA_BLOCKS = {
+  1: { L: [19], M: [16], Q: [13], H: [9] },
+  2: { L: [34], M: [28], Q: [22], H: [16] },
+  3: { L: [55], M: [44], Q: [17, 17], H: [13, 13] },
+  4: { L: [80], M: [32, 32], Q: [24, 24], H: [9, 9, 9, 9] },
+  5: { L: [108], M: [43, 43], Q: [15, 15, 16, 16], H: [11, 11, 12, 12] },
+  6: { L: [68, 68], M: [27, 27, 27, 27], Q: [19, 19, 19, 19], H: [15, 15, 15, 15] },
+};
+
+const QR_MASKS = [
+  (x, y) => (x + y) % 2 === 0,
+  (x, y) => y % 2 === 0,
+  (x, y) => x % 3 === 0,
+  (x, y) => (x + y) % 3 === 0,
+  (x, y) => (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0,
+  (x, y) => ((x * y) % 2) + ((x * y) % 3) === 0,
+  (x, y) => (((x * y) % 2) + ((x * y) % 3)) % 2 === 0,
+  (x, y) => (((x + y) % 2) + ((x * y) % 3)) % 2 === 0,
+];
+
+// The dark squares, as rows of true and false, with the quiet border removed.
+function qrModules(svg) {
+  const path = svg.match(/<path class="qrline"[^>]* d="([^"]+)"/)[1];
+  const step = /([Mmh])(-?[\d.]+)(?: (-?[\d.]+))?/g;
+  assert.equal(path.replace(step, ""), "", "the code is drawn with M, m and h only");
+  const dark = [];
+  let x = 0;
+  let y = 0;
+  for (const [, command, first, second] of path.matchAll(step)) {
+    if (command === "M") [x, y] = [Number(first), Number(second)];
+    else if (command === "m") [x, y] = [x + Number(first), y + Number(second)];
+    else {
+      for (let i = 0; i < Number(first); i += 1) dark.push([x + i, Math.floor(y)]);
+      x += Number(first);
+    }
+  }
+  const border = Math.min(...dark.map(([column]) => column));
+  const size = Math.max(...dark.map(([column]) => column)) - border + 1;
+  const grid = Array.from({ length: size }, () => Array(size).fill(false));
+  for (const [column, row] of dark) grid[row - border][column - border] = true;
+  return grid;
+}
+
+function readQr(svg) {
+  const grid = qrModules(svg);
+  const size = grid.length;
+  const version = (size - 17) / 4;
+
+  // Fifteen format bits beside the top left corner say how much of the code
+  // is spare and which pattern was laid over the data.
+  const formatCells = [
+    [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 7], [8, 8],
+    [7, 8], [5, 8], [4, 8], [3, 8], [2, 8], [1, 8], [0, 8],
+  ];
+  let format = 0;
+  formatCells.forEach(([x, y], bit) => {
+    if (grid[y][x]) format |= 1 << bit;
+  });
+  format ^= 0x5412;
+  const level = ["M", "L", "H", "Q"][format >> 13];
+  const mask = QR_MASKS[(format >> 10) & 7];
+  const blocks = QR_DATA_BLOCKS[version] && QR_DATA_BLOCKS[version][level];
+  assert.ok(blocks, `QR version ${version} level ${level} is not one this test can read`);
+
+  // The corner squares, the timing lines and the small alignment square hold
+  // no data.
+  const reserved = (x, y) =>
+    (x < 9 && y < 9) ||
+    (x >= size - 8 && y < 9) ||
+    (x < 9 && y >= size - 8) ||
+    x === 6 ||
+    y === 6 ||
+    (version > 1 && x >= size - 9 && x <= size - 5 && y >= size - 9 && y <= size - 5);
+
+  // Data runs in two-column strips from the right edge, up then down.
+  const bits = [];
+  for (let right = size - 1; right >= 1; right -= 2) {
+    if (right === 6) right = 5;
+    const upward = ((right + 1) & 2) === 0;
+    for (let n = 0; n < size; n += 1) {
+      const y = upward ? size - 1 - n : n;
+      for (const x of [right, right - 1]) {
+        if (!reserved(x, y)) bits.push(grid[y][x] !== mask(x, y) ? 1 : 0);
+      }
+    }
+  }
+  const codewords = [];
+  for (let i = 0; i + 8 <= bits.length; i += 8) {
+    codewords.push(Number.parseInt(bits.slice(i, i + 8).join(""), 2));
+  }
+
+  // The data is dealt out across its blocks one byte at a time.
+  const data = blocks.map(() => []);
+  let next = 0;
+  for (let i = 0; i < Math.max(...blocks); i += 1) {
+    blocks.forEach((length, block) => {
+      if (i < length) data[block].push(codewords[next++]);
+    });
+  }
+  const stream = data.flat().map((byte) => byte.toString(2).padStart(8, "0")).join("");
+  assert.equal(stream.slice(0, 4), "0100", "the address is stored in byte mode");
+  const length = Number.parseInt(stream.slice(4, 12), 2);
+  const bytes = [];
+  for (let i = 0; i < length; i += 1) {
+    bytes.push(Number.parseInt(stream.slice(12 + i * 8, 20 + i * 8), 2));
+  }
+  return new TextDecoder().decode(new Uint8Array(bytes));
+}
+
 test("install manifest, guide, and QR code", () => {
   const manifest = JSON.parse(readFileSync(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
   assert.equal(manifest.name, "Hark");
@@ -548,7 +661,14 @@ test("install manifest, guide, and QR code", () => {
   }
   const svg = readFileSync(new URL("../icons/hark-qr.svg", import.meta.url), "utf8");
   assert.equal(svg.startsWith("<svg"), true);
-  assert.match(svg, new RegExp(INSTALL_URL.replace(/[.]/g, "\\.")));
+  // The install link and the code both open the live site, not the old
+  // project address, and the code really does hold the address it is
+  // labelled with.
+  assert.equal(INSTALL_URL, "https://hymns.theweightofglory.com/");
+  assert.equal(readQr(svg), INSTALL_URL);
+  assert.ok(svg.includes(`<title>QR code for ${INSTALL_URL}</title>`));
+  const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
+  assert.ok(readme.includes(`The live app is <${INSTALL_URL}>`));
   assert.equal(/<image[\s>]/i.test(svg), false);
   assert.equal(svg.includes("xlink:href"), false);
   assert.ok(installGuide.android.some((step) => step.includes("Add to Home screen")));
