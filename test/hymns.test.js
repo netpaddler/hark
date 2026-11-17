@@ -73,7 +73,7 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 89);
+  assert.equal(hymns.length, 90);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
@@ -157,7 +157,7 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 68);
+  assert.equal(all.length, 70);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
@@ -230,7 +230,7 @@ test("neighbors follow hymnal number", () => {
   assert.equal(neighbors(hymns, 2).prev, null, "2 is the lowest number held");
   assert.equal(neighbors(hymns, 15).prev.number, 2);
   assert.equal(neighbors(hymns, 108).prev.number, 99);
-  assert.equal(neighbors(hymns, 162).prev.number, 108);
+  assert.equal(neighbors(hymns, 162).prev.number, 115);
   assert.equal(neighbors(hymns, 227).next.number, 253);
   assert.equal(neighbors(hymns, 700).next, null, "700 is the highest number held");
   assert.equal(neighbors(hymns, 999).hymn, null);
@@ -276,7 +276,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   for (const number of [108, 401, 559]) assert.ok(allYear.includes(number), String(number));
   // Bulletin hymns land here until someone sorts them into a season.
   assert.ok(allYear.includes(15) && allYear.includes(691));
-  assert.equal(allYear.length, 59);
+  assert.equal(allYear.length, 60);
 });
 
 test("every recording belongs to a hymn that is in the book", () => {
@@ -288,8 +288,8 @@ test("every recording belongs to a hymn that is in the book", () => {
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
-  assert.equal(Object.keys(recordings).length, 67);
-  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 281);
+  assert.equal(Object.keys(recordings).length, 89);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 303);
   assert.equal(faithRecordings(recordings, 108)[0].dateSort, "2025-12-14");
   assert.equal(faithRecordings(recordings, 401).length, 1);
   assert.equal(faithRecordings(recordings, 559)[0].dateSort, "2026-07-19");
@@ -1799,7 +1799,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v35";/);
+  assert.match(sw, /const CACHE = "hark-v36";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));

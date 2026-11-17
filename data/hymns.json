@@ -27,7 +27,7 @@
       [
         "The earth with its store of wonders untold,",
         "Almighty, your pow'r has founded of old;",
-        "has stablished it fast by a changeless decree,",
+        "has 'stablished it fast by a changeless decree,",
         "and round it has cast, like a mantle, the sea."
       ],
       [
@@ -560,17 +560,23 @@
         "The Lord's my Shepherd, I'll not want;",
         "he makes me down to lie",
         "in pastures green; he leadeth me",
+        "the quiet waters by.",
+        "He leadeth me, he leadeth me",
         "the quiet waters by."
       ],
       [
-        "My soul he doth restore again,",
+        "My soul he doth restore again;",
         "and me to walk doth make",
+        "within the paths of righteousness,",
+        "e'en for his own name's sake;",
         "within the paths of righteousness,",
         "e'en for his own name's sake."
       ],
       [
         "Yea, though I walk in death's dark vale,",
         "yet will I fear none ill,",
+        "for thou art with me; and thy rod",
+        "and staff me comfort still;",
         "for thou art with me, and thy rod",
         "and staff me comfort still."
       ],
@@ -578,11 +584,15 @@
         "My table thou hast furnished",
         "in presence of my foes;",
         "my head thou dost with oil anoint,",
+        "and my cup overflows.",
+        "My head thou dost with oil anoint,",
         "and my cup overflows."
       ],
       [
         "Goodness and mercy all my life",
-        "shall surely follow me;",
+        "shall surely follow me:",
+        "and in God's house forevermore",
+        "my dwelling place shall be;",
         "and in God's house forevermore",
         "my dwelling place shall be."
       ]
@@ -596,7 +606,7 @@
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf. Credit: Psalm 23. Francis Rous, William Mure, and others, Scottish Psalter, 1650. Tune BROTHER JAMES' AIR, J. L. Macbeth Bain, ca. 1840-1925, arr. by Gordon Jacob, 1934; alt.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The tune is printed by permission of Oxford University Press. That notice is on the music only."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf. Credit: Psalm 23. Francis Rous, William Mure, and others, Scottish Psalter, 1650. Tune BROTHER JAMES' AIR, J. L. Macbeth Bain, ca. 1840-1925, arr. by Gordon Jacob, 1934; alt. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The tune is printed by permission of Oxford University Press. That notice is on the music only."
   },
   {
     "number": 92,
@@ -911,6 +921,76 @@
     "refrain": null,
     "refrain_after_each_stanza": false,
     "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page (https://web.archive.org/web/20241115041530/https://hymnary.org/hymn/TH1990/108); live hymnary.org blocked automated fetches. Section 'God's Work: His Decrees' follows the hymnary topic of that name; not checked against the printed table of contents. Translator credit on the instance page is Catherine Winkworth (1863; Alt. 1961). The 1961 alteration is treated as public domain, as with other 1961 alterations in hymns.json, but the copyright status of the alteration was not independently confirmed. All four stanzas are shown on the instance page with no copyright notice. The instance page credits the tune as 'Attributed to: Severus Gastorius' and does not name a year or a harmonizer (neither J. S. Bach nor Johann Pachelbel). The hymnary.org tune authority page for WAS GOTT TUT credits Severus Gastorius (1681) and notes Pachelbel as an alternate attribution; that year and alternate credit are not on the TH 1990 instance page. The hymnal meter is 8.7.8.7.4.5.8.8.; some short middle lines are printed together (for example, 'He is my God: though dark my road,')."
+  },
+  {
+    "number": 115,
+    "title": "All Creatures of Our God and King",
+    "section": null,
+    "author": "Francis of Assisi",
+    "translator": "William H. Draper",
+    "composer": "Geistliche Kirchengesänge",
+    "tune": "LASST UNS ERFREUEN",
+    "year_text": "1926",
+    "public_domain": true,
+    "copyright_note": null,
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-am-6x9-1.pdf",
+    "stanzas": [
+      [
+        "All creatures of our God and King,",
+        "lift up your voice and with us sing",
+        "alleluia, alleluia!",
+        "Thou burning sun with golden beam,",
+        "thou silver moon with softer gleam,",
+        "O praise him, O praise him,",
+        "alleluia, alleluia, alleluia!"
+      ],
+      [
+        "Thou rushing wind that art so strong,",
+        "ye clouds that sail in heav'n along,",
+        "O praise him, alleluia!",
+        "Thou rising morn in praise rejoice,",
+        "ye lights of evening, find a voice,",
+        "O praise him, O praise him,",
+        "alleluia, alleluia, alleluia!"
+      ],
+      [
+        "Thou flowing water, pure and clear,",
+        "make music for thy Lord to hear,",
+        "alleluia, alleluia!",
+        "Thou fire so masterful and bright,",
+        "that givest man both warmth and light,",
+        "O praise him, O praise him,",
+        "alleluia, alleluia, alleluia!"
+      ],
+      [
+        "And all ye men of tender heart,",
+        "forgiving others, take your part,",
+        "O sing ye, alleluia!",
+        "Ye who long pain and sorrow bear,",
+        "praise God and on him cast your care,",
+        "O praise him, O praise him,",
+        "alleluia, alleluia, alleluia!"
+      ],
+      [
+        "Let all things their Creator bless,",
+        "and worship him in humbleness,",
+        "O praise him, alleluia!",
+        "Praise, praise the Father, praise the Son,",
+        "and praise the Spirit, three in one,",
+        "O praise him, O praise him,",
+        "alleluia, alleluia, alleluia!"
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "refrain": null,
+    "refrain_after_each_stanza": false,
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-am-6x9-1.pdf. Credit: Francis of Assisi, ca. 1225. Tr. by William H. Draper, 1926. Tune LASST UNS ERFREUEN, Geistliche Kirchengesange, Cologne, 1623. The bulletin prints a 1926 G. Schirmer copyright notice and \"used by permission\" on the text. A text published in 1926 is in the public domain in the United States; that term ended on January 1, 2022. The Oxford University Press notice is on the tune only. Syllable hyphens in the music underlay are joined into words."
   },
   {
     "number": 162,
@@ -2743,7 +2823,7 @@
   },
   {
     "number": 253,
-    "title": "There Is a Foundation Filled with Blood",
+    "title": "There Is a Fountain Filled with Blood",
     "section": null,
     "author": "William Cowper",
     "translator": null,
@@ -2758,7 +2838,7 @@
         "There is a fountain filled with blood,",
         "drawn from Immanuel's veins;",
         "and sinners, plunged beneath that flood,",
-        "lose all their guilty stains,",
+        "lose all their guilty stains:",
         "lose all their guilty stains,",
         "lose all their guilty stains;",
         "and sinners, plunged beneath that flood,",
@@ -2768,7 +2848,7 @@
         "The dying thief rejoiced to see",
         "that fountain in his day;",
         "and there have I, as vile as he,",
-        "washed all my sins away,",
+        "washed all my sins away:",
         "washed all my sins away,",
         "washed all my sins away;",
         "and there have I, as vile as he,",
@@ -2778,7 +2858,7 @@
         "E'er since by faith I saw the stream",
         "your flowing wounds supply,",
         "redeeming love has been my theme,",
-        "and shall be till I die,",
+        "and shall be till I die:",
         "and shall be till I die,",
         "and shall be till I die;",
         "redeeming love has been my theme,",
@@ -2788,7 +2868,7 @@
         "Then in a nobler, sweeter song",
         "I'll sing your pow'r to save,",
         "when this poor lisping, stamm'ring tongue",
-        "lies silent in the grave,",
+        "lies silent in the grave:",
         "lies silent in the grave,",
         "lies silent in the grave;",
         "when this poor lisping, stamm'ring tongue",
@@ -2798,7 +2878,7 @@
         "Dear dying Lamb, your precious blood",
         "shall never lose its pow'r,",
         "till all the ransomed church of God",
-        "be saved to sin no more,",
+        "be saved to sin no more:",
         "be saved to sin no more,",
         "be saved to sin no more;",
         "till all the ransomed church of God",
@@ -2814,7 +2894,7 @@
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.08.26Bulletin-am-6x9-1.pdf. Credit: William Cowper, 1771; mod. Tune FOUNTAIN, Lowell Mason, 1830. The bulletin heading prints Foundation; the first line prints fountain.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.08.26Bulletin-am-6x9-1.pdf. Credit: William Cowper, 1771; mod. Tune FOUNTAIN, Lowell Mason, 1830. The bulletin heading prints Foundation; the first line prints fountain. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
   },
   {
     "number": 271,
@@ -2957,7 +3037,7 @@
       [
         "O quickly come, great King of all;",
         "reign all around us and within;",
-        "let sin no more our souls enthrall,",
+        "let sin no more our souls enthral,",
         "let pain and sorrow die with sin:",
         "O quickly come, for thou alone",
         "canst make thy scattered people one."
@@ -3149,7 +3229,7 @@
         "by heresies distressed,",
         "yet saints their watch are keeping,",
         "their cry goes up, \"How long?\"",
-        "and soon the night of weeping",
+        "And soon the night of weeping",
         "shall be the morn of song."
       ],
       [
@@ -3278,7 +3358,9 @@
       ],
       [
         "For his the kingdom, his of right,",
-        "he rules the nations by his might;"
+        "he rules the nations by his might;",
+        "all earth to him her homage brings,",
+        "the Lord of Lords, the King of kings."
       ],
       [
         "Both rich and poor, both bond and free,",
@@ -3297,7 +3379,7 @@
       "the Lord of lords, the King of kings."
     ],
     "refrain_after_each_stanza": true,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-pm-6x9-1.pdf. Credit: From Psalm 22:27-30. The Psalter, 1912. Tune VISION, William H. Doane, 1832-1916; alt. 1990.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The alt. 1990 is on the tune credit, not the text."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-pm-6x9-1.pdf. Credit: From Psalm 22:27-30. The Psalter, 1912. Tune VISION, William H. Doane, 1832-1916; alt. 1990. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The alt. 1990 is on the tune credit, not the text."
   },
   {
     "number": 388,
@@ -3516,7 +3598,7 @@
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-pm-6x9-1.pdf. Credit: John Keble, 1820. Tune HURSLEY, Katholisches Gesangbuch, Vienna, ca. 1774; alt. The alt. is on the tune credit.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-pm-6x9-1.pdf. Credit: John Keble, 1820. Tune HURSLEY, Katholisches Gesangbuch, Vienna, ca. 1774; alt. The alt. is on the tune credit. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
   },
   {
     "number": 406,
@@ -3676,12 +3758,12 @@
       ],
       [
         "Savior, thou hast freely given",
-        "all the blessings we enjoy;",
+        "all the blessings we enjoy,",
         "earthly store and bread of heaven,",
         "love and peace without alloy;",
         "humbly now we bow before thee,",
         "and our all to thee resign;",
-        "for the kingdom, pow'r, and glory",
+        "for the kingdom, pow'r, and glory,",
         "are, O Lord, forever thine."
       ]
     ],
@@ -3693,7 +3775,7 @@
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf. Credit: Robert Murray, 1898. Tune BEECHER, John Zundel, 1870; alt. 1990.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The alt. 1990 is on the tune credit, not the text."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf. Credit: Robert Murray, 1898. Tune BEECHER, John Zundel, 1870; alt. 1990. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The alt. 1990 is on the tune credit, not the text."
   },
   {
     "number": 457,
@@ -3856,7 +3938,7 @@
       [
         "I bless the Christ of God;",
         "I rest on love divine;",
-        "and with unfaltering lip and heart,",
+        "and with unfalt'ring lip and heart,",
         "I call this Savior mine.",
         "His cross dispels each doubt;",
         "I bury in his tomb",
@@ -3921,7 +4003,7 @@
         "bruised and broken by the fall;",
         "if you tarry till you're better,",
         "you will never come at all:",
-        "not the righteous, not the righteous, not the righteous,",
+        "not the righteous, not the righteous, not the righteous—",
         "sinners Jesus came to call;",
         "sinners Jesus came to call."
       ],
@@ -3930,7 +4012,7 @@
         "nor of fitness fondly dream;",
         "all the fitness he requireth",
         "is to feel your need of him;",
-        "this he gives you, this he gives you, this he gives you,",
+        "this he gives you, this he gives you, this he gives you;",
         "'tis the Spirit's rising beam;",
         "'tis the Spirit's rising beam."
       ],
@@ -4040,7 +4122,7 @@
       ],
       [
         "Not the labors of my hands",
-        "can fulfill thy law's demands;",
+        "can fulfil thy law's demands;",
         "could my zeal no respite know,",
         "could my tears forever flow,",
         "all for sin could not atone;",
@@ -4051,7 +4133,7 @@
         "simply to thy cross I cling;",
         "naked, come to thee for dress;",
         "helpless, look to thee for grace;",
-        "foul, I to the fountain fly;",
+        "foul, I to the Fountain fly;",
         "wash me, Savior, or I die."
       ],
       [
@@ -4071,7 +4153,7 @@
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf. Credit: Augustus M. Toplady, 1776. Alt. by Thomas Cotterill, 1815. Tune NEW CITY FELLOWSHIP, James Ward, 1984.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The bulletin says the tune is copyright James Ward Music, all rights reserved, used by permission. That notice is on the music only."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf. Credit: Augustus M. Toplady, 1776. Alt. by Thomas Cotterill, 1815. Tune NEW CITY FELLOWSHIP, James Ward, 1984. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The bulletin says the tune is copyright James Ward Music, all rights reserved, used by permission. That notice is on the music only."
   },
   {
     "number": 501,
@@ -4557,7 +4639,7 @@
         "Jesus calls us: o'er the tumult",
         "of our life's wild, restless sea,",
         "day by day his sweet voice soundeth,",
-        "saying, \"Christian, follow me\";"
+        "saying, \"Christian, follow me\":"
       ],
       [
         "As, of old, apostles heard it",
@@ -4599,11 +4681,11 @@
     "number": 602,
     "title": "O God, My Faithful God",
     "section": null,
-    "author": "Johann Heermann",
+    "author": "Johann Heermann, 1585-1647",
     "translator": "Catherine Winkworth",
     "composer": "Ahasuerus Fritsch",
     "tune": "DARMSTADT (or WAS FRAG' ICH NACH DER WELT)",
-    "year_text": "1630",
+    "year_text": "1863; alt.",
     "public_domain": true,
     "copyright_note": null,
     "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-pm-6x9-1.pdf",
@@ -4622,7 +4704,7 @@
         "Give me the strength to do",
         "with ready heart and willing",
         "whatever you command,",
-        "my calling here fulfilling,",
+        "my calling here fulfilling—",
         "to do it when I ought,",
         "with all my strength; and bless",
         "whatever I have wrought,",
@@ -4632,7 +4714,7 @@
         "Keep me from saying words",
         "that later need recalling;",
         "guard me, lest idle speech",
-        "may from my lips be falling;",
+        "may from my lips be falling:",
         "but when, within my place,",
         "I must and ought to speak,",
         "then to my words give grace,",
@@ -4726,7 +4808,7 @@
   },
   {
     "number": 607,
-    "title": "The Loving-Kindness, Lord, Is Good and Free",
+    "title": "Thy Loving-Kindness, Lord, Is Good and Free",
     "section": null,
     "author": "The Psalter",
     "translator": null,
@@ -4746,7 +4828,7 @@
       [
         "Needy and sorrowful, to thee I cry;",
         "let thy salvation set my soul on high:",
-        "then I will sing and praise thy holy name,",
+        "then I will sing and praise thy holy name;",
         "my thankful song thy mercy shall proclaim."
       ],
       [
@@ -4811,7 +4893,7 @@
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf. Credit: Stanzas 1-2, Thomas Moore, 1816; alt. The alt. is undated. Stanza 3, Thomas Hastings, 1832. Tune ALMA, Samuel Webbe, 1792; arr.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf. Credit: Stanzas 1-2, Thomas Moore, 1816; alt. The alt. is undated. Stanza 3, Thomas Hastings, 1832. Tune ALMA, Samuel Webbe, 1792; arr. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
   },
   {
     "number": 624,
@@ -4890,13 +4972,13 @@
     "stanzas": [
       [
         "Be thou my vision, O Lord of my heart;",
-        "naught be all else to me, save that thou art:",
+        "naught be all else to me, save that thou art—",
         "thou my best thought by day or by night,",
         "waking or sleeping, thy presence my light."
       ],
       [
         "Be thou my wisdom, and thou my true word;",
-        "I ever with thee and thou with me, Lord:",
+        "I ever with thee and thou with me, Lord;",
         "thou my great Father, I thy true son;",
         "thou in me dwelling, and I with thee one."
       ],
@@ -4928,7 +5010,7 @@
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-pm-6x9-1.pdf. Credit: Ancient Irish poem, ca. 8th cent. Tr. by Mary E. Byrne, 1905. Versified by Eleanor H. Hull, 1912. Tune SLANE, traditional Irish melody, arr. by David Evans, 1927.. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The bulletin says the tune arrangement is from the Revised Church Hymnary by permission of Oxford University Press. That notice is on the music only."
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-pm-6x9-1.pdf. Credit: Ancient Irish poem, ca. 8th cent. Tr. by Mary E. Byrne, 1905. Versified by Eleanor H. Hull, 1912. Tune SLANE, traditional Irish melody, arr. by David Evans, 1927. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. The bulletin says the tune arrangement is from the Revised Church Hymnary by permission of Oxford University Press. That notice is on the music only."
   },
   {
     "number": 644,

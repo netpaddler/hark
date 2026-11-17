@@ -1,4 +1,15 @@
 {
+  "2": [
+    {
+      "label": "Sunday Morning Worship, Sep 20, 2026, congregation",
+      "video_title": "Sunday Morning Worship - September 20, 2026",
+      "video_date": "2026-09-20",
+      "url": "https://www.youtube.com/watch?v=6mj98DwG3_M&t=863s",
+      "start_seconds": 863,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: singing hymn number two. O worship the king."
+    }
+  ],
   "15": [
     {
       "label": "Sunday Evening Worship, Sep 20, 2026, congregation",
@@ -102,6 +113,17 @@
       "start_seconds": 725,
       "confidence": "medium",
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: of those covenant promises which we have inherited through jesus with the god of abraham praise number with the god of abraham praise number 34. foreign foreign foreign foreign ..."
+    }
+  ],
+  "38": [
+    {
+      "label": "Sunday Morning Worship, Oct 18, 2026, congregation",
+      "video_title": "Sunday Morning Worship - October 18, 2026",
+      "video_date": "2026-10-18",
+      "url": "https://www.youtube.com/watch?v=5SUWKJU3Qsg&t=685s",
+      "start_seconds": 685,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: as we sing hymn number 38. Immortal,"
     }
   ],
   "56": [
@@ -263,6 +285,50 @@
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's do just that together and ascribe to the lord the glory that's due his name as we stand together and sing psalm 103 are hymn number 76 praise my soul so foreign more is je..."
     }
   ],
+  "80": [
+    {
+      "label": "Sunday Morning Worship, Nov 8, 2026, congregation",
+      "video_title": "Sunday Morning Worship - November 8, 2026",
+      "video_date": "2026-11-08",
+      "url": "https://www.youtube.com/watch?v=KJVRUfd6omk&t=824s",
+      "start_seconds": 824,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: as we stand and sing hymn number 80,"
+    }
+  ],
+  "86": [
+    {
+      "label": "Sunday Evening Worship, Sep 20, 2026, congregation",
+      "video_title": "Sunday Evening Worship - September 20, 2026",
+      "video_date": "2026-09-20",
+      "url": "https://www.youtube.com/watch?v=-7bFYZbPXOw&t=645s",
+      "start_seconds": 645,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our hymn number 86. The Lord's my shepherd."
+    }
+  ],
+  "92": [
+    {
+      "label": "Sunday Morning Worship, Oct 25, 2026, congregation",
+      "video_title": "Sunday Morning Worship - October 25, 2026",
+      "video_date": "2026-10-25",
+      "url": "https://www.youtube.com/watch?v=od-as3gatso&t=771s",
+      "start_seconds": 771,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Hymn number 92. A mighty fortress."
+    }
+  ],
+  "94": [
+    {
+      "label": "Sunday Morning Worship, Oct 18, 2026, congregation",
+      "video_title": "Sunday Morning Worship - October 18, 2026",
+      "video_date": "2026-10-18",
+      "url": "https://www.youtube.com/watch?v=5SUWKJU3Qsg&t=4457s",
+      "start_seconds": 4457,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 94. How firm a foundation."
+    }
+  ],
   "95": [
     {
       "label": "Sunday Evening Worship, Oct 11, 2026, congregation",
@@ -393,6 +459,17 @@
       "start_seconds": 950,
       "confidence": "medium",
       "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. The announcement does not clearly ask the congregation to stand. Auto captions write 'him 108' for 'hymn 108.'"
+    }
+  ],
+  "115": [
+    {
+      "label": "Sunday Morning Worship, Oct 4, 2026, congregation",
+      "video_title": "Sunday Morning Worship - October 4, 2026",
+      "video_date": "2026-10-04",
+      "url": "https://www.youtube.com/watch?v=bAaECMHYCHo&t=782s",
+      "start_seconds": 782,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our hymn number 115, All Creatures of Our God and King."
     }
   ],
   "162": [
@@ -1730,6 +1807,17 @@
       "embeddable": false
     }
   ],
+  "253": [
+    {
+      "label": "Sunday Morning Worship, Nov 8, 2026, congregation",
+      "video_title": "Sunday Morning Worship - November 8, 2026",
+      "video_date": "2026-11-08",
+      "url": "https://www.youtube.com/watch?v=KJVRUfd6omk&t=1260s",
+      "start_seconds": 1260,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing hymn number 253. There is a fountain."
+    }
+  ],
   "271": [
     {
       "label": "Sunday Evening Worship, Aug 23, 2026, congregation",
@@ -1777,6 +1865,17 @@
       "start_seconds": 372,
       "confidence": "medium",
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: one God, forever and ever. Amen. Please join me in singing praise to God number 301. Join all the glorious to God number 301. Join all the glorious names. Ever see myior myior m..."
+    }
+  ],
+  "322": [
+    {
+      "label": "Sunday Evening Worship, Sep 20, 2026, congregation",
+      "video_title": "Sunday Evening Worship - September 20, 2026",
+      "video_date": "2026-09-20",
+      "url": "https://www.youtube.com/watch?v=-7bFYZbPXOw&t=3752s",
+      "start_seconds": 3752,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 322. Oh, quickly come dread judge."
     }
   ],
   "338": [
@@ -1873,6 +1972,50 @@
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: you can turn to that now in the hymnal as we stand in worship together singing hymn 343 christ has made the shure hymn 343 christ has made the shure foundation you you uh grass ..."
     }
   ],
+  "347": [
+    {
+      "label": "Sunday Evening Worship, Nov 8, 2026, congregation",
+      "video_title": "Sunday Evening Worship - November 8, 2026",
+      "video_date": "2026-11-08",
+      "url": "https://www.youtube.com/watch?v=yO4L0raNZpw&t=722s",
+      "start_seconds": 722,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's sing hymn number 347, The Church's one foundation."
+    }
+  ],
+  "353": [
+    {
+      "label": "Sunday Evening Worship, Nov 8, 2026, congregation",
+      "video_title": "Sunday Evening Worship - November 8, 2026",
+      "video_date": "2026-11-08",
+      "url": "https://www.youtube.com/watch?v=yO4L0raNZpw&t=490s",
+      "start_seconds": 490,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing together hymn number 353. I love thy kingdom, Lord."
+    }
+  ],
+  "368": [
+    {
+      "label": "Sunday Evening Worship, Oct 18, 2026, congregation",
+      "video_title": "Sunday Evening Worship - October 18, 2026",
+      "video_date": "2026-10-18",
+      "url": "https://www.youtube.com/watch?v=ZvKq3Uw-wiY&t=520s",
+      "start_seconds": 520,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: the ends of all the earth shall hear. The caption heard the number as 369; the bulletin and the title are hymn 368."
+    }
+  ],
+  "388": [
+    {
+      "label": "Sunday Evening Worship, Sep 27, 2026, congregation",
+      "video_title": "Sunday Evening Worship - September 27, 2026",
+      "video_date": "2026-09-27",
+      "url": "https://www.youtube.com/watch?v=4eBy7NfLs4M&t=3447s",
+      "start_seconds": 3447,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: stand and sing hymn 388. Savior again, thy dear name we."
+    }
+  ],
   "398": [
     {
       "label": "Sunday Morning Worship, Aug 23, 2026, congregation",
@@ -1893,6 +2036,17 @@
       "start_seconds": 4109,
       "confidence": "medium",
       "notes": "The hymn is announced at 4069s as 'all praise to thee, my God, this night.' The start is placed later, at 4109s, just before the congregation stands, because brief singing instructions come between the announcement and the hymn. Sung lines, including the doxology stanza, follow."
+    }
+  ],
+  "404": [
+    {
+      "label": "Sunday Evening Worship, Oct 4, 2026, congregation",
+      "video_title": "Sunday Evening Worship - October 4, 2026",
+      "video_date": "2026-10-04",
+      "url": "https://www.youtube.com/watch?v=OKchzovwL4A&t=3300s",
+      "start_seconds": 3300,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: evening hymn number 404. Son of my soul, thou."
     }
   ],
   "406": [
@@ -1933,6 +2087,17 @@
       "start_seconds": null,
       "confidence": "low",
       "notes": "Bulletin places this communion hymn after the sermon and before the psalm readings at the Lord's table. After the words of institution (~3877s) there is singing before Psalm 30 begins at 4096s, but the auto captions are too garbled to confirm the start."
+    }
+  ],
+  "434": [
+    {
+      "label": "Sunday Morning Worship, Oct 11, 2026, congregation",
+      "video_title": "Sunday Morning Worship - October 11, 2026",
+      "video_date": "2026-10-11",
+      "url": "https://www.youtube.com/watch?v=vO--AvjZMqY&t=4784s",
+      "start_seconds": 4784,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's stand and sing hymn 434, Lord thou lov'st the cheerful giver."
     }
   ],
   "457": [
@@ -2083,6 +2248,28 @@
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: we've heard from god's word and as we conclude our service um we'll finish with him uh the final hymn and the order of service amazing grace which of the top reads who am i o lo..."
     }
   ],
+  "461": [
+    {
+      "label": "Sunday Morning Worship, Sep 27, 2026, congregation",
+      "video_title": "Sunday Morning Worship - September 27, 2026",
+      "video_date": "2026-09-27",
+      "url": "https://www.youtube.com/watch?v=U83VzDXrhj0&t=4105s",
+      "start_seconds": 4105,
+      "confidence": "medium",
+      "notes": "No spoken hymn number in the auto captions. The singing just after the anthem Just as I Am includes the line \"my guilty soul,\" which is stanza 1 of hymn 461. The player starts at that caption."
+    }
+  ],
+  "472": [
+    {
+      "label": "Sunday Morning Worship, Sep 20, 2026, congregation",
+      "video_title": "Sunday Morning Worship - September 20, 2026",
+      "video_date": "2026-09-20",
+      "url": "https://www.youtube.com/watch?v=6mj98DwG3_M&t=4822s",
+      "start_seconds": 4822,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Let's stand and sing hymn 472. Come ye sinners."
+    }
+  ],
   "485": [
     {
       "label": "Sunday Evening Worship, Oct 4, 2026, congregation",
@@ -2092,6 +2279,17 @@
       "start_seconds": 455,
       "confidence": "medium",
       "notes": "Bulletin second hymn, after We Gather Together (363). Announcement: Let's sing now to the Lord. Oh thou that."
+    }
+  ],
+  "500": [
+    {
+      "label": "Sunday Morning Worship, Oct 11, 2026, congregation",
+      "video_title": "Sunday Morning Worship - October 11, 2026",
+      "video_date": "2026-10-11",
+      "url": "https://www.youtube.com/watch?v=vO--AvjZMqY&t=1279s",
+      "start_seconds": 1279,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing hymn number 500, Rock of Ages."
     }
   ],
   "501": [
@@ -2452,6 +2650,28 @@
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: so as we present our gifts to god let's all pledge ourselves to him together as we stand and sing together take my life and let it be let it be is is me a people of god we have ..."
     }
   ],
+  "591": [
+    {
+      "label": "Sunday Evening Worship, Oct 18, 2026, congregation",
+      "video_title": "Sunday Evening Worship - October 18, 2026",
+      "video_date": "2026-10-18",
+      "url": "https://www.youtube.com/watch?v=ZvKq3Uw-wiY&t=1070s",
+      "start_seconds": 1070,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Let's sing 591 Jesus calls us."
+    }
+  ],
+  "602": [
+    {
+      "label": "Sunday Evening Worship, Oct 18, 2026, congregation",
+      "video_title": "Sunday Evening Worship - October 18, 2026",
+      "video_date": "2026-10-18",
+      "url": "https://www.youtube.com/watch?v=ZvKq3Uw-wiY&t=745s",
+      "start_seconds": 745,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: with hymn 602. Oh God, my faithful God."
+    }
+  ],
   "604": [
     {
       "label": "Sunday Evening Worship, Aug 9, 2026, congregation",
@@ -2461,6 +2681,28 @@
       "start_seconds": 701,
       "confidence": "medium",
       "notes": "Bulletin second hymn, after the psalm. Announcement: Now, please join me in singing him. Sung captions: Rejoice."
+    }
+  ],
+  "607": [
+    {
+      "label": "Sunday Evening Worship, Oct 11, 2026, congregation",
+      "video_title": "Sunday Evening Worship - October 11, 2026",
+      "video_date": "2026-10-11",
+      "url": "https://www.youtube.com/watch?v=MWGsibNeYBY&t=3309s",
+      "start_seconds": 3309,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 607."
+    }
+  ],
+  "615": [
+    {
+      "label": "Sunday Evening Worship, Sep 20, 2026, congregation",
+      "video_title": "Sunday Evening Worship - September 20, 2026",
+      "video_date": "2026-09-20",
+      "url": "https://www.youtube.com/watch?v=-7bFYZbPXOw&t=915s",
+      "start_seconds": 915,
+      "confidence": "medium",
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's sing now hymn number 615. Come, ye disconsolate."
     }
   ],
   "624": [
