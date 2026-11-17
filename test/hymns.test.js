@@ -9,6 +9,7 @@ import { isLiked, likeButtonState, likedHymns, readLikes, toggleLike } from "../
 import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
+import { captionEnd, estimatedEnd, playbackStop, shuffleTracks, themeTracks } from "../playlist.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -1198,6 +1199,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "styles.css",
     "app.js",
     "hymn-model.js",
+    "playlist.js",
     "install.js",
     "likes.js",
     "changelog.js",
@@ -1748,7 +1750,13 @@ test("the changelog lists hymns that are in the book, newest first", () => {
     assert.match(entry.date, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(entry.date <= previous, entry.date);
     previous = entry.date;
-    assert.ok(Array.isArray(entry.hymns) && entry.hymns.length > 0);
+    assert.ok(Array.isArray(entry.hymns));
+    if (entry.hymns.length === 0) {
+      assert.equal(typeof entry.note, "string");
+      assert.ok(entry.note.trim().length > 0);
+      assert.equal(/\u2013|\u2014/.test(entry.note), false, entry.note);
+      continue;
+    }
     assert.equal(new Set(entry.hymns).size, entry.hymns.length);
     for (const number of entry.hymns) {
       assert.equal(typeof number, "number", String(number));
@@ -1785,8 +1793,9 @@ test("the RSS feed is generated from the changelog", () => {
   assert.ok(xml.includes(`${SITE}feed.xml`));
   assert.ok(xml.includes("Whate'er My God Ordains Is Right"));
   assert.equal(/\u2013|\u2014/.test(xml), false);
-  const first = hymns.find((hymn) => hymn.number === changelog[0].hymns[0]).title;
-  const last = hymns.find((hymn) => hymn.number === changelog[changelog.length - 1].hymns[0]).title;
+  const withHymns = changelog.filter((entry) => entry.hymns.length > 0);
+  const first = hymns.find((hymn) => hymn.number === withHymns[0].hymns[0]).title;
+  const last = hymns.find((hymn) => hymn.number === withHymns[withHymns.length - 1].hymns[0]).title;
   assert.ok(xml.indexOf(first) < xml.indexOf(last));
   const escaped = buildFeed({
     changelog: [{ date: "2026-11-17", hymns: [1], note: "A & B" }],
@@ -1804,7 +1813,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v38";/);
+  assert.match(sw, /const CACHE = "hark-v39";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -1985,4 +1994,45 @@ test("the worker stores a subscription and sends the notice", async () => {
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+test("play all keeps caption ends and every song still stops", () => {
+  const counts = {};
+  for (const def of [...themes.seasons, ...themes.topics]) {
+    counts[def.id] = themeTracks({ hymns, themes, recordings, themeId: def.id }).length;
+  }
+  assert.equal(counts.christmas, 20);
+  assert.equal(counts.advent, 5);
+  assert.equal(counts.epiphany, 4);
+  assert.equal(counts["all-year"], 49);
+  const christmas = themeTracks({ hymns, themes, recordings, themeId: "christmas" });
+  assert.ok(christmas.every((track) => track.trustworthy && track.end > track.start));
+  assert.equal(new Set(christmas.map((track) => track.number)).size, christmas.length);
+
+  const shepherd = faithRecordings(recordings, 86)[0];
+  assert.equal(captionEnd(shepherd), 860);
+  const known = playbackStop(shepherd, byNumber.get(86));
+  assert.equal(known.trustworthy, true);
+  assert.equal(known.at, 860);
+
+  const bare = playbackStop({ start: 10, id: "abcdefghijk" }, { stanzas: [["a"], ["b"]] });
+  assert.equal(bare.trustworthy, false);
+  assert.equal(bare.at, estimatedEnd(10, 2));
+  assert.equal(bare.at, 10 + 12 + 80);
+  assert.ok(bare.at < known.at);
+
+  const shuffled = shuffleTracks(christmas, () => 0);
+  assert.equal(shuffled.length, christmas.length);
+  assert.equal(shuffled[0], christmas[1]);
+  assert.deepEqual(shuffled.slice(1, -1), christmas.slice(2));
+  assert.equal(shuffled[shuffled.length - 1], christmas[0]);
+
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /Play all/);
+  assert.match(appSource, /getCurrentTime/);
+  assert.match(appSource, /endSeconds: track\.end/);
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.match(page, /id="song-bar"/);
+  assert.match(page, /Keep watching the service/);
+  assert.equal(/\u2013|\u2014/.test(page), false);
 });

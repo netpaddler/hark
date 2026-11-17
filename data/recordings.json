@@ -7,7 +7,9 @@
       "url": "https://www.youtube.com/watch?v=6mj98DwG3_M&t=863s",
       "start_seconds": 863,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: singing hymn number two. O worship the king."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: singing hymn number two. O worship the king.",
+      "end_seconds": 1087,
+      "end_source": "captions"
     }
   ],
   "15": [
@@ -18,7 +20,9 @@
       "url": "https://www.youtube.com/watch?v=-7bFYZbPXOw&t=297s",
       "start_seconds": 297,
       "confidence": "medium",
-      "notes": "Bulletin opening hymn. Announcement: let's continue now to bless and to worship our God as we sing hymn number Stand up and bless the Lord."
+      "notes": "Bulletin opening hymn. Announcement: let's continue now to bless and to worship our God as we sing hymn number Stand up and bless the Lord.",
+      "end_seconds": 458,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Sep 8, 2024, congregation",
@@ -47,7 +51,9 @@
       "url": "https://www.youtube.com/watch?v=TgzQMKbk5_Y&t=3891s",
       "start_seconds": 3891,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: is a way that we exhort one another to trust in that one who's greater than us, the Lord Jesus Christ. Please stand and sing with me our closing hymn number 31. Earth everlastin..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: is a way that we exhort one another to trust in that one who's greater than us, the Lord Jesus Christ. Please stand and sing with me our closing hymn number 31. Earth everlastin...",
+      "end_seconds": 4077,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Apr 27, 2025, congregation",
@@ -123,7 +129,9 @@
       "url": "https://www.youtube.com/watch?v=5SUWKJU3Qsg&t=685s",
       "start_seconds": 685,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: as we sing hymn number 38. Immortal,"
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: as we sing hymn number 38. Immortal,",
+      "end_seconds": 826,
+      "end_source": "captions"
     }
   ],
   "56": [
@@ -134,7 +142,9 @@
       "url": "https://www.youtube.com/watch?v=4eBy7NfLs4M&t=690s",
       "start_seconds": 690,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: forever. Amen. God has shown us his mercy and his love for us in the gospel. With that in mind, let's sing from hymn 56. When all your Mercy Christy. Christy. So God to my soul...."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: forever. Amen. God has shown us his mercy and his love for us in the gospel. With that in mind, let's sing from hymn 56. When all your Mercy Christy. Christy. So God to my soul....",
+      "end_seconds": 890,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Mar 29, 2026, congregation",
@@ -172,7 +182,9 @@
       "url": "https://www.youtube.com/watch?v=ucj5t2AB66Y&t=1201s",
       "start_seconds": 1201,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Let the sound of his praise be heard. Let's respond to this call now and praise our God together as we stand and sing from Psalm 146, our hymn number 57. Hallelujah. Hallelujah...."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Let the sound of his praise be heard. Let's respond to this call now and praise our God together as we stand and sing from Psalm 146, our hymn number 57. Hallelujah. Hallelujah....",
+      "end_seconds": 1401,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Apr 26, 2026, congregation",
@@ -237,7 +249,9 @@
       "url": "https://www.youtube.com/watch?v=6_k8Z4RzvKQ&t=744s",
       "start_seconds": 744,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: everlasting. And let all the people say, \"Amen. Praise the Lord.\" Let's praise the Lord together now as we stand and sing from Psalm 103, our hymn number 76. Praise my soul, the..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: everlasting. And let all the people say, \"Amen. Praise the Lord.\" Let's praise the Lord together now as we stand and sing from Psalm 103, our hymn number 76. Praise my soul, the...",
+      "end_seconds": 948,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Jul 13, 2025, congregation",
@@ -293,7 +307,9 @@
       "url": "https://www.youtube.com/watch?v=KJVRUfd6omk&t=824s",
       "start_seconds": 824,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: as we stand and sing hymn number 80,"
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: as we stand and sing hymn number 80,",
+      "end_seconds": 1042,
+      "end_source": "captions"
     }
   ],
   "86": [
@@ -304,7 +320,9 @@
       "url": "https://www.youtube.com/watch?v=-7bFYZbPXOw&t=645s",
       "start_seconds": 645,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our hymn number 86. The Lord's my shepherd."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our hymn number 86. The Lord's my shepherd.",
+      "end_seconds": 860,
+      "end_source": "captions"
     }
   ],
   "92": [
@@ -315,7 +333,9 @@
       "url": "https://www.youtube.com/watch?v=od-as3gatso&t=771s",
       "start_seconds": 771,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Hymn number 92. A mighty fortress."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Hymn number 92. A mighty fortress.",
+      "end_seconds": 1035,
+      "end_source": "captions"
     }
   ],
   "94": [
@@ -326,7 +346,9 @@
       "url": "https://www.youtube.com/watch?v=5SUWKJU3Qsg&t=4457s",
       "start_seconds": 4457,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 94. How firm a foundation."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 94. How firm a foundation.",
+      "end_seconds": 4719,
+      "end_source": "captions"
     }
   ],
   "95": [
@@ -337,7 +359,9 @@
       "url": "https://www.youtube.com/watch?v=MWGsibNeYBY&t=323s",
       "start_seconds": 323,
       "confidence": "medium",
-      "notes": "Bulletin opening hymn (printed Through Troubles Assail Us, Trinity Hymnal 95). Announcement: Let's continue worshiping now with hymn. Auto captions then garble the title."
+      "notes": "Bulletin opening hymn (printed Through Troubles Assail Us, Trinity Hymnal 95). Announcement: Let's continue worshiping now with hymn. Auto captions then garble the title.",
+      "end_seconds": 601,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, May 10, 2026, congregation",
@@ -384,7 +408,9 @@
       "url": "https://www.youtube.com/watch?v=pgm5642TYns&t=641s",
       "start_seconds": 641,
       "confidence": "medium",
-      "notes": "Bulletin opening hymn of praise. Announcement: Please stand. Let's sing praise to our great God. Sung captions: Your faithfulness / I sing of mercies."
+      "notes": "Bulletin opening hymn of praise. Announcement: Please stand. Let's sing praise to our great God. Sung captions: Your faithfulness / I sing of mercies.",
+      "end_seconds": 879,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Mar 15, 2026, congregation",
@@ -431,7 +457,9 @@
       "url": "https://www.youtube.com/watch?v=wKzOyIFC2Es&t=3304s",
       "start_seconds": 3304,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Auto captions spell the title as 'What air my God ordains is right.'"
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Auto captions spell the title as 'What air my God ordains is right.'",
+      "end_seconds": 3532,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, May 25, 2025, congregation",
@@ -469,7 +497,9 @@
       "url": "https://www.youtube.com/watch?v=bAaECMHYCHo&t=782s",
       "start_seconds": 782,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our hymn number 115, All Creatures of Our God and King."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our hymn number 115, All Creatures of Our God and King.",
+      "end_seconds": 1079,
+      "end_source": "captions"
     }
   ],
   "162": [
@@ -480,7 +510,9 @@
       "url": "https://www.youtube.com/watch?v=YMkvnnFS848&t=849s",
       "start_seconds": 849,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 1105,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Nov 30, 2025, congregation",
@@ -489,7 +521,9 @@
       "url": "https://www.youtube.com/watch?v=CKtA7MdZi68&t=5273s",
       "start_seconds": 5273,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 5566,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 29, 2024, congregation",
@@ -525,7 +559,9 @@
       "url": "https://www.youtube.com/watch?v=DSpv6SIVFZA&t=1201s",
       "start_seconds": 1201,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 1450,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Nov 28, 2021, congregation",
@@ -555,7 +591,9 @@
       "url": "https://www.youtube.com/watch?v=U83VzDXrhj0&t=4339s",
       "start_seconds": 4339,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: I love Christ has washed us and cleansed us and drawn us close. And so let's stand now for our final hymn number 172. Let us love and sing and wonder. love and sing and wonder. ..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: I love Christ has washed us and cleansed us and drawn us close. And so let's stand now for our final hymn number 172. Let us love and sing and wonder. love and sing and wonder. ...",
+      "end_seconds": 4547,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Jan 25, 2026, congregation",
@@ -629,7 +667,9 @@
       "url": "https://www.youtube.com/watch?v=F3vuZcq5s4o&t=5388s",
       "start_seconds": 5388,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 5618,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 10, 2023, congregation",
@@ -676,7 +716,9 @@
       "url": "https://www.youtube.com/watch?v=pThh6ak-Jfw&t=1303s",
       "start_seconds": 1303,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 1557,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Nov 28, 2021, congregation",
@@ -724,7 +766,9 @@
       "url": "https://www.youtube.com/watch?v=2dYJJ_lp1z4&t=5294s",
       "start_seconds": 5294,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 5484,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 22, 2024, congregation",
@@ -827,7 +871,9 @@
       "url": "https://www.youtube.com/watch?v=CKtA7MdZi68&t=1662s",
       "start_seconds": 1662,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 1885,
+      "end_source": "captions"
     }
   ],
   "198": [
@@ -838,7 +884,9 @@
       "url": "https://www.youtube.com/watch?v=6FvBXooCgpI&t=404s",
       "start_seconds": 404,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 765,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Nov 30, 2025, congregation",
@@ -912,7 +960,9 @@
       "url": "https://www.youtube.com/watch?v=SiNO3GBWj0Y&t=1135s",
       "start_seconds": 1135,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 1448,
+      "end_source": "captions"
     }
   ],
   "201": [
@@ -952,7 +1002,9 @@
       "url": "https://www.youtube.com/watch?v=o5rpjquRRFA&t=660s",
       "start_seconds": 660,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 871,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 14, 2025, congregation",
@@ -961,7 +1013,9 @@
       "url": "https://www.youtube.com/watch?v=SiNO3GBWj0Y&t=766s",
       "start_seconds": 766,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 969,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 29, 2024, unspecified",
@@ -997,7 +1051,9 @@
       "url": "https://www.youtube.com/watch?v=pThh6ak-Jfw&t=5074s",
       "start_seconds": 5074,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 5316,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 26, 2021, unspecified",
@@ -1006,7 +1062,9 @@
       "url": "https://www.youtube.com/watch?v=DSpv6SIVFZA&t=814s",
       "start_seconds": 814,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 1035,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 27, 2020, congregation",
@@ -1058,7 +1116,9 @@
       "url": "https://www.youtube.com/watch?v=YmVxFo_a6EY&t=4565s",
       "start_seconds": 4565,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 4868,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Jan 7, 2024, congregation",
@@ -1097,7 +1157,9 @@
       "url": "https://www.youtube.com/watch?v=wKzOyIFC2Es&t=320s",
       "start_seconds": 320,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 511,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 8, 2024, congregation",
@@ -1163,7 +1225,9 @@
       "url": "https://www.youtube.com/watch?v=F3vuZcq5s4o&t=852s",
       "start_seconds": 852,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement ('as we stand and sing together hymn number O come, all ye faithful'); the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement ('as we stand and sing together hymn number O come, all ye faithful'); the organ introduction and singing follow.",
+      "end_seconds": 1101,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 22, 2024, unspecified",
@@ -1219,7 +1283,9 @@
       "url": "https://www.youtube.com/watch?v=o5rpjquRRFA&t=5146s",
       "start_seconds": 5146,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 5436,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 18, 2022, congregation",
@@ -1251,7 +1317,9 @@
       "url": "https://www.youtube.com/watch?v=SiNO3GBWj0Y&t=4531s",
       "start_seconds": 4531,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: final hymn this morning calls us to rest in the tidings of comfort and joy found in Jesus. With that in mind, let's stand and sing hymn 211. God rest you, Mary and sing hymn 211..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: final hymn this morning calls us to rest in the tidings of comfort and joy found in Jesus. With that in mind, let's stand and sing hymn 211. God rest you, Mary and sing hymn 211...",
+      "end_seconds": 4716,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 11, 2022, congregation",
@@ -1271,7 +1339,9 @@
       "url": "https://www.youtube.com/watch?v=2dYJJ_lp1z4&t=1288s",
       "start_seconds": 1288,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 1498,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Nov 30, 2025, congregation",
@@ -1328,7 +1398,9 @@
       "url": "https://www.youtube.com/watch?v=2dYJJ_lp1z4&t=848s",
       "start_seconds": 848,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 1039,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 22, 2024, congregation",
@@ -1394,7 +1466,9 @@
       "url": "https://www.youtube.com/watch?v=2dYJJ_lp1z4&t=2356s",
       "start_seconds": 2356,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 2480,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Dec 22, 2024, congregation",
@@ -1441,7 +1515,9 @@
       "url": "https://www.youtube.com/watch?v=E0Xfhcz2uiA&t=545s",
       "start_seconds": 545,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 790,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 29, 2024, congregation",
@@ -1480,7 +1556,9 @@
       "url": "https://www.youtube.com/watch?v=wKzOyIFC2Es&t=514s",
       "start_seconds": 514,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 696,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 22, 2024, unspecified",
@@ -1537,7 +1615,9 @@
       "url": "https://www.youtube.com/watch?v=1mr1cagZ_1s&t=964s",
       "start_seconds": 964,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 1112,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 8, 2024, congregation",
@@ -1566,7 +1646,9 @@
       "url": "https://www.youtube.com/watch?v=pThh6ak-Jfw&t=4794s",
       "start_seconds": 4794,
       "confidence": "medium",
-      "notes": "Sunday morning Dec 11, 2022 (oEmbed 200). The AM bulletin lists Hymn 221, Lo, How a Rose E'er Blooming, as the congregational hymn at the Lord's table. After the words of institution (~4568-4597s) the printed Irish/Wexford Carol is sung during the distribution (captions: 'to God with love this Christmas', 'prepare and go the angel said'), ending about 4792s. New, louder music begins at 4794s and continues until the final hymn, 203 Hark! the Herald Angels Sing, is announced at 5074s (about four and a half minutes, a fit for this slow chorale). Auto captions and CPU whisper did not clearly capture 'rose' or 'blooming' in this window."
+      "notes": "Sunday morning Dec 11, 2022 (oEmbed 200). The AM bulletin lists Hymn 221, Lo, How a Rose E'er Blooming, as the congregational hymn at the Lord's table. After the words of institution (~4568-4597s) the printed Irish/Wexford Carol is sung during the distribution (captions: 'to God with love this Christmas', 'prepare and go the angel said'), ending about 4792s. New, louder music begins at 4794s and continues until the final hymn, 203 Hark! the Herald Angels Sing, is announced at 5074s (about four and a half minutes, a fit for this slow chorale). Auto captions and CPU whisper did not clearly capture 'rose' or 'blooming' in this window.",
+      "end_seconds": 5074,
+      "end_source": "captions"
     }
   ],
   "222": [
@@ -1586,7 +1668,9 @@
       "url": "https://www.youtube.com/watch?v=wKzOyIFC2Es&t=790s",
       "start_seconds": 790,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Trinity Hymnal 222 and 223 share these words with different tunes; captions cannot show which tune was sung."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Trinity Hymnal 222 and 223 share these words with different tunes; captions cannot show which tune was sung.",
+      "end_seconds": 931,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 29, 2024, congregation",
@@ -1624,7 +1708,9 @@
       "url": "https://www.youtube.com/watch?v=wKzOyIFC2Es&t=790s",
       "start_seconds": 790,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Trinity Hymnal 222 and 223 share these words with different tunes; captions cannot show which tune was sung."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it. Trinity Hymnal 222 and 223 share these words with different tunes; captions cannot show which tune was sung.",
+      "end_seconds": 931,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 29, 2024, congregation",
@@ -1653,7 +1739,9 @@
       "url": "https://www.youtube.com/watch?v=1mr1cagZ_1s&t=677s",
       "start_seconds": 677,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 908,
+      "end_source": "captions"
     },
     {
       "label": "Christmas Eve Candlelight Service, 4:00 pm, Dec 24, 2023, unspecified",
@@ -1692,7 +1780,9 @@
       "url": "https://www.youtube.com/watch?v=YmVxFo_a6EY&t=685s",
       "start_seconds": 685,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 882,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Jan 5, 2025, congregation",
@@ -1776,7 +1866,9 @@
       "url": "https://www.youtube.com/watch?v=E0Xfhcz2uiA&t=345s",
       "start_seconds": 345,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow.",
+      "end_seconds": 546,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 29, 2024, unspecified",
@@ -1815,7 +1907,9 @@
       "url": "https://www.youtube.com/watch?v=KJVRUfd6omk&t=1260s",
       "start_seconds": 1260,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing hymn number 253. There is a fountain."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing hymn number 253. There is a fountain.",
+      "end_seconds": 1540,
+      "end_source": "captions"
     }
   ],
   "271": [
@@ -1826,7 +1920,9 @@
       "url": "https://www.youtube.com/watch?v=tvX6H8zZRZM&t=326s",
       "start_seconds": 326,
       "confidence": "medium",
-      "notes": "Bulletin opening hymn. Announcement: Let's sing praise now to the Lord. Auto captions then garble the title."
+      "notes": "Bulletin opening hymn. Announcement: Let's sing praise now to the Lord. Auto captions then garble the title.",
+      "end_seconds": 613,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Apr 5, 2026, congregation",
@@ -1875,7 +1971,9 @@
       "url": "https://www.youtube.com/watch?v=-7bFYZbPXOw&t=3752s",
       "start_seconds": 3752,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 322. Oh, quickly come dread judge."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 322. Oh, quickly come dread judge.",
+      "end_seconds": 3934,
+      "end_source": "captions"
     }
   ],
   "338": [
@@ -1886,7 +1984,9 @@
       "url": "https://www.youtube.com/watch?v=b7VH4068TCM&t=1007s",
       "start_seconds": 1007,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and the life everlasting. Amen. Let's sing now hymn number 338. Spirit of God de..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Catholic Church, the communion of saints, the forgiveness of sins, the resurrection of the body, and the life everlasting. Amen. Let's sing now hymn number 338. Spirit of God de...",
+      "end_seconds": 1228,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, May 24, 2026, congregation",
@@ -1933,7 +2033,9 @@
       "url": "https://www.youtube.com/watch?v=U83VzDXrhj0&t=638s",
       "start_seconds": 638,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our the source of our praise. He is the foundation of our hope. And so with that in mind, let's stand and sing again together hymn 343. Christ has made the Christ Christ Christ ..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our the source of our praise. He is the foundation of our hope. And so with that in mind, let's stand and sing again together hymn 343. Christ has made the Christ Christ Christ ...",
+      "end_seconds": 896,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Jan 25, 2026, congregation",
@@ -1980,7 +2082,9 @@
       "url": "https://www.youtube.com/watch?v=yO4L0raNZpw&t=722s",
       "start_seconds": 722,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's sing hymn number 347, The Church's one foundation."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's sing hymn number 347, The Church's one foundation.",
+      "end_seconds": 1014,
+      "end_source": "captions"
     }
   ],
   "353": [
@@ -1991,7 +2095,9 @@
       "url": "https://www.youtube.com/watch?v=yO4L0raNZpw&t=490s",
       "start_seconds": 490,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing together hymn number 353. I love thy kingdom, Lord."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing together hymn number 353. I love thy kingdom, Lord.",
+      "end_seconds": 655,
+      "end_source": "captions"
     }
   ],
   "368": [
@@ -2002,7 +2108,9 @@
       "url": "https://www.youtube.com/watch?v=ZvKq3Uw-wiY&t=520s",
       "start_seconds": 520,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: the ends of all the earth shall hear. The caption heard the number as 369; the bulletin and the title are hymn 368."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: the ends of all the earth shall hear. The caption heard the number as 369; the bulletin and the title are hymn 368.",
+      "end_seconds": 744,
+      "end_source": "captions"
     }
   ],
   "388": [
@@ -2013,7 +2121,9 @@
       "url": "https://www.youtube.com/watch?v=4eBy7NfLs4M&t=3447s",
       "start_seconds": 3447,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: stand and sing hymn 388. Savior again, thy dear name we."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: stand and sing hymn 388. Savior again, thy dear name we.",
+      "end_seconds": 3649,
+      "end_source": "captions"
     }
   ],
   "398": [
@@ -2024,7 +2134,9 @@
       "url": "https://www.youtube.com/watch?v=exBanncOd3g&t=938s",
       "start_seconds": 938,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: the great king. Within her citadels, God has made himself known as a fortress. Please join me in singing praise to God. Please stand and sing our first hymn number 398, Christ, ..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: the great king. Within her citadels, God has made himself known as a fortress. Please join me in singing praise to God. Please stand and sing our first hymn number 398, Christ, ...",
+      "end_seconds": 1077,
+      "end_source": "captions"
     }
   ],
   "401": [
@@ -2035,7 +2147,9 @@
       "url": "https://www.youtube.com/watch?v=in68OvOYOpI&t=4109s",
       "start_seconds": 4109,
       "confidence": "medium",
-      "notes": "The hymn is announced at 4069s as 'all praise to thee, my God, this night.' The start is placed later, at 4109s, just before the congregation stands, because brief singing instructions come between the announcement and the hymn. Sung lines, including the doxology stanza, follow."
+      "notes": "The hymn is announced at 4069s as 'all praise to thee, my God, this night.' The start is placed later, at 4109s, just before the congregation stands, because brief singing instructions come between the announcement and the hymn. Sung lines, including the doxology stanza, follow.",
+      "end_seconds": 4277,
+      "end_source": "captions"
     }
   ],
   "404": [
@@ -2046,7 +2160,9 @@
       "url": "https://www.youtube.com/watch?v=OKchzovwL4A&t=3300s",
       "start_seconds": 3300,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: evening hymn number 404. Son of my soul, thou."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: evening hymn number 404. Son of my soul, thou.",
+      "end_seconds": 3533,
+      "end_source": "captions"
     }
   ],
   "406": [
@@ -2057,7 +2173,9 @@
       "url": "https://www.youtube.com/watch?v=tvX6H8zZRZM&t=3876s",
       "start_seconds": 3876,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: telling the truth. Amen. telling the truth. Amen. [snorts] Let's stand and close our worship with a nice evening hymn. Now the day is over. falling shadow. Jesus Jesus the restl..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: telling the truth. Amen. telling the truth. Amen. [snorts] Let's stand and close our worship with a nice evening hymn. Now the day is over. falling shadow. Jesus Jesus the restl...",
+      "end_seconds": 4049,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Aug 10, 2025, congregation",
@@ -2097,7 +2215,9 @@
       "url": "https://www.youtube.com/watch?v=vO--AvjZMqY&t=4784s",
       "start_seconds": 4784,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's stand and sing hymn 434, Lord thou lov'st the cheerful giver."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's stand and sing hymn 434, Lord thou lov'st the cheerful giver.",
+      "end_seconds": 5027,
+      "end_source": "captions"
     }
   ],
   "457": [
@@ -2108,7 +2228,9 @@
       "url": "https://www.youtube.com/watch?v=ucj5t2AB66Y&t=1592s",
       "start_seconds": 1592,
       "confidence": "medium",
-      "notes": "Bulletin hymn after the assurance of pardon. Announcement: let's stand and sing together. Sung captions include of God's unchanging love and Here I raise my (Ebenezer)."
+      "notes": "Bulletin hymn after the assurance of pardon. Announcement: let's stand and sing together. Sung captions include of God's unchanging love and Here I raise my (Ebenezer).",
+      "end_seconds": 1768,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Nov 23, 2025, congregation",
@@ -2191,7 +2313,9 @@
       "url": "https://www.youtube.com/watch?v=bAaECMHYCHo&t=1292s",
       "start_seconds": 1292,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: forgiven. Let's now sing together of the incredible mercy that we have received in Christ as we stand and sing hymn 460, Amazing. Praise the sweet the sound I all my heart to th..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: forgiven. Let's now sing together of the incredible mercy that we have received in Christ as we stand and sing hymn 460, Amazing. Praise the sweet the sound I all my heart to th...",
+      "end_seconds": 1505,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Morning Worship, Oct 19, 2025, congregation",
@@ -2256,7 +2380,9 @@
       "url": "https://www.youtube.com/watch?v=U83VzDXrhj0&t=4105s",
       "start_seconds": 4105,
       "confidence": "medium",
-      "notes": "No spoken hymn number in the auto captions. The singing just after the anthem Just as I Am includes the line \"my guilty soul,\" which is stanza 1 of hymn 461. The player starts at that caption."
+      "notes": "No spoken hymn number in the auto captions. The singing just after the anthem Just as I Am includes the line \"my guilty soul,\" which is stanza 1 of hymn 461. The player starts at that caption.",
+      "end_seconds": 4337,
+      "end_source": "captions"
     }
   ],
   "472": [
@@ -2267,7 +2393,9 @@
       "url": "https://www.youtube.com/watch?v=6mj98DwG3_M&t=4822s",
       "start_seconds": 4822,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Let's stand and sing hymn 472. Come ye sinners."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Let's stand and sing hymn 472. Come ye sinners.",
+      "end_seconds": 5093,
+      "end_source": "captions"
     }
   ],
   "485": [
@@ -2278,7 +2406,9 @@
       "url": "https://www.youtube.com/watch?v=OKchzovwL4A&t=455s",
       "start_seconds": 455,
       "confidence": "medium",
-      "notes": "Bulletin second hymn, after We Gather Together (363). Announcement: Let's sing now to the Lord. Oh thou that."
+      "notes": "Bulletin second hymn, after We Gather Together (363). Announcement: Let's sing now to the Lord. Oh thou that.",
+      "end_seconds": 744,
+      "end_source": "captions"
     }
   ],
   "500": [
@@ -2289,7 +2419,9 @@
       "url": "https://www.youtube.com/watch?v=vO--AvjZMqY&t=1279s",
       "start_seconds": 1279,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing hymn number 500, Rock of Ages."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: sing hymn number 500, Rock of Ages.",
+      "end_seconds": 1490,
+      "end_source": "captions"
     }
   ],
   "501": [
@@ -2349,7 +2481,9 @@
       "url": "https://www.youtube.com/watch?v=b7VH4068TCM&t=3451s",
       "start_seconds": 3451,
       "confidence": "medium",
-      "notes": "Bulletin closing hymn. Announcement: Let's close by standing and singing my. Sung captions follow (to my heart)."
+      "notes": "Bulletin closing hymn. Announcement: Let's close by standing and singing my. Sung captions follow (to my heart).",
+      "end_seconds": 3629,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Jul 27, 2025, congregation",
@@ -2405,7 +2539,9 @@
       "url": "https://www.youtube.com/watch?v=xXxINa7Bs10&t=1060s",
       "start_seconds": 1060,
       "confidence": "medium",
-      "notes": "Bulletin third hymn. Announcement: Let's sing now a song of consecration as we come to the preaching of the word. Oh, for a closer walk with."
+      "notes": "Bulletin third hymn. Announcement: Let's sing now a song of consecration as we come to the preaching of the word. Oh, for a closer walk with.",
+      "end_seconds": 1206,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Aug 15, 2021, congregation",
@@ -2481,7 +2617,9 @@
       "url": "https://www.youtube.com/watch?v=xXxINa7Bs10&t=759s",
       "start_seconds": 759,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: But you, oh God, will cast them down Glory to the father and to the son and Amen. Let's sing now. Jerusalem the golden Lord, voice. voice. I know I know great were"
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: But you, oh God, will cast them down Glory to the father and to the son and Amen. Let's sing now. Jerusalem the golden Lord, voice. voice. I know I know great were",
+      "end_seconds": 970,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Dec 7, 2025, congregation",
@@ -2528,7 +2666,9 @@
       "url": "https://www.youtube.com/watch?v=_2SvYytmHnA&t=4253s",
       "start_seconds": 4253,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it."
+      "notes": "Starts at the spoken announcement of the hymn; the organ introduction and singing follow. Sung lines from this hymn also appear in the captions after it.",
+      "end_seconds": 4425,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Feb 9, 2025, congregation",
@@ -2557,7 +2697,9 @@
       "url": "https://www.youtube.com/watch?v=yO4L0raNZpw&t=2163s",
       "start_seconds": 2163,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Caleb apart for this particular service, let's join them in dedicating ourselves to the Lord's service as well as we stand and sing hymn 585, Take My Life Take my hands and let ..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Caleb apart for this particular service, let's join them in dedicating ourselves to the Lord's service as well as we stand and sing hymn 585, Take My Life Take my hands and let ...",
+      "end_seconds": 2378,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Sep 13, 2026, congregation",
@@ -2669,7 +2811,9 @@
       "url": "https://www.youtube.com/watch?v=ZvKq3Uw-wiY&t=745s",
       "start_seconds": 745,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: with hymn 602. Oh God, my faithful God."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: with hymn 602. Oh God, my faithful God.",
+      "end_seconds": 988,
+      "end_source": "captions"
     }
   ],
   "604": [
@@ -2680,7 +2824,9 @@
       "url": "https://www.youtube.com/watch?v=b7VH4068TCM&t=701s",
       "start_seconds": 701,
       "confidence": "medium",
-      "notes": "Bulletin second hymn, after the psalm. Announcement: Now, please join me in singing him. Sung captions: Rejoice."
+      "notes": "Bulletin second hymn, after the psalm. Announcement: Now, please join me in singing him. Sung captions: Rejoice.",
+      "end_seconds": 919,
+      "end_source": "captions"
     }
   ],
   "607": [
@@ -2691,7 +2837,9 @@
       "url": "https://www.youtube.com/watch?v=MWGsibNeYBY&t=3309s",
       "start_seconds": 3309,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 607."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: our final hymn number 607.",
+      "end_seconds": 3506,
+      "end_source": "captions"
     }
   ],
   "615": [
@@ -2702,7 +2850,9 @@
       "url": "https://www.youtube.com/watch?v=-7bFYZbPXOw&t=915s",
       "start_seconds": 915,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's sing now hymn number 615. Come, ye disconsolate."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: let's sing now hymn number 615. Come, ye disconsolate.",
+      "end_seconds": 1095,
+      "end_source": "captions"
     }
   ],
   "624": [
@@ -2769,7 +2919,9 @@
       "url": "https://www.youtube.com/watch?v=DSpv6SIVFZA&t=4505s",
       "start_seconds": 4505,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: but the king shall rejoice in god all who swear by him shall exalt for the mouths of liars our final hymn this morning is hymn 644 may the mind of christ my savior and as we sin..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: but the king shall rejoice in god all who swear by him shall exalt for the mouths of liars our final hymn this morning is hymn 644 may the mind of christ my savior and as we sin...",
+      "end_seconds": 4702,
+      "end_source": "captions"
     }
   ],
   "647": [
@@ -2780,7 +2932,9 @@
       "url": "https://www.youtube.com/watch?v=tvX6H8zZRZM&t=615s",
       "start_seconds": 615,
       "confidence": "medium",
-      "notes": "Bulletin second hymn, after the psalm. Announcement: Let's sing to our great king now. Number. Sung captions begin The sweet."
+      "notes": "Bulletin second hymn, after the psalm. Announcement: Let's sing to our great king now. Number. Sung captions begin The sweet.",
+      "end_seconds": 768,
+      "end_source": "captions"
     }
   ],
   "652": [
@@ -2791,7 +2945,9 @@
       "url": "https://www.youtube.com/watch?v=tvX6H8zZRZM&t=823s",
       "start_seconds": 823,
       "confidence": "medium",
-      "notes": "Bulletin third hymn, after the catechism. Announcement: Let's sing now about our need to be instructed by the Lord Jesus. Savior. Later spoken: expressing our need for you to teach us."
+      "notes": "Bulletin third hymn, after the catechism. Announcement: Let's sing now about our need to be instructed by the Lord Jesus. Savior. Later spoken: expressing our need for you to teach us.",
+      "end_seconds": 939,
+      "end_source": "captions"
     }
   ],
   "656": [
@@ -2887,7 +3043,9 @@
       "url": "https://www.youtube.com/watch?v=4eBy7NfLs4M&t=404s",
       "start_seconds": 404,
       "confidence": "medium",
-      "notes": "Bulletin opening hymn. Announcement: let's worship him together singing hymn number We join in the song. That line is from stanza 1 of 700."
+      "notes": "Bulletin opening hymn. Announcement: let's worship him together singing hymn number We join in the song. That line is from stanza 1 of 700.",
+      "end_seconds": 541,
+      "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Apr 13, 2025, congregation",

@@ -26,6 +26,7 @@ import {
   formatRecordingDate,
   youtubeBlock,
 } from "./hymn-model.js";
+import { playbackStop, shuffleTracks, themeTracks } from "./playlist.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
@@ -807,6 +808,21 @@ function renderTheme(id) {
   const page = el("div", { class: "theme-page" });
   page.append(el("p", { class: "theme-back" }, el("a", { href: "#/themes" }, "All themes")));
   page.append(el("h2", { class: "theme-page-title" }, theme.title));
+  const straight = themeTracks({
+    hymns,
+    themes: themeCatalog,
+    recordings: recordingCatalog,
+    themeId: id,
+  });
+  if (straight.length) {
+    const row = el("p", { class: "play-all" });
+    const all = el("button", { type: "button", class: "play-song" }, "Play all");
+    const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
+    all.addEventListener("click", () => beginSongs(straight, "all"));
+    shuffle.addEventListener("click", () => beginSongs(shuffleTracks(straight), "all"));
+    row.append(all, shuffle);
+    page.append(row);
+  }
   if (list.length === 0) page.append(el("p", { class: "empty" }, "No songs match that search."));
   else page.append(themeHymnList(list));
   main.replaceChildren(page);
@@ -963,26 +979,37 @@ function youtubeLink(item) {
   );
 }
 
-function faithCard(item, openPlayer) {
+function playControl(hymn, item) {
+  const button = el("button", { type: "button", class: "play-song" }, "Play this song");
+  button.addEventListener("click", () => {
+    const stop = playbackStop(item, hymn);
+    beginSongs(
+      [
+        {
+          number: hymn.number,
+          title: hymn.title,
+          videoId: item.id,
+          start: stop.start,
+          end: stop.at,
+          trustworthy: stop.trustworthy,
+          label: item.label || "",
+        },
+      ],
+      "one",
+    );
+  });
+  return button;
+}
+
+function faithCard(hymn, item, openPlayer) {
   const figure = el("figure", { class: "faith-item" });
   if (item.date) figure.append(el("p", { class: "faith-date" }, item.date));
   figure.append(el("p", { class: "faith-label" }, item.label));
   if (item.kind === "youtube" && item.embeddable === false) {
     const player = mountYoutube(item);
     if (player) figure.append(player);
-  } else if (item.kind === "youtube" && openPlayer) {
-    const player = mountYoutube(item);
-    if (player) figure.append(player);
-  } else if (item.kind === "youtube") {
-    const details = el("details", { class: "faith-play" });
-    details.append(el("summary", {}, "Play in the page"));
-    details.addEventListener("toggle", () => {
-      if (details.open && !details.querySelector("iframe") && !details.querySelector(".watch-card")) {
-        const player = mountYoutube(item);
-        if (player) details.append(player);
-      }
-    });
-    figure.append(details);
+  } else if (item.kind === "youtube" && item.id) {
+    figure.append(playControl(hymn, item));
   } else if (item.kind === "video") {
     const video = el("video", { controls: true, playsinline: true, preload: "metadata" });
     video.src = item.url;
@@ -1010,14 +1037,14 @@ function faithSection(hymn) {
   sectionEl.append(el("h2", { class: "faith-heading" }, "Hear it at Faith Presbyterian"));
   const caution = tuneCaution(hymn.number);
   if (caution) sectionEl.append(el("p", { class: "faith-note" }, caution));
-  sectionEl.append(faithCard(items[0], true));
+  sectionEl.append(faithCard(hymn, items[0], true));
   if (items.length > 1) {
     const details = el("details", { class: "earlier" });
     const older = items.length - 1;
     details.append(
       el("summary", {}, older === 1 ? "1 earlier recording" : `${older} earlier recordings`),
     );
-    for (const item of items.slice(1)) details.append(faithCard(item, false));
+    for (const item of items.slice(1)) details.append(faithCard(hymn, item, false));
     sectionEl.append(details);
   }
   return sectionEl;
@@ -1028,7 +1055,13 @@ function recordingSection(hymn) {
   if (items.length === 0) return null;
   const sectionEl = el("section", { class: "recordings" });
   sectionEl.append(el("h2", {}, "Choir"));
-  for (const item of items) sectionEl.append(mediaFigure(item));
+  for (const item of items) {
+    if (item.kind === "youtube" && item.id && item.embeddable !== false) {
+      sectionEl.append(faithCard(hymn, item, false));
+    } else {
+      sectionEl.append(mediaFigure(item));
+    }
+  }
   return sectionEl;
 }
 
@@ -2224,6 +2257,223 @@ async function toggleNotify() {
     paintNotify();
   }
 }
+
+const songBar = document.getElementById("song-bar");
+const songTitle = document.getElementById("song-bar-title");
+const songToggle = document.getElementById("song-toggle");
+const songKeep = document.getElementById("song-keep");
+let ytPlayer = null;
+let songQueue = [];
+let songIndex = 0;
+let songMode = "one";
+let songPoll = 0;
+let songHolding = false;
+
+function loadYouTubeApi() {
+  if (window.YT && window.YT.Player) return Promise.resolve();
+  if (loadYouTubeApi.promise) return loadYouTubeApi.promise;
+  loadYouTubeApi.promise = new Promise((resolve) => {
+    const previous = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (typeof previous === "function") previous();
+      resolve();
+    };
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    document.head.append(script);
+  });
+  return loadYouTubeApi.promise;
+}
+
+function ensureSongPlayer() {
+  if (ytPlayer && typeof ytPlayer.loadVideoById === "function") return Promise.resolve(ytPlayer);
+  return loadYouTubeApi().then(
+    () =>
+      new Promise((resolve) => {
+        if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
+          resolve(ytPlayer);
+          return;
+        }
+        ytPlayer = new window.YT.Player("song-player-host", {
+          host: "https://www.youtube-nocookie.com",
+          playerVars: {
+            playsinline: 1,
+            rel: 0,
+            modestbranding: 1,
+            origin: location.origin,
+          },
+          events: {
+            onReady: () => resolve(ytPlayer),
+            onStateChange: onSongState,
+          },
+        });
+      }),
+  );
+}
+
+function currentSong() {
+  return songQueue[songIndex] || null;
+}
+
+function paintSong() {
+  const track = currentSong();
+  if (!songBar || !track) return;
+  songBar.hidden = false;
+  document.documentElement.dataset.player = "on";
+  songTitle.textContent = `${track.number}. ${track.title}`;
+  if (songToggle) songToggle.textContent = "Pause";
+}
+
+function watchSong(track) {
+  window.clearInterval(songPoll);
+  songHolding = true;
+  songPoll = window.setInterval(() => {
+    if (!ytPlayer || currentSong() !== track) return;
+    let now = 0;
+    try {
+      now = ytPlayer.getCurrentTime();
+    } catch {
+      return;
+    }
+    if (now >= track.start && now + 1 < track.end) songHolding = false;
+    if (!songHolding && now + 0.25 >= track.end) finishSong();
+  }, 400);
+}
+
+function loadSong() {
+  const track = currentSong();
+  if (!track || !ytPlayer) return;
+  songHolding = true;
+  if (songKeep) songKeep.hidden = true;
+  paintSong();
+  ytPlayer.loadVideoById({
+    videoId: track.videoId,
+    startSeconds: track.start,
+    endSeconds: track.end,
+  });
+  watchSong(track);
+}
+
+function finishSong() {
+  if (songHolding) return;
+  const track = currentSong();
+  if (!track) return;
+  let now = track.end;
+  try {
+    now = ytPlayer.getCurrentTime();
+  } catch {
+    return;
+  }
+  if (now + 0.25 < track.end) return;
+  songHolding = true;
+  try {
+    ytPlayer.pauseVideo();
+  } catch {
+    /* already stopped */
+  }
+  if (songMode === "all" && songIndex + 1 < songQueue.length) {
+    songIndex += 1;
+    loadSong();
+    return;
+  }
+  if (songToggle) songToggle.textContent = "Play";
+  if (songKeep) songKeep.hidden = false;
+}
+
+function onSongState(event) {
+  if (!event || event.data !== 0) {
+    if (songToggle && event && event.data === 1) songToggle.textContent = "Pause";
+    if (songToggle && event && event.data === 2 && songKeep && songKeep.hidden) songToggle.textContent = "Play";
+    return;
+  }
+  finishSong();
+}
+
+function beginSongs(tracks, playMode) {
+  if (!tracks.length || !songBar) return;
+  songMode = playMode;
+  songQueue = tracks;
+  songIndex = 0;
+  songBar.hidden = false;
+  document.documentElement.dataset.player = "on";
+  const start = () => loadSong();
+  if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
+    start();
+    return;
+  }
+  ensureSongPlayer().then(start);
+}
+
+function stopSongs() {
+  window.clearInterval(songPoll);
+  songHolding = true;
+  songQueue = [];
+  songIndex = 0;
+  if (songKeep) songKeep.hidden = true;
+  if (songBar) songBar.hidden = true;
+  document.documentElement.dataset.player = "off";
+  try {
+    if (ytPlayer) ytPlayer.stopVideo();
+  } catch {
+    /* player was not ready */
+  }
+}
+
+function keepWatchingService() {
+  const track = currentSong();
+  if (!track || !ytPlayer) return;
+  window.clearInterval(songPoll);
+  songHolding = true;
+  songMode = "one";
+  if (songKeep) songKeep.hidden = true;
+  if (songToggle) songToggle.textContent = "Pause";
+  ytPlayer.loadVideoById({ videoId: track.videoId, startSeconds: track.end });
+}
+
+function stepSong(delta) {
+  if (!songQueue.length) return;
+  const next = songIndex + delta;
+  if (next < 0) {
+    songIndex = 0;
+    if (ytPlayer && typeof ytPlayer.loadVideoById === "function") loadSong();
+    else ensureSongPlayer().then(loadSong);
+    return;
+  }
+  if (next >= songQueue.length) {
+    stopSongs();
+    return;
+  }
+  songIndex = next;
+  if (ytPlayer && typeof ytPlayer.loadVideoById === "function") loadSong();
+  else ensureSongPlayer().then(loadSong);
+}
+
+function toggleSong() {
+  if (!ytPlayer || typeof ytPlayer.getPlayerState !== "function") return;
+  if (ytPlayer.getPlayerState() === 1) {
+    ytPlayer.pauseVideo();
+    if (songToggle) songToggle.textContent = "Play";
+    return;
+  }
+  ytPlayer.playVideo();
+  if (songToggle) songToggle.textContent = "Pause";
+}
+
+if (songTitle) {
+  songTitle.addEventListener("click", () => {
+    const track = currentSong();
+    if (track) location.hash = `#/hymn/${track.number}`;
+  });
+}
+const songPrev = document.getElementById("song-prev");
+const songNext = document.getElementById("song-next");
+const songStop = document.getElementById("song-stop");
+if (songPrev) songPrev.addEventListener("click", () => stepSong(-1));
+if (songNext) songNext.addEventListener("click", () => stepSong(1));
+if (songToggle) songToggle.addEventListener("click", toggleSong);
+if (songStop) songStop.addEventListener("click", stopSongs);
+if (songKeep) songKeep.addEventListener("click", keepWatchingService);
+loadYouTubeApi();
 
 if (installLink) installLink.addEventListener("click", installClick);
 
