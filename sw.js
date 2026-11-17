@@ -1,4 +1,4 @@
-const CACHE = "hark-v30";
+const CACHE = "hark-v31";
 
 // vendor/abcjs-basic-min.js is deliberately absent. It is close to half a
 // megabyte, and precaching it meant every first visit paid for music the
@@ -31,7 +31,6 @@ const PRECACHE = [
   "./icons/apple-touch-icon.png",
   "./icons/hark-qr.svg",
   "./data/music/ADESTE_FIDELES.abc",
-  "./data/music/CAROL.abc",
   "./data/music/DIVINUM_MYSTERIUM.abc",
   "./data/music/DIX.abc",
   "./data/music/ES_IST_EIN_ROS_ENTSPRUNGEN.abc",
@@ -42,10 +41,8 @@ const PRECACHE = [
   "./data/music/REGENT_SQUARE.abc",
   "./data/music/SEE_AMID_THE_WINTERS_SNOW.abc",
   "./data/music/TALLIS_CANON.abc",
-  "./data/music/TEMPUS_ADEST_FLORIDUM.abc",
   "./data/music/THIRSTING.abc",
   "./data/music/VENI_EMMANUEL.abc",
-  "./data/music/VON_HIMMEL_HOCH.abc",
   "./data/music/WARUM_SOLLT_ICH_MICH_DENN_GRAMEN.abc",
 ];
 

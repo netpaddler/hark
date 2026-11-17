@@ -2,7 +2,7 @@
 
 Hark is a phone-first hymnal for reading the words of hymns from the Trinity Hymnal (1990), the hymnal of the PCA and OPC. It is meant for pulling up a number quickly, including from an Android home screen. Worship recordings from Faith Presbyterian Church, Tacoma, play on the hymn page, and a choir recording can be added later.
 
-This copy has hymns from the Trinity Hymnal: nos. 193 to 233, plus nos. 108, 162, 401, and 559. The wording in `data/hymns.json` is the text to sing. Do not edit it.
+This copy has hymns from the Trinity Hymnal. The wording in `data/hymns.json` is the text to sing. Do not edit it.
 
 ## Run it locally
 

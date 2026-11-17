@@ -205,15 +205,7 @@
       "seasons": ["christmas"],
       "topics": ["incarnation", "deity", "angels"]
     },
-    "200": {
-      "seasons": ["christmas"],
-      "topics": ["second-coming", "longing", "peace", "angels"]
-    },
     "201": {
-      "seasons": ["christmas"],
-      "topics": ["light"]
-    },
-    "202": {
       "seasons": ["christmas"],
       "topics": ["light"]
     },
@@ -261,10 +253,6 @@
       "seasons": ["christmas"],
       "topics": ["joy", "angels"]
     },
-    "215": {
-      "seasons": ["christmas"],
-      "topics": ["angels"]
-    },
     "216": {
       "seasons": ["christmas"],
       "topics": ["angels"]
@@ -281,10 +269,6 @@
       "seasons": ["christmas"],
       "topics": ["incarnation", "deity", "light", "joy"]
     },
-    "220": {
-      "seasons": ["christmas"],
-      "topics": ["incarnation", "deity", "angels", "proclaim", "grace"]
-    },
     "221": {
       "seasons": ["christmas"],
       "topics": ["incarnation", "angels"]
@@ -297,10 +281,6 @@
       "seasons": ["christmas"],
       "topics": ["peace", "angels"]
     },
-    "224": {
-      "seasons": ["christmas"],
-      "topics": ["angels", "proclaim"]
-    },
     "225": {
       "seasons": ["christmas"],
       "topics": ["incarnation", "deity", "second-coming", "grace"]
@@ -312,18 +292,6 @@
     "227": {
       "seasons": ["christmas"],
       "topics": ["light", "peace", "joy", "grace"]
-    },
-    "228": {
-      "seasons": ["christmas", "epiphany"],
-      "topics": ["deity", "king", "light", "magi"]
-    },
-    "229": {
-      "seasons": ["christmas", "epiphany"],
-      "topics": ["incarnation", "deity", "angels", "magi"]
-    },
-    "233": {
-      "seasons": ["christmas"],
-      "topics": ["deity", "king", "longing", "peace", "magi"]
     },
     "108": {
       "seasons": ["all-year"],
