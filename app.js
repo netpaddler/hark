@@ -5,6 +5,7 @@ import {
   faithRecordings,
   filterHymns,
   isWithheld,
+  wordsPending,
   listRecordings,
   listSections,
   neighbors,
@@ -1158,6 +1159,16 @@ function renderHymn(number) {
       const notice = el("div", { class: "notice" });
       notice.append(el("h2", {}, "These words are under copyright"));
       if (hymn.copyright_note) notice.append(el("p", {}, hymn.copyright_note));
+      notice.append(el("p", {}, "See the printed Trinity Hymnal for the words."));
+      article.append(notice);
+    } else if (wordsPending(hymn)) {
+      // Listed from a bulletin so it can be found by number or title. Say that
+      // plainly rather than showing an empty page.
+      const notice = el("div", { class: "notice" });
+      notice.append(el("h2", {}, "Words not added yet"));
+      notice.append(
+        el("p", {}, "This hymn is here because the congregation sings it. The words are still to come."),
+      );
       notice.append(el("p", {}, "See the printed Trinity Hymnal for the words."));
       article.append(notice);
     } else {

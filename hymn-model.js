@@ -243,6 +243,15 @@ export function isWithheld(hymn) {
   return hymn.public_domain === false;
 }
 
+// A hymn that is in the index by number and title with no words sourced yet.
+// This is not isWithheld: nothing is being kept back for copyright, and no
+// claim is made either way. The text simply has not been added.
+export function wordsPending(hymn) {
+  if (!hymn || hymn.public_domain === false) return false;
+  const stanzas = Array.isArray(hymn.stanzas) ? hymn.stanzas : [];
+  return stanzas.length === 0;
+}
+
 export function partialNote(hymn) {
   if (!hymn || !hymn.copyright_note || hymn.public_domain === false) return null;
   return String(hymn.copyright_note).replace(/^PARTIAL\.\s*/, "");
