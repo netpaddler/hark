@@ -175,6 +175,16 @@ The token user's name is the name on the public issue and the reply. A separate 
 
 The Worker allows 5 posts an hour from one address, drops a filled honeypot, and checks Turnstile when `TURNSTILE_SECRET` is set. The site loads Turnstile only when `turnstileSiteKey` is set.
 
+## Notifications
+
+Notify me on the What's New page, and in the header, asks the browser for permission and stores the push subscription on the same Worker. The private VAPID key and the notify secret stay on the Worker. They are not in the site.
+
+When `main` deploys and `data/changelog.json` has an entry that was not in the previous commit, the workflow calls `POST /notify`. Subscribers get a notice such as "3 new hymns from Sunday's services", and it opens What's New. The first deploy of this feature does not announce the hymns already in the book, because there is no earlier changelog to compare, or the comparison finds nothing new.
+
+The Worker secret `PUSH_NOTIFY_SECRET` and the GitHub Actions secret of the same name must match. `VAPID_PRIVATE_JWK` is a Worker secret. The public key is in `config/push.js` and `worker/wrangler.toml`. Subscriptions are in the `hark-push` KV namespace.
+
+On iPhone, notifications work only after Hark is added to the Home Screen, and only on iOS 16.4 or newer. The button says so instead of failing quietly.
+
 ## Install Hark
 
 The live app is <https://hymns.theweightofglory.com/>. <https://netpaddler.github.io/hark/> redirects there. The install page, with steps and a QR code, is <https://hymns.theweightofglory.com/#/install>.

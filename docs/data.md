@@ -14,7 +14,7 @@ Every hymn addition must append a `changelog.json` entry. The Monday bulletin ro
 
 After the changelog changes, run `npm run build:feed` (`scripts/build-feed.mjs`) and commit `feed.xml` with it. The deploy workflow runs that same script before it publishes the site, so the feed updates whenever `changelog.json` changes. Bump the cache name in `sw.js` in the same change, or an installed copy keeps the previous list.
 
-The first three entries are a seed from the git history of `data/hymns.json`. They are all dated 2026-11-16, the day those commits landed, and they list only numbers that are still in the book. A web push design, not built yet, is in [push.md](push.md).
+The first three entries are a seed from the git history of `data/hymns.json`. They are all dated 2026-11-16, the day those commits landed, and they list only numbers that are still in the book. After the site deploys, a new changelog entry notifies readers who pressed Notify me. See [push.md](push.md).
 
 ## Fields
 These are the requested fields plus one extra, `stanza_numbers`. It gives the hymnal's stanza number for each entry in `stanzas`. It matters for no. 196, where only stanzas 1 and 4 are given. Stanza numbers and "[Refrain]" markers have been removed from the lines. `refrain` is printed once. `refrain_after_each_stanza` is true wherever the source marks the refrain as repeated.

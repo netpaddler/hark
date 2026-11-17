@@ -27,6 +27,7 @@ import {
   youtubeBlock,
 } from "./hymn-model.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
+import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
   RETURNING_KEY,
   everyTextPublicDomain,
@@ -2017,9 +2018,13 @@ function renderWhatsNew() {
   page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Hymns")));
   page.append(el("h2", {}, "What's New"));
   page.append(el("p", { class: "whats-new-lead" }, "Hymns added to Hark, newest first."));
-  page.append(
-    el("p", { class: "whats-new-subscribe" }, el("a", { href: "feed.xml" }, "Subscribe (RSS)")),
-  );
+  const actions = el("p", { class: "whats-new-actions" });
+  actions.append(el("a", { href: "feed.xml" }, "Subscribe (RSS)"));
+  const notify = el("button", { type: "button", class: "notify-btn", id: "notify-page" }, "Notify me");
+  notify.addEventListener("click", () => toggleNotify());
+  actions.append(notify);
+  page.append(actions);
+  page.append(el("p", { class: "notify-status", id: "notify-status", hidden: true }));
   const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
   const groups = groupChangelog(changelog);
   if (!groups.length) page.append(el("p", {}, "No hymns have been added yet."));
@@ -2041,6 +2046,7 @@ function renderWhatsNew() {
     page.append(section);
   }
   main.replaceChildren(page);
+  paintNotify();
   const y = scrollMemory["whats-new"] || 0;
   requestAnimationFrame(() => window.scrollTo(0, y));
 }
@@ -2111,9 +2117,120 @@ function installClick(event) {
   if (openInstallHelp()) event.preventDefault();
 }
 
+let notifyOn = false;
+let notifyMessage = "";
+
+function notifyLabel() {
+  return notifyOn ? "Stop notifications" : "Notify me";
+}
+
+function paintNotify() {
+  for (const id of ["notify-link", "notify-page"]) {
+    const node = document.getElementById(id);
+    if (!node) continue;
+    node.textContent = notifyLabel();
+    node.setAttribute("aria-pressed", notifyOn ? "true" : "false");
+  }
+  const status = document.getElementById("notify-status");
+  if (status) {
+    status.hidden = !notifyMessage;
+    status.textContent = notifyMessage;
+  }
+}
+
+function pushSnapshot() {
+  return {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    maxTouchPoints: navigator.maxTouchPoints || 0,
+    standalone: runningAsApp(),
+    notification: "Notification" in window,
+    pushManager: "PushManager" in window,
+    serviceWorker: "serviceWorker" in navigator,
+  };
+}
+
+async function refreshNotify() {
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+    notifyOn = false;
+    paintNotify();
+    return;
+  }
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    notifyOn = Boolean(await registration.pushManager.getSubscription());
+  } catch {
+    notifyOn = false;
+  }
+  paintNotify();
+}
+
+async function toggleNotify() {
+  const blocked = pushBlockReason(pushSnapshot());
+  if (blocked) {
+    notifyMessage = blocked;
+    paintNotify();
+    return;
+  }
+  if (!pushOpen()) {
+    notifyMessage = "Notifications are not open yet.";
+    paintNotify();
+    return;
+  }
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const existing = await registration.pushManager.getSubscription();
+    if (existing) {
+      const endpoint = existing.endpoint;
+      await existing.unsubscribe();
+      notifyOn = false;
+      notifyMessage = "";
+      paintNotify();
+      await fetch(new URL("/unsubscribe", pushConfig.endpoint), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ endpoint }),
+      }).catch(() => {});
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      notifyMessage = "Notifications stay off until you allow them.";
+      paintNotify();
+      return;
+    }
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToBytes(pushConfig.vapidPublicKey),
+    });
+    const body = subscription.toJSON();
+    const response = await fetch(new URL("/subscribe", pushConfig.endpoint), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ endpoint: body.endpoint, keys: body.keys }),
+    });
+    if (!response.ok) {
+      await subscription.unsubscribe();
+      notifyOn = false;
+      notifyMessage = "Notifications could not be saved. Try again.";
+      paintNotify();
+      return;
+    }
+    notifyOn = true;
+    notifyMessage = "";
+    paintNotify();
+  } catch {
+    notifyMessage = "Notifications could not be saved. Try again.";
+    paintNotify();
+  }
+}
+
 if (installLink) installLink.addEventListener("click", installClick);
 
 syncInstallButton();
+const notifyLink = document.getElementById("notify-link");
+if (notifyLink) notifyLink.addEventListener("click", () => toggleNotify());
+refreshNotify();
 
 // load() is still waiting on the hymnal here. This first pass is what puts the
 // welcome page on screen without waiting for it.
