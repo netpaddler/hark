@@ -1934,6 +1934,18 @@ function render() {
   else if (current.view === "whats-new") renderWhatsNew();
   else renderIndex(current.index);
   syncSticky();
+  // A route change only replaces #main. The YouTube player stays in #song-bar,
+  // which is outside that view, so playback is not paused, stopped, or rebuilt.
+  holdPlayer();
+}
+
+function holdPlayer() {
+  if (!songBar || document.documentElement.dataset.player !== "on") return;
+  songBar.hidden = false;
+  const host = document.getElementById("song-player-host");
+  if (!host || songBar.contains(host)) return;
+  const video = songBar.querySelector(".song-bar-video") || songBar;
+  video.append(host);
 }
 
 function showError() {
@@ -2412,6 +2424,64 @@ function currentSong() {
   return songQueue[songIndex] || null;
 }
 
+const NOW_PLAYING_ARTIST = "Faith Presbyterian Church Tacoma";
+
+function publishNowPlaying(track) {
+  const session = navigator.mediaSession;
+  if (!session || !track || typeof MediaMetadata !== "function") return;
+  try {
+    session.metadata = new MediaMetadata({
+      title: `${track.number}. ${track.title}`,
+      artist: NOW_PLAYING_ARTIST,
+      album: "Hark",
+    });
+  } catch {
+    /* this browser rejected the metadata */
+  }
+  const handlers = {
+    play: () => {
+      if (!ytPlayer || typeof ytPlayer.playVideo !== "function") return;
+      ytPlayer.playVideo();
+      setToggleLabel(true);
+    },
+    pause: () => {
+      if (!ytPlayer || typeof ytPlayer.pauseVideo !== "function") return;
+      ytPlayer.pauseVideo();
+      setToggleLabel(false);
+    },
+    nexttrack: () => stepSong(1),
+  };
+  for (const [name, handler] of Object.entries(handlers)) {
+    try {
+      session.setActionHandler(name, handler);
+    } catch {
+      /* this action is not supported here */
+    }
+  }
+}
+
+function clearNowPlaying() {
+  const session = navigator.mediaSession;
+  if (!session) return;
+  try {
+    session.metadata = null;
+  } catch {
+    /* ignore */
+  }
+  try {
+    session.playbackState = "none";
+  } catch {
+    /* ignore */
+  }
+  for (const name of ["play", "pause", "nexttrack"]) {
+    try {
+      session.setActionHandler(name, null);
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 function paintSong() {
   const track = currentSong();
   if (!songBar || !track) return;
@@ -2419,6 +2489,7 @@ function paintSong() {
   document.documentElement.dataset.player = "on";
   songTitle.textContent = `${track.number}. ${track.title}`;
   setToggleLabel(true);
+  publishNowPlaying(track);
 }
 
 function watchSong(track) {
@@ -2521,6 +2592,7 @@ function stopSongs() {
   if (songKeep) songKeep.hidden = true;
   if (songBar) songBar.hidden = true;
   document.documentElement.dataset.player = "off";
+  clearNowPlaying();
   try {
     if (ytPlayer) ytPlayer.stopVideo();
   } catch {
@@ -2590,9 +2662,17 @@ function stepSong(delta) {
 }
 
 function setToggleLabel(playing) {
-  if (!songToggle) return;
-  songToggle.setAttribute("aria-label", playing ? "Pause" : "Play");
-  songToggle.replaceChildren(icon(playing ? "pause" : "play"));
+  if (songToggle) {
+    songToggle.setAttribute("aria-label", playing ? "Pause" : "Play");
+    songToggle.replaceChildren(icon(playing ? "pause" : "play"));
+  }
+  const session = navigator.mediaSession;
+  if (!session) return;
+  try {
+    session.playbackState = playing ? "playing" : "paused";
+  } catch {
+    /* ignore */
+  }
 }
 
 function toggleSong() {
