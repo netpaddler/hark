@@ -4,6 +4,7 @@ import test from "node:test";
 import vm from "node:vm";
 import { requestConfig, requestsOpen } from "../config/requests.js";
 import { INSTALL_URL, installGuide } from "../install.js";
+import { isLiked, likeButtonState, likedHymns, readLikes, toggleLike } from "../likes.js";
 import {
   authorIndex,
   browse,
@@ -1187,6 +1188,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "app.js",
     "hymn-model.js",
     "install.js",
+    "likes.js",
     "welcome.js",
     "config/requests.js",
     "worker/src/index.js",
@@ -1651,4 +1653,67 @@ test("the app routes the welcome page and leaves every other route alone", () =>
   // The search box and tabs are hidden by the stylesheet from the first paint.
   assert.match(css, /html\[data-view="welcome"\] \.search,[\s\S]*?html\[data-view="welcome"\] \.count-row \{\s*display: none;/);
   assert.match(css, /--paper: #f3eee4;/);
+});
+
+function memoryLikes() {
+  const bag = new Map();
+  return {
+    getItem(key) {
+      return bag.has(key) ? bag.get(key) : null;
+    },
+    setItem(key, value) {
+      bag.set(key, String(value));
+    },
+  };
+}
+
+test("a like toggles and stays in storage", () => {
+  const storage = memoryLikes();
+  assert.equal(isLiked(203, storage), false);
+  assert.deepEqual(likeButtonState(false), {
+    pressed: false,
+    label: "Like this hymn",
+    text: "Like",
+  });
+
+  const liked = toggleLike(203, storage);
+  assert.equal(liked.liked, true);
+  assert.deepEqual(liked.likes, [203]);
+  assert.equal(isLiked(203, storage), true);
+  assert.deepEqual(likeButtonState(true), {
+    pressed: true,
+    label: "Unlike this hymn",
+    text: "Liked",
+  });
+
+  // A later read of the same store still has the hymn.
+  assert.deepEqual(readLikes(storage), [203]);
+  toggleLike(15, storage);
+  toggleLike(108, storage);
+  assert.deepEqual(readLikes(storage), [15, 108, 203]);
+
+  const removed = toggleLike(203, storage);
+  assert.equal(removed.liked, false);
+  assert.deepEqual(readLikes(storage), [15, 108]);
+  assert.deepEqual(
+    likedHymns(
+      [
+        { number: 203, title: "Hark" },
+        { number: 15, title: "Stand Up" },
+        { number: 999, title: "Missing" },
+      ],
+      storage,
+    ).map((hymn) => hymn.number),
+    [15],
+  );
+
+  storage.setItem("hark-likes", "not json");
+  assert.deepEqual(readLikes(storage), []);
+
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /aria-pressed/);
+  assert.match(appSource, /aria-label", state\.label/);
+  assert.match(appSource, /type: "button", class: "like-btn"/);
+  assert.match(appSource, /No liked hymns yet/);
+  assert.match(appSource, /path === "\/liked"/);
 });

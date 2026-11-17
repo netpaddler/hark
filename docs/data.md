@@ -2,6 +2,10 @@
 
 File: `data/hymns.json`. It holds 45 entries: Trinity Hymnal (1990) nos. 193-233, plus nos. 108, 162, 401, and 559.
 
+## Likes
+
+A heart on the hymn page stores that hymn number in the browser under `hark-likes`. The Liked tab reads the same list. Nothing is sent to a server, and the hymn files are not changed. The list still works when the device is offline, because the page and this store are both on the device.
+
 ## Fields
 These are the requested fields plus one extra, `stanza_numbers`. It gives the hymnal's stanza number for each entry in `stanzas`. It matters for no. 196, where only stanzas 1 and 4 are given. Stanza numbers and "[Refrain]" markers have been removed from the lines. `refrain` is printed once. `refrain_after_each_stanza` is true wherever the source marks the refrain as repeated.
 

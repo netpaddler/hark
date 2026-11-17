@@ -1,4 +1,4 @@
-const CACHE = "hark-v31";
+const CACHE = "hark-v32";
 
 // vendor/abcjs-basic-min.js is deliberately absent. It is close to half a
 // megabyte, and precaching it meant every first visit paid for music the
@@ -11,6 +11,7 @@ const PRECACHE = [
   "./hymn-model.js",
   "./install.js",
   "./welcome.js",
+  "./likes.js",
   "./config/requests.js",
   "./data/music.json",
   "./manifest.webmanifest",
