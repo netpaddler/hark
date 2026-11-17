@@ -134,7 +134,7 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 48);
+  assert.equal(all.length, 49);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
@@ -145,7 +145,7 @@ test("author index files people by surname and keeps translators", () => {
   );
   assert.deepEqual(
     group("Watts, Isaac").hymns.map((item) => item.hymn.number),
-    [195],
+    [195, 301],
   );
   assert.deepEqual(
     group("Wesley, Charles").hymns.map((item) => item.hymn.number),
@@ -950,7 +950,7 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
 
   // Every bulletin hymn still needs a theme row and a music row.
   const pending = hymns.filter((hymn) => wordsPending(hymn) && !isWithheld(hymn));
-  assert.equal(pending.length, 51);
+  assert.equal(pending.length, 49);
   for (const hymn of pending) {
     assert.ok(themes.hymns[String(hymn.number)], `themes ${hymn.number}`);
     assert.ok(music.omitted[String(hymn.number)], `music ${hymn.number}`);

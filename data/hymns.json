@@ -2664,19 +2664,60 @@
     "number": 301,
     "title": "Join All the Glorious Names",
     "section": null,
-    "author": null,
+    "author": "Isaac Watts",
     "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
+    "composer": "John Darwall (1770)",
+    "tune": "DARWALL",
+    "year_text": "1707",
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://hymnary.org/hymn/TH1990/301",
+    "stanzas": [
+      [
+        "Join all the glorious names",
+        "of wisdom, love, and pow'r,",
+        "that ever mortals knew,",
+        "that angels ever bore:",
+        "all are too poor to speak his worth,",
+        "too poor to set my Savior forth."
+      ],
+      [
+        "Great Prophet of my God,",
+        "my tongue would bless thy name:",
+        "by thee the joyful news",
+        "of our salvation came,",
+        "the joyful news of sins forgiv'n,",
+        "of hell subdued, and peace with heav'n."
+      ],
+      [
+        "Jesus, my great High Priest,",
+        "offered his blood and died;",
+        "my guilty conscience seeks",
+        "no sacrifice beside:",
+        "his pow'rful blood did once atone",
+        "and now it pleads before the throne."
+      ],
+      [
+        "Thou art my Counselor,",
+        "my pattern, and my Guide,",
+        "and thou my Shepherd art;",
+        "O keep me near thy side;",
+        "nor let my feet e'er turn astray",
+        "to wander in the crooked way."
+      ],
+      [
+        "My Savior and my Lord,",
+        "my Conqu'ror and my King,",
+        "thy scepter and thy sword,",
+        "thy reigning grace, I sing:",
+        "thine is the pow'r; behold I sit",
+        "in willing bonds beneath thy feet."
+      ]
+    ],
+    "stanza_numbers": [1, 2, 3, 4, 5],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-09-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Trinity Hymnal (1990) instance page https://hymnary.org/hymn/TH1990/301. Isaac Watts, 1707. The page shows no alteration and no copyright notice. The Faith Presbyterian Tacoma bulletin for 2026-08-09-pm (https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf) prints the same five stanzas, with the same lines, and credits Isaac Watts, 1707."
   },
   {
     "number": 305,
@@ -2834,19 +2875,56 @@
     "number": 406,
     "title": "Now the Day Is Over",
     "section": null,
-    "author": null,
+    "author": "Sabine Baring-Gould",
     "translator": null,
-    "composer": null,
-    "tune": null,
-    "year_text": null,
-    "public_domain": null,
+    "composer": "Joseph Barnby (1868)",
+    "tune": "MERRIAL",
+    "year_text": "1865",
+    "public_domain": true,
     "copyright_note": null,
-    "source_url": null,
-    "stanzas": [],
-    "stanza_numbers": [],
+    "source_url": "https://hymnary.org/hymn/TH1990/406",
+    "stanzas": [
+      [
+        "Now the day is over,",
+        "night is drawing nigh,",
+        "shadows of the evening",
+        "steal across the sky."
+      ],
+      [
+        "Jesus, give the weary",
+        "calm and sweet repose;",
+        "with thy tend'rest blessing",
+        "may our eyelids close."
+      ],
+      [
+        "Grant to little children",
+        "visions bright of thee;",
+        "guard the sailors, tossing",
+        "on the deep blue sea."
+      ],
+      [
+        "Comfort ev'ry suff'rer",
+        "watching late in pain;",
+        "those who plan some evil",
+        "from their sin restrain."
+      ],
+      [
+        "Through the long night watches",
+        "may thine angels spread",
+        "their white wings above me,",
+        "watching round my bed."
+      ],
+      [
+        "Glory to the Father,",
+        "glory to the Son,",
+        "and to thee, blest Spirit,",
+        "whilst all ages run."
+      ]
+    ],
+    "stanza_numbers": [1, 2, 3, 4, 5, 6],
     "refrain": null,
     "refrain_after_each_stanza": false,
-    "notes": "Listed in a Faith Presbyterian Tacoma bulletin (2026-08-23-pm). Number and title only; the words have not been added."
+    "notes": "Text from the Trinity Hymnal (1990) instance page https://hymnary.org/hymn/TH1990/406. Sabine Baring-Gould, 1865. The page shows no alteration and no copyright notice. The Faith Presbyterian Tacoma bulletin for 2026-08-23-pm (https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf) prints the same six stanzas, with the same lines, and credits Sabine Baring-Gould, 1865."
   },
   {
     "number": 415,
