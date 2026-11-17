@@ -19,10 +19,11 @@ function json(body, status = 200) {
   });
 }
 
-// Hark is served from more than one host: the custom domain, and the old
-// github.io address that redirects to it. A single allow-origin header cannot
-// name a list, so the matching origin is echoed back instead. The vary header
-// below is what keeps a cache from handing one site's header to the other.
+// Hark is served from more than one host: the current custom domain, the
+// previous custom domain, and the old github.io address. A single allow-origin
+// header cannot name a list, so the matching origin is echoed back instead.
+// The vary header below is what keeps a cache from handing one site's header
+// to the other.
 function allowedOrigins(env) {
   return String(env.ALLOWED_ORIGIN || "*")
     .split(",")

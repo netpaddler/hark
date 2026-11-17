@@ -5,10 +5,11 @@ compatibility_date = "2024-11-01"
 [vars]
 REPO = "netpaddler/hark"
 LABEL = "hymn-request"
-# The site moved to a custom domain. The github.io address redirects there, so
-# it should not normally appear as an Origin, but it costs nothing to keep
-# while anything still points at the old URL.
-ALLOWED_ORIGIN = "https://hymns.theweightofglory.com,https://netpaddler.github.io"
+# The site is moving from hymns.theweightofglory.com to
+# hark.theweightofglory.com. Both stay allowed until the old name is gone.
+# The github.io address redirects there, so it should not normally appear as
+# an Origin, but it costs nothing to keep while anything still points at it.
+ALLOWED_ORIGIN = "https://hark.theweightofglory.com,https://hymns.theweightofglory.com,https://netpaddler.github.io"
 # Public half of the VAPID key. The private half is the VAPID_PRIVATE_JWK secret.
 VAPID_PUBLIC_KEY = "BOv3KiVHSNSaOXPjN87gZnLI7H3PZ8hd6VT2re5-iO0qyMrNsG4ogBp0S_-at0_GRa1ql1nNRvh2BGWNxEbZVMw"
 VAPID_SUBJECT = "mailto:netpaddler@gmail.com"
