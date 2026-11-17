@@ -36,19 +36,18 @@ Licensed words can come from:
   - "Christmas" (199-233) is inferred from hymn order, between the Advent hymns and no. 234 ("His Life"). It was not checked against the printed table of contents.
   - Nos. 190-192 (children's hymns) and 234 were excluded.
 - **No. 162** is not in the Advent or Christmas section of the hymnal. It was included because it is in the Advent 2026 series. It is labeled 'Christmas' by choice.
-- **Editorial alterations.** The hymnal credits alterations dated 1951 (no. 194) and 1961 (nos. 206, 207, 220, 226), plus modernizations (206, 227). These are minor changes to public domain texts, and hymnary.org shows them with no copyright notice. They are treated as public domain, but the copyright status of the alterations was not independently confirmed.
+- **Editorial alterations.** The hymnal credits alterations dated 1951 (no. 194) and 1961 (nos. 206, 207, 226), plus modernizations (206, 227). These are minor changes to public domain texts, and hymnary.org shows them with no copyright notice. They are treated as public domain, but the copyright status of the alterations was not independently confirmed.
   - No. 194, stanza 4 ("Dayspring, from on high, and cheer us by thy drawing nigh") is the most visible altered line.
 - **No. 196 punctuation.** The capitalization and punctuation of the Wesley stanzas come from a representative text, not from TH 196 itself.
 - **Translation dates** for no. 221 (1875, 1894, 1914) and Neale's 1854 date for no. 162 come from standard sources. The instance pages do not give them.
 - **Tune credits.** No. 198 (TRURO) has no tune composer in the source, so `composer` is null. Tune arrangements under copyright do not affect the text, but matter if music is reproduced:
-  - 202 (Oxford University Press)
   - 227 (Stainer & Bell)
-  - possibly 214 (1937) and 229 (1930)
+  - possibly 214 (1937)
 - **Dashes.** All en and em dashes were removed:
   - no. 199, stanza 3: replaced with a comma;
   - nos. 222 and 223, stanza 2: replaced with commas.
   Curly quotes were normalized to straight quotes.
-- **Spellings** follow the source, for example "Counsellor" and "Counselor" in no. 233, and "heav'n".
+- **Spellings** follow the source, for example "heav'n".
 
 ## Themes
 File: `data/themes.json`. These tags do not change the hymn lines in `data/hymns.json`.
@@ -81,16 +80,13 @@ Scores are ABC files in `data/music/`, listed in `data/music.json`. Each one is 
 - 196 HYFRYDOL (SATB). Rowland Hugh Pritchard, 1830. Four-part setting from The English Hymnal, 1906, hymn 563, via the Open Hymnal Project. That book does not credit Pritchard for the harmony.
 - 197 THIRSTING (melody). Melody from Trente Quatre Pseaumes de David, Geneva, 1551, via the Open Hymnal Project. The four-part setting in a 1931 book was not used.
 - 199 SEE AMID THE WINTER'S SNOW (SATB). John Goss, 1870, also called Humility. Four-part setting from The Children's Hymnal, with Tunes, 1875, hymn 233, via the Open Hymnal Project.
-- 200 CAROL (SATB). Richard Storrs Willis. Four-part setting from Order of Worship for the Reformed Church in the United States, 1866, hymn 63, via the Open Hymnal Project.
 - 204 MUELLER (SATB). James R. Murray, 1887. Four-part setting from Hymnal for American Youth, 1919, hymn 84, via the Open Hymnal Project.
 - 208 ADESTE FIDELES (SATB). John Francis Wade, 1743. Four-part setting from A Hymnal (Episcopal), 1916, hymn 72, via the Open Hymnal Project.
 - 211 GOD REST YOU MERRY (SATB). English melody. Four-part setting from Carols Old and Carols New, 1918, carol 722, via the Open Hymnal Project.
 - 217 WARUM SOLLT' ICH MICH DENN GRAMEN (SATB). Johann Georg Ebeling, 1666. Four-part setting from The Chorale Book for England, 1863, hymn 31, via the Open Hymnal Project.
 - 218 REGENT SQUARE (SATB). Henry Smart, 1867. Four-part setting from Psalms and Hymns for Divine Worship, 1867, hymn 58, via the Open Hymnal Project.
-- 220 VON HIMMEL HOCH (SATB). Melody from Schumann's Geistliche Lieder, Leipzig, 1539. Four-part setting from the Common Service Book with Hymnal (ULCA), 1918, hymn 19, via the Open Hymnal Project.
 - 221 ES IST EIN' ROS' ENTSPRUNGEN (SATB). German melody, Koln, 1599. Michael Praetorius, 1609. Four-part setting from The English Hymnal, 1906, hymn 19, via the Open Hymnal Project.
 - 226 DIX (SATB). Conrad Kocher, 1838, abridged by William Henry Monk, 1861. Four-part setting from The English Hymnal, 1906, hymn 39, via the Open Hymnal Project.
-- 229 TEMPUS ADEST FLORIDUM (SATB). Melody from Piae Cantiones, 1582. Four-part setting from Carols Old and Carols New, 1916, carol 415, via the Open Hymnal Project. This is not the Ernest MacMillan arrangement.
 - 401 TALLIS' CANON (SATB). Thomas Tallis, about 1567. Four-part setting from A Hymnal (Episcopal), 1916, hymn 25, via the Open Hymnal Project.
 
 ### Left out
@@ -99,7 +95,6 @@ Scores are ABC files in `data/music/`, listed in `data/music.json`. Each one is 
 - 195 ANTIOCH. ANTIOCH is Lowell Mason's 1836 arrangement, but the only ABC score found lists Lutheran Worship (1982) as its music source. Notes from a copyrighted hymnal were not used.
 - 198 TRURO. TRURO is an 18th century tune, but no engraved score with a recorded pre-1931 source was found. Another setting of this text uses a different tune and was not substituted.
 - 201 ST. LOUIS. No engraved score with a recorded pre-1931 public domain source was found.
-- 202 CHRISTMAS CAROL. CHRISTMAS CAROL by Walford Davies is printed in the Trinity Hymnal by permission of Oxford University Press. That setting was not copied.
 - 203 MENDELSSOHN. MENDELSSOHN is the Cummings arrangement of Mendelssohn, but the only ABC score found lists Lutheran Worship (1982) as its music source. Notes from a copyrighted hymnal were not used.
 - 205 CRADLE SONG. CRADLE SONG by William J. Kirkpatrick (1895) is old, but no engraved score with a recorded pre-1931 source was found. A file that cites a 1993 hymnal was not used.
 - 206 MORNING STAR. MORNING STAR by James P. Harding is old, but no engraved score with a recorded pre-1931 source was found.
@@ -108,14 +103,10 @@ Scores are ABC files in `data/music/`, listed in `data/music.json`. Each one is 
 - 210 STILLE NACHT. No engraved score with a recorded pre-1931 public domain source was found.
 - 213 GREENSLEEVES. No engraved score with a recorded pre-1931 public domain source was found.
 - 214 GLORIA. GLORIA is a French carol melody, but the Trinity Hymnal uses an arrangement from 1937. A score that also cites Lutheran Worship (1982) was not used.
-- 215 JUNGST. JUNGST is an arrangement by Hugo Jungst. No engraved score with a recorded pre-1931 source was found.
 - 216 W ZLOBIE LEZY. W ZLOBIE LEZY is a traditional Polish melody. The arrangement named in the hymn data is from a carol book whose date was not confirmed, and no pre-1931 score was found.
 - 219 CANONBURY. CANONBURY is from Robert Schumann and is old, but no engraved score with a recorded pre-1931 source was found.
 - 222 WINCHESTER OLD. WINCHESTER OLD is from Thomas Este, 1592, but the hymn data notes a 1990 alteration of the tune. No pre-1931 score of the unaltered tune was retrieved, so the 1990 form was not copied.
 - 223 CHRISTMAS. CHRISTMAS is Handel arranged by Lowell Mason and is old, but no engraved score with a recorded pre-1931 source was found.
-- 224 GO TELL IT. GO TELL IT is a spiritual. No engraved score was found that did not come from a modern copyrighted hymnal.
 - 225 IRBY. IRBY by Henry J. Gauntlett (1849) is old, but the score that was found cites a 1994 hymnal as its source and was not used.
 - 227 SUSSEX CAROL. SUSSEX CAROL is a traditional melody. The Trinity Hymnal uses an arrangement associated with Stainer and Bell. That arrangement was not copied, and no separate pre-1931 folk setting was found.
-- 228 CHARTRES. CHARTRES is a 15th century melody arranged by Charles Wood. No engraved score with a recorded pre-1931 source was found.
-- 233 I DO BELIEVE. I DO BELIEVE has no composer in the hymn data, and no engraved score with a recorded source was found.
 - 559 MORWELLHAM. MORWELLHAM is by Charles Steggall, who died in 1905, but no engraved score with a recorded pre-1931 source was retrieved.

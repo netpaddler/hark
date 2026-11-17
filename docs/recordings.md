@@ -40,7 +40,6 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
 - **Choir or congregation.** The label says "congregation" when the announcement asks people to stand or sing together. Otherwise it says "unspecified". No choir-only performances were identified with confidence.
 - **Full congregation preferred.** Prefer the full congregation singing. A hymn sung during the Lord's Supper, when the singing is sparse, should be replaced only when another service has that hymn sung by the full congregation and the start time is verified from the captions. If no such recording is available, keep the existing entry. Do not drop a recording only because it was sung at communion. Do not guess a start time.
 - **Hymns sharing words.** Captions cannot tell which tune was used, so those recordings are listed under both numbers:
-  - 201 and 202 (no recordings found)
   - 204 and 205
   - 222 and 223
 - **Not verified by ear.** Nothing was checked by listening. Check a link by ear before sharing it widely.
@@ -56,9 +55,7 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
 | 197 | Comfort, Comfort Ye My People | 1 |
 | 198 | Lift Up Your Heads, Ye Mighty Gates! | 8 |
 | 199 | See, amid the Winter's Snow | 1 |
-| 200 | It Came upon the Midnight Clear | 0 |
-| 201 | O Little Town of Bethlehem | 0 |
-| 202 | O Little Town of Bethlehem | 0 |
+| 201 | O Little Town of Bethlehem | 3 |
 | 203 | Hark! The Herald Angels Sing | 9 |
 | 204 | Away in a Manger | 1 |
 | 205 | Away in a Manger | 1 |
@@ -70,24 +67,17 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
 | 211 | God Rest You Merry, Gentlemen | 0 |
 | 213 | What Child Is This | 6 |
 | 214 | Angels We Have Heard on High | 7 |
-| 215 | While by the Sheep we Watched at Night | 0 |
 | 216 | Infant Holy, Infant Lowly | 5 |
 | 217 | All My Heart This Night Rejoices | 4 |
 | 218 | Angels, from the Realms of Glory | 6 |
 | 219 | All Praise to Thee, Eternal Lord | 3 |
-| 220 | From Heaven High I Come to You | 0 |
-| 221 | Lo, How a Rose E'er Blooming | 0 |
+| 221 | Lo, How a Rose E'er Blooming | 1 |
 | 222 | While Shepherds Watched Their Flocks | 4 |
 | 223 | While Shepherds Watched Their Flocks | 4 |
-| 224 | Go, Tell It on the Mountain | 0 |
 | 225 | Once in Royal David's City | 4 |
 | 226 | As with Gladness Men of Old | 9 |
 | 227 | On Christmas Night All Christians Sing | 4 |
-| 228 | Saw You Never, in the Twilight | 0 |
-| 229 | Gentle Mary Laid Her Child | 0 |
-| 233 | To Us a Child of Hope is Born | 0 |
 
-None found: 200 It Came upon the Midnight Clear, 201 O Little Town of Bethlehem, 202 O Little Town of Bethlehem, 211 God Rest You Merry, Gentlemen, 215 While by the Sheep we Watched at Night, 220 From Heaven High I Come to You, 221 Lo, How a Rose E'er Blooming, 224 Go, Tell It on the Mountain, 228 Saw You Never, in the Twilight, 229 Gentle Mary Laid Her Child, 233 To Us a Child of Hope is Born.
 - Silent Night (210) has one entry, from Christmas Eve 2020 at 11:00 pm.
   - It is also announced for the close of Christmas Eve 2020 at 4:00 pm (video gyux6d9UtBM, roughly 3680s to 4160s) and 2023 at 4:00 pm (video GcyYETKpWVI, roughly 3365s to 3750s).
   - In both, the sung captions are too garbled to place a start, so they are not in `data/recordings.json`.

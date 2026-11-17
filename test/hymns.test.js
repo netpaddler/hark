@@ -67,7 +67,7 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 75);
+  assert.equal(hymns.length, 67);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
@@ -151,7 +151,7 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 52);
+  assert.equal(all.length, 47);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
@@ -177,13 +177,9 @@ test("author index files people by surname and keeps translators", () => {
     group("Hunt, Mark E.").hymns.map((item) => [item.hymn.number, item.mark]),
     [[196, null]],
   );
-  assert.equal(
-    group("Anonymous").hymns.find((item) => item.hymn.number === 215).mark,
-    "tr.",
-  );
   assert.deepEqual(
     group("Winkworth, Catherine (tr.)").hymns.map((item) => item.hymn.number),
-    [108, 197, 198, 217, 220],
+    [108, 197, 198, 217],
   );
   const indexed = new Set(all.flatMap((item) => item.hymns.map((entry) => entry.hymn.number)));
   // Hymns listed from a bulletin carry no author yet, so they are reachable by
@@ -223,12 +219,12 @@ test("partial and withheld hymns describe what is missing", () => {
 
 test("neighbors follow hymnal number", () => {
   const around = neighbors(hymns, 203);
-  assert.equal(around.prev.number, 202);
+  assert.equal(around.prev.number, 201);
   assert.equal(around.next.number, 204);
   assert.equal(neighbors(hymns, 15).prev, null, "15 is the lowest number held");
   assert.equal(neighbors(hymns, 108).prev.number, 99);
   assert.equal(neighbors(hymns, 162).prev.number, 108);
-  assert.equal(neighbors(hymns, 233).next.number, 271);
+  assert.equal(neighbors(hymns, 227).next.number, 271);
   assert.equal(neighbors(hymns, 700).next, null, "700 is the highest number held");
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
@@ -256,7 +252,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
     for (const number of users) assert.ok(numbers.has(number), `${id} lists ${number}`);
   }
   for (const key of Object.keys(themes.hymns)) assert.ok(numbers.has(Number(key)), key);
-  assert.deepEqual(hymnsInTheme(themes, "epiphany"), [206, 213, 218, 226, 228, 229]);
+  assert.deepEqual(hymnsInTheme(themes, "epiphany"), [206, 213, 218, 226]);
   assert.ok(!hymnsInTheme(themes, "advent").includes(203));
   assert.ok(themesForHymn(themes, 203).some((item) => item.id === "incarnation"));
   assert.equal(findTheme(themes, "incarnation").title, "The Incarnation");
@@ -1113,7 +1109,7 @@ test("a hymn with no words yet is a different state from one that has them", () 
   // Every listed hymn now has words. The copyrighted numbers are gone.
   assert.equal(hymns.filter((hymn) => wordsPending(hymn)).length, 0);
   assert.equal(byNumber.get(53), undefined);
-  assert.deepEqual(filterHymns(hymns, "53").map((hymn) => hymn.number), [220, 534, 535, 539]);
+  assert.deepEqual(filterHymns(hymns, "53").map((hymn) => hymn.number), [534, 535, 539]);
 
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.match(appSource, /wordsPending\(hymn\)/);
