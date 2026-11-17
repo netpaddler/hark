@@ -276,9 +276,17 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   assert.equal(allYear.length, 37);
 });
 
+test("every recording belongs to a hymn that is in the book", () => {
+  const numbers = new Set(hymns.map((hymn) => hymn.number));
+  for (const key of Object.keys(recordings)) {
+    assert.equal(numbers.has(Number(key)), true, key);
+    assert.ok(Array.isArray(recordings[key]) && recordings[key].length > 0, key);
+  }
+});
+
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
-  assert.equal(Object.keys(recordings).length, 30);
-  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 134);
+  assert.equal(Object.keys(recordings).length, 65);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 277);
   assert.equal(faithRecordings(recordings, 108)[0].dateSort, "2025-12-14");
   assert.equal(faithRecordings(recordings, 401).length, 1);
   assert.equal(faithRecordings(recordings, 559)[0].dateSort, "2026-07-19");
@@ -297,7 +305,7 @@ test("Faith Presbyterian recordings stay out of the hymn file and sort newest fi
     [...herald.map((item) => item.dateSort)].sort((a, b) => (a < b ? 1 : a > b ? -1 : 0)),
   );
   assert.equal(faithRecordings(recordings, 200).length, 0);
-  assert.equal(faithRecordings(recordings, 211).length, 0);
+  assert.equal(faithRecordings(recordings, 211).length, 2);
   const away = faithRecordings(recordings, 204);
   const awayOther = faithRecordings(recordings, 205);
   assert.equal(away.length, 1);
