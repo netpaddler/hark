@@ -5,7 +5,10 @@ compatibility_date = "2024-11-01"
 [vars]
 REPO = "netpaddler/hark"
 LABEL = "hymn-request"
-ALLOWED_ORIGIN = "https://netpaddler.github.io"
+# The site moved to a custom domain. The github.io address redirects there, so
+# it should not normally appear as an Origin, but it costs nothing to keep
+# while anything still points at the old URL.
+ALLOWED_ORIGIN = "https://hymns.theweightofglory.com,https://netpaddler.github.io"
 
 # The hark-rate-limit namespace exists, and the live Worker is already bound to it.
 [[kv_namespaces]]

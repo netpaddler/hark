@@ -685,6 +685,61 @@ test("worker list strips html, drops pull requests, and caches for 60 seconds", 
   }
 });
 
+test("both hosts Hark is served from are allowed, and each gets its own header", async () => {
+  const LIVE = "https://hymns.theweightofglory.com";
+  const OLD = "https://netpaddler.github.io";
+  const originalFetch = globalThis.fetch;
+  const originalCaches = globalThis.caches;
+  const store = new Map();
+  globalThis.caches = {
+    default: {
+      async match(key) {
+        return store.get(key.url);
+      },
+      async put(key, response) {
+        store.set(key.url, response);
+      },
+    },
+  };
+  globalThis.fetch = async () =>
+    new Response("[]", { status: 200, headers: { "content-type": "application/json" } });
+  try {
+    const worker = await import(`../worker/src/index.js?origins=${Date.now()}`);
+    const env = {
+      GITHUB_TOKEN: "test-token",
+      TURNSTILE_SECRET: "test-secret",
+      ALLOWED_ORIGIN: `${LIVE},${OLD}`,
+    };
+    const get = (origin) =>
+      worker.default.fetch(
+        new Request("https://hark-requests.example/", origin ? { headers: { origin } } : undefined),
+        env,
+      );
+    // The domain the site actually runs on. This answered 403 before.
+    const live = await get(LIVE);
+    assert.equal(live.status, 200);
+    assert.equal(live.headers.get("access-control-allow-origin"), LIVE);
+    // A list cannot go in the header, so each caller is told its own origin,
+    // and vary keeps a cache from mixing the two up.
+    const old = await get(OLD);
+    assert.equal(old.status, 200);
+    assert.equal(old.headers.get("access-control-allow-origin"), OLD);
+    assert.equal(old.headers.get("vary"), "Origin");
+    // Anything else is still refused.
+    assert.equal((await get("https://evil.example")).status, 403);
+    // A single origin, with no comma, still behaves as it always did.
+    const solo = await worker.default.fetch(
+      new Request("https://hark-requests.example/", { headers: { origin: OLD } }),
+      { ...env, ALLOWED_ORIGIN: OLD },
+    );
+    assert.equal(solo.status, 200);
+    assert.equal(solo.headers.get("access-control-allow-origin"), OLD);
+  } finally {
+    globalThis.fetch = originalFetch;
+    globalThis.caches = originalCaches;
+  }
+});
+
 test("a missing Turnstile secret closes the form instead of opening it", async () => {
   const originalFetch = globalThis.fetch;
   let calls = 0;
