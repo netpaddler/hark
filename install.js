@@ -1,4 +1,4 @@
-export const INSTALL_URL = "https://netpaddler.github.io/hark/";
+export const INSTALL_URL = "https://hymns.theweightofglory.com/";
 
 export const installGuide = {
   intro:
