@@ -13,6 +13,7 @@ import {
   formatRecordingDate,
   gapNote,
   isWithheld,
+  wordsPending,
   listRecordings,
   listSections,
   neighbors,
@@ -49,15 +50,14 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 45);
-  assert.deepEqual(
-    hymns.map((hymn) => hymn.number),
-    [
-      108, 162, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208,
-      209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226,
-      227, 228, 229, 230, 231, 232, 233, 401, 559,
-    ],
-  );
+  assert.equal(hymns.length, 96);
+  const numbers = hymns.map((hymn) => hymn.number);
+  assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
+  assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
+  // The 1990 Trinity Hymnal runs to 742.
+  for (const number of numbers) assert.ok(number >= 1 && number <= 742, String(number));
+  assert.deepEqual(numbers.slice(0, 6), [5, 15, 31, 34, 36, 46]);
+  assert.deepEqual(numbers.slice(-4), [691, 700, 703, 719]);
   assert.deepEqual(listSections(hymns), [
     "Advent",
     "Christmas",
@@ -120,16 +120,16 @@ test("title index is alphabetical and ignores a leading article", () => {
   assert.equal(titleLetter("All Creatures of Our God and King"), "A");
   assert.ok(titleSortKey("The First Noel") < titleSortKey("Thou Who Wast Rich"));
   assert.equal(titleLetter("Hark! The Herald Angels Sing"), "H");
-  assert.deepEqual(
-    browse(hymns, { mode: "title" }).letters.flatMap((bucket) =>
-      bucket.hymns.map((hymn) => hymn.number),
-    ),
-    [
-      217, 219, 401, 218, 214, 226, 204, 205, 206, 209, 196, 197, 559, 220, 229, 224, 211, 207,
-      203, 216, 200, 195, 193, 198, 221, 231, 208, 194, 232, 201, 202, 162, 227, 225, 228, 199,
-      210, 230, 233, 213, 108, 215, 222, 223, 212,
-    ],
+  const listed = browse(hymns, { mode: "title" }).letters.flatMap((bucket) =>
+    bucket.hymns.map((hymn) => hymn.title),
   );
+  assert.equal(listed.length, hymns.length, "every hymn is filed under a letter");
+  const keys = listed.map((title) => titleSortKey(title));
+  assert.deepEqual([...keys].sort(), keys, "titles are in sort-key order");
+  // Leading articles are ignored, so these sit under T and A, not under T twice.
+  const order = browse(hymns, { mode: "title" }).letters.map((bucket) => bucket.letter);
+  assert.deepEqual([...order].sort(), order, "letters ascend");
+  assert.ok(order.includes("A") && order.includes("W"));
 });
 
 test("author index files people by surname and keeps translators", () => {
@@ -172,7 +172,16 @@ test("author index files people by surname and keeps translators", () => {
     [108, 197, 198, 217, 220],
   );
   const indexed = new Set(all.flatMap((item) => item.hymns.map((entry) => entry.hymn.number)));
-  for (const hymn of hymns) assert.ok(indexed.has(hymn.number), String(hymn.number));
+  // Hymns listed from a bulletin carry no author yet, so they are reachable by
+  // number and title but cannot be filed under a person. Everything with a
+  // credit must be.
+  for (const hymn of hymns) {
+    if (!hymn.author && !hymn.translator) {
+      assert.equal(indexed.has(hymn.number), false, `${hymn.number} has no credit`);
+      continue;
+    }
+    assert.ok(indexed.has(hymn.number), String(hymn.number));
+  }
 });
 
 test("partial and withheld hymns describe what is missing", () => {
@@ -197,10 +206,11 @@ test("neighbors follow hymnal number", () => {
   const around = neighbors(hymns, 203);
   assert.equal(around.prev.number, 202);
   assert.equal(around.next.number, 204);
-  assert.equal(neighbors(hymns, 108).prev, null);
-  assert.equal(neighbors(hymns, 162).prev.number, 108);
-  assert.equal(neighbors(hymns, 233).next.number, 401);
-  assert.equal(neighbors(hymns, 559).next, null);
+  assert.equal(neighbors(hymns, 5).prev, null, "5 is the lowest number held");
+  assert.equal(neighbors(hymns, 108).prev.number, 103);
+  assert.equal(neighbors(hymns, 162).prev.number, 125);
+  assert.equal(neighbors(hymns, 233).next.number, 239);
+  assert.equal(neighbors(hymns, 719).next, null, "719 is the highest number held");
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
 
@@ -240,7 +250,11 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   assert.deepEqual(themes.hymns["108"], { seasons: ["all-year"], topics: ["providence", "trust-trials"] });
   assert.deepEqual(themes.hymns["559"], { seasons: ["all-year"], topics: ["providence", "contentment"] });
   assert.deepEqual(themes.hymns["401"], { seasons: ["all-year"], topics: ["evening", "joy"] });
-  assert.deepEqual(hymnsInTheme(themes, "all-year"), [108, 401, 559]);
+  const allYear = hymnsInTheme(themes, "all-year");
+  for (const number of [108, 401, 559]) assert.ok(allYear.includes(number), String(number));
+  // Bulletin hymns land here until someone sorts them into a season.
+  assert.ok(allYear.includes(53) && allYear.includes(691));
+  assert.equal(allYear.length, 54);
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
@@ -856,6 +870,41 @@ test("abcjs loads when the music is opened, not on every page", () => {
   // Opening the block and pressing Play both ask for the score, so the build
   // is shared rather than run twice.
   assert.match(appSource, /if \(!pending\) pending = buildScore\(\)/);
+});
+
+test("hymns listed from a bulletin are findable but say the words are missing", () => {
+  const stub = byNumber.get(53);
+  assert.equal(stub.title, "Praise to the Lord, the Almighty");
+  assert.deepEqual(stub.stanzas, []);
+  // Not withheld: no copyright claim is being made either way.
+  assert.equal(stub.public_domain, null);
+  assert.equal(isWithheld(stub), false);
+  assert.equal(wordsPending(stub), true);
+  assert.match(stub.notes, /Faith Presbyterian Tacoma bulletin/);
+  // A hymn whose words are withheld for copyright is a different state.
+  assert.equal(wordsPending(byNumber.get(212)), false);
+  assert.equal(isWithheld(byNumber.get(212)), true);
+  // A hymn with words is neither.
+  assert.equal(wordsPending(byNumber.get(108)), false);
+  assert.equal(isWithheld(byNumber.get(108)), false);
+
+  // Findable by number and by title, even with no text to search.
+  assert.deepEqual(filterHymns(hymns, "53").map((hymn) => hymn.number), [53, 220, 534, 535, 539]);
+  assert.deepEqual(filterHymns(hymns, "Praise to the Lord").map((hymn) => hymn.number), [53]);
+  assert.equal(stanzaPlan(stub).length, 0);
+
+  // Every bulletin hymn still needs a theme row and a music row.
+  const pending = hymns.filter((hymn) => wordsPending(hymn) && !isWithheld(hymn));
+  assert.equal(pending.length, 51);
+  for (const hymn of pending) {
+    assert.ok(themes.hymns[String(hymn.number)], `themes ${hymn.number}`);
+    assert.ok(music.omitted[String(hymn.number)], `music ${hymn.number}`);
+    assert.equal(hymn.section, null);
+  }
+
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /wordsPending\(hymn\)/);
+  assert.match(appSource, /Words not added yet/);
 });
 
 test("the Hark title links home on the list and on a hymn", () => {

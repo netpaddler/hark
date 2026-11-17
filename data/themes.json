@@ -24,6 +24,210 @@
     { "id": "evening", "title": "Evening" }
   ],
   "hymns": {
+    "5": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "15": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "31": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "34": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "36": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "46": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "53": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "56": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "57": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "76": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "95": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "99": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "103": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "125": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "168": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "172": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "239": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "257": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "271": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "301": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "305": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "338": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "343": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "363": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "398": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "406": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "415": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "429": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "457": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "460": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "469": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "485": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "501": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "510": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "528": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "534": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "535": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "539": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "585": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "604": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "624": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "644": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "647": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "652": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "656": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "660": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "689": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "691": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "700": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "703": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
+    "719": {
+      "seasons": ["all-year"],
+      "topics": []
+    },
     "162": {
       "seasons": ["christmas"],
       "topics": ["incarnation", "deity", "king", "longing", "joy"]
