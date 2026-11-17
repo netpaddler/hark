@@ -30,6 +30,23 @@ import {
   youtubeBlock,
   listSermons,
 } from "../hymn-model.js";
+import {
+  NEWCOMER_KEY,
+  RETURNING_KEY,
+  adventStart,
+  canFeature,
+  everyTextPublicDomain,
+  exampleHymns,
+  excerptLines,
+  featuredHymns,
+  hasWords,
+  searchTarget,
+  seasonLinks,
+  seasonOn,
+  statItems,
+  welcomeCopy,
+  welcomeStats,
+} from "../welcome.js";
 
 const hymns = JSON.parse(readFileSync(new URL("../data/hymns.json", import.meta.url), "utf8"));
 const recordings = JSON.parse(readFileSync(new URL("../data/recordings.json", import.meta.url), "utf8"));
@@ -993,6 +1010,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "app.js",
     "hymn-model.js",
     "install.js",
+    "welcome.js",
     "config/requests.js",
     "worker/src/index.js",
     "sw.js",
@@ -1018,4 +1036,442 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
     assert.equal(/\u2013|\u2014/.test(text), false, file);
   }
+});
+
+// Every line of welcome copy. The few that are built from a hymn or a season
+// name are filled in with a stand-in, so they are checked as well.
+function allStrings(value, found = []) {
+  const standIn = { number: 0, title: "Advent", toString: () => "Advent" };
+  if (typeof value === "string") found.push(value);
+  else if (typeof value === "function") found.push(String(value(standIn, "Sunday, November 29")));
+  else if (value && typeof value === "object") for (const item of Object.values(value)) allStrings(item, found);
+  return found;
+}
+
+// Every calendar day from one November to the next, so each season is crossed.
+function daysOfAYear() {
+  const days = [];
+  for (let day = new Date(2026, 10, 1); day < new Date(2027, 10, 1); day.setDate(day.getDate() + 1)) {
+    days.push(new Date(day));
+  }
+  return days;
+}
+
+test("welcome counts are worked out from the data and leave withheld hymns out", () => {
+  const stats = welcomeStats({ hymns, recordings, music });
+  const open = hymns.filter((hymn) => hymn.public_domain !== false);
+  const withWords = open.filter((hymn) => hymn.stanzas.length > 0);
+  assert.equal(stats.words, withWords.length);
+  assert.equal(stats.pending, open.length - withWords.length);
+  assert.equal(stats.words + stats.pending, open.length);
+  assert.equal(
+    stats.recordings,
+    open.reduce((sum, hymn) => sum + faithRecordings(recordings, hymn.number).length, 0),
+  );
+  assert.equal(stats.recorded, open.filter((hymn) => faithRecordings(recordings, hymn.number).length > 0).length);
+  assert.equal(stats.scores, open.filter((hymn) => music.scores[String(hymn.number)]).length);
+  assert.ok(stats.words > 0 && stats.recordings > 0 && stats.scores > 0);
+
+  // Taking the withheld hymns out of the book changes none of the figures.
+  assert.deepEqual(welcomeStats({ hymns: open, recordings, music }), stats);
+  // Giving one a recording and a score still does not count it.
+  const withheld = hymns.find((hymn) => isWithheld(hymn));
+  if (withheld) {
+    const key = String(withheld.number);
+    const padded = welcomeStats({
+      hymns,
+      recordings: { ...recordings, [key]: [{ url: "https://youtu.be/abcdefghijk", video_date: "2026-01-04" }] },
+      music: { ...music, scores: { ...music.scores, [key]: { tune: "X" } } },
+    });
+    assert.deepEqual(padded, stats);
+  }
+
+  // A hymn added or removed moves the count. Nothing is written down.
+  const one = open.find((hymn) => hymn.stanzas.length > 0);
+  const fewer = welcomeStats({ hymns: hymns.filter((hymn) => hymn !== one), recordings, music });
+  assert.equal(fewer.words, stats.words - 1);
+  assert.deepEqual(welcomeStats({ hymns: [], recordings, music }), {
+    words: 0,
+    pending: 0,
+    recorded: 0,
+    recordings: 0,
+    scores: 0,
+  });
+
+  const items = statItems(stats);
+  assert.deepEqual(
+    items.map((item) => item.id),
+    ["words", "pending", "recordings", "scores"],
+  );
+  assert.equal(items[0].value, stats.words);
+  // A zero is left off the page, and one of a thing is not called "hymns".
+  assert.deepEqual(
+    statItems({ words: 1, pending: 0, recorded: 0, recordings: 0, scores: 0 }).map((item) => item.label),
+    ["hymn with its words"],
+  );
+
+  // The page reads its numbers from welcomeStats, not from digits in the copy.
+  for (const text of allStrings(welcomeCopy)) {
+    assert.equal(/\d/.test(text.replace("no. 0", "").replace("November 29", "")), false, text);
+  }
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /statItems\(welcomeStats\(\{ hymns, recordings: recordingCatalog, music: musicCatalog \}\)\)/);
+});
+
+test("welcome says every text is public domain only while the data agrees", () => {
+  assert.equal(everyTextPublicDomain(hymns), true);
+  for (const hymn of hymns) {
+    if (hymn.stanzas.length > 0) assert.equal(hymn.public_domain, true, String(hymn.number));
+  }
+  const first = hymns.find((hymn) => hymn.stanzas.length > 0);
+  for (const flag of [false, null]) {
+    const changed = hymns.map((hymn) => (hymn === first ? { ...hymn, public_domain: flag } : hymn));
+    assert.equal(everyTextPublicDomain(changed), false);
+  }
+  assert.equal(everyTextPublicDomain([]), false);
+  assert.equal(everyTextPublicDomain(null), false);
+
+  assert.equal(welcomeCopy.publicDomain.claim, "Every hymn text in Hark is in the public domain.");
+  assert.match(welcomeCopy.publicDomain.detail, /only its public domain stanzas are shown\.$/);
+  // The second sentence is true of the one hymn it describes: the stanzas
+  // under copyright are not in the file.
+  const partial = hymns.filter((hymn) => hymn.public_domain !== false && hymn.copyright_note);
+  for (const hymn of partial) {
+    assert.ok(partialNote(hymn), String(hymn.number));
+    assert.ok(hymn.stanzas.length > 0 && hymn.stanzas.length === hymn.stanza_numbers.length);
+  }
+
+  // It sits with the stats, in the main part of the page, and is guarded.
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /const claim = everyTextPublicDomain\(hymns\);/);
+  assert.match(appSource, /if \(claim\) \{[\s\S]*?copy\.publicDomain\.claim[\s\S]*?copy\.publicDomain\.detail/);
+  const facts = appSource.slice(appSource.indexOf("function welcomeFacts()"), appSource.indexOf("function welcomeFeatured("));
+  assert.match(facts, /welcome-stats/);
+  assert.match(facts, /welcome-pd/);
+});
+
+test("the seasons the welcome page follows", () => {
+  // Advent Sunday, checked against the calendar for six years.
+  const starts = { 2022: [10, 27], 2023: [11, 3], 2024: [11, 1], 2025: [10, 30], 2026: [10, 29], 2027: [10, 28] };
+  for (const [year, [month, day]] of Object.entries(starts)) {
+    const start = adventStart(Number(year));
+    assert.deepEqual([start.getMonth(), start.getDate(), start.getDay()], [month, day, 0], year);
+  }
+  const on = (y, m, d) => seasonOn(new Date(y, m - 1, d, 15, 30)).id;
+  assert.equal(on(2026, 11, 28), null);
+  assert.equal(on(2026, 11, 29), "advent");
+  assert.equal(on(2026, 12, 24), "advent");
+  assert.equal(on(2026, 12, 25), "christmas");
+  assert.equal(on(2027, 1, 5), "christmas");
+  assert.equal(on(2027, 1, 6), "epiphany");
+  assert.equal(on(2027, 1, 31), "epiphany");
+  assert.equal(on(2027, 2, 1), null);
+  assert.equal(on(2027, 7, 4), null);
+  const ahead = seasonOn(new Date(2026, 10, 17, 9));
+  assert.equal(ahead.next.id, "advent");
+  assert.equal(ahead.next.days, 12);
+  // Every season it can name is one the Themes tab has.
+  for (const day of daysOfAYear()) {
+    const season = seasonOn(day);
+    if (season.id) assert.ok(findTheme(themes, season.id), season.id);
+    else assert.ok(findTheme(themes, season.next.id), season.next.id);
+  }
+});
+
+test("welcome features only hymns whose words are shown whole, and never a withheld one", () => {
+  const withheld = new Set(hymns.filter((hymn) => isWithheld(hymn)).map((hymn) => hymn.number));
+  const shown = new Set();
+  const kinds = new Set();
+  for (const day of daysOfAYear()) {
+    const feature = featuredHymns({ hymns, themes, recordings, music, date: day });
+    kinds.add(feature.kind);
+    assert.ok(feature.hymns.length >= 1 && feature.hymns.length <= 4, day.toDateString());
+    assert.equal(new Set(feature.hymns.map((pick) => pick.hymn.number)).size, feature.hymns.length);
+    for (const pick of feature.hymns) {
+      const hymn = pick.hymn;
+      shown.add(hymn.number);
+      assert.equal(byNumber.get(hymn.number), hymn, "a real hymn from the file");
+      assert.equal(withheld.has(hymn.number), false, `withheld ${hymn.number}`);
+      assert.equal(hymn.public_domain, true, String(hymn.number));
+      assert.equal(hymn.copyright_note, null, String(hymn.number));
+      assert.ok(hymn.stanzas.length > 0, String(hymn.number));
+      // The lines quoted are the hymn's own opening lines, and only a few.
+      assert.ok(pick.lines.length >= 1 && pick.lines.length <= 4, String(hymn.number));
+      assert.deepEqual(pick.lines, hymn.stanzas[0].slice(0, pick.lines.length));
+      assert.equal(pick.recorded, faithRecordings(recordings, hymn.number).length > 0);
+      assert.equal(pick.score, Boolean(music.scores[String(hymn.number)]));
+      if (feature.theme) {
+        assert.ok(hymnsInTheme(themes, feature.theme.id).includes(hymn.number), `${hymn.number} in ${feature.theme.id}`);
+      }
+    }
+    const season = seasonOn(day);
+    if (feature.kind === "season") assert.equal(feature.theme.id, season.id);
+    if (feature.kind === "year") assert.equal(feature.theme.id, "all-year");
+    if (feature.upcoming) {
+      assert.equal(season.id, null);
+      assert.ok(season.next.days <= 28);
+      assert.equal(feature.upcoming.theme.id, "advent");
+    }
+  }
+  assert.deepEqual([...kinds].sort(), ["season", "year"]);
+  assert.ok(shown.size > 10, "the picks move through the book over a year");
+
+  const advent = featuredHymns({ hymns, themes, recordings, music, date: new Date(2026, 11, 6) });
+  assert.equal(advent.kind, "season");
+  assert.equal(advent.theme.title, "Advent");
+  assert.equal(advent.upcoming, null);
+  for (const pick of advent.hymns) assert.equal(pick.hymn.section, "Advent");
+  // No. 196 has stanzas left out for copyright. It stays in the Advent list
+  // and is not put on the welcome page.
+  assert.equal(canFeature(byNumber.get(196)), false);
+  assert.equal(hasWords(byNumber.get(196)), true);
+
+  const before = featuredHymns({ hymns, themes, recordings, music, date: new Date(2026, 10, 17) });
+  assert.equal(before.kind, "year");
+  assert.equal(before.upcoming.when, "Sunday, November 29");
+  assert.equal(welcomeCopy.featured.upcoming("Advent", before.upcoming.when), "Advent begins Sunday, November 29.");
+  assert.equal(featuredHymns({ hymns, themes, recordings, music, date: new Date(2026, 10, 1) }).upcoming.theme.id, "advent");
+  assert.equal(featuredHymns({ hymns, themes, recordings, music, date: new Date(2026, 9, 31) }).upcoming, null);
+  // The hymn for the day changes from one day to the next.
+  const next = featuredHymns({ hymns, themes, recordings, music, date: new Date(2026, 10, 18) });
+  assert.notEqual(next.hymns[0].hymn.number, before.hymns[0].hymn.number);
+
+  // With the withheld hymns gone from the book, the same days give the same picks.
+  const open = hymns.filter((hymn) => !isWithheld(hymn));
+  for (const day of [new Date(2026, 10, 17), new Date(2026, 11, 6), new Date(2026, 11, 27), new Date(2027, 0, 10)]) {
+    const a = featuredHymns({ hymns, themes, recordings, music, date: day });
+    const b = featuredHymns({ hymns: open, themes, recordings, music, date: day });
+    assert.deepEqual(
+      b.hymns.map((pick) => pick.hymn.number),
+      a.hymns.map((pick) => pick.hymn.number),
+    );
+  }
+
+  // A hymn that is withheld, wordless, or cut short never yields an excerpt.
+  for (const hymn of hymns) {
+    const lines = excerptLines(hymn);
+    if (!canFeature(hymn)) assert.deepEqual(lines, [], String(hymn.number));
+    else assert.ok(lines.length >= 1 && lines.length <= 4, String(hymn.number));
+  }
+  assert.deepEqual(excerptLines(byNumber.get(194)), byNumber.get(194).stanzas[0]);
+  // The excerpt stops where a clause closes, not in the middle of one.
+  assert.deepEqual(excerptLines(byNumber.get(193)), [
+    "Let all mortal flesh keep silence,",
+    "and with fear and trembling stand;",
+  ]);
+
+  // The links that promise a recording or a score land on a hymn that has one.
+  const examples = exampleHymns({ hymns, recordings, music, prefer: before.hymns.map((pick) => pick.hymn) });
+  assert.ok(faithRecordings(recordings, examples.recorded.number).length > 0);
+  assert.ok(music.scores[String(examples.score.number)]);
+  assert.ok(canFeature(examples.recorded) && canFeature(examples.score));
+  assert.deepEqual(exampleHymns({ hymns: [], recordings, music }), { recorded: null, score: null });
+
+  assert.deepEqual(
+    seasonLinks(themes, hymns).map((season) => season.id),
+    themes.seasons.map((season) => season.id),
+  );
+  assert.deepEqual(seasonLinks(themes, hymns.filter((hymn) => isWithheld(hymn))), []);
+});
+
+test("welcome copy names only what Hark has, and never a withheld hymn", () => {
+  const strings = allStrings(welcomeCopy);
+  for (const text of strings) {
+    assert.equal(/\u2013|\u2014/.test(text), false, text);
+    for (const hymn of hymns.filter((item) => isWithheld(item))) {
+      assert.equal(text.includes(hymn.title), false, hymn.title);
+    }
+  }
+  const all = strings.join(" ");
+  // Hark has no hymn histories, devotionals, or commentary today, so the
+  // page must not offer them. Take a word off this list when its feature ships.
+  for (const word of [/devotion/i, /histor/i, /story/i, /biograph/i, /commentar/i]) {
+    assert.equal(word.test(all), false, String(word));
+  }
+
+  // Each thing it does say is there to be found.
+  const features = Object.fromEntries(welcomeCopy.features.items.map((item) => [item.id, item]));
+  assert.deepEqual(Object.keys(features), ["words", "hear", "music", "themes", "sins", "offline"]);
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const model = readFileSync(new URL("../hymn-model.js", import.meta.url), "utf8");
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  // Search by number, title, author, tune, or a line.
+  for (const field of ["hymn.title", "hymn.author", "hymn.tune", "String(hymn.number)", "hymn.stanzas"]) {
+    assert.ok(model.includes(field), field);
+  }
+  assert.match(features.words.text, /number, title, author, tune, or any line/);
+  // Recordings open at the hymn.
+  assert.match(model, /\?start=\$\{start\}/);
+  // The tempo is the reader's to choose.
+  assert.match(appSource, /setAttribute\("aria-label", "Tempo"\)/);
+  // Seasons and topics both exist.
+  assert.ok(themes.seasons.length > 0 && themes.topics.length > 0);
+  // The Sins page begins and ends as the page says.
+  assert.equal(sins.intro.catechism.question, "What is sin?");
+  assert.ok(sins.groups.some((item) => item.title === "The Ten Commandments"));
+  assert.match(sins.gospel.catechism.question, /repentance/);
+  // The words are kept for offline use, and the install page exists.
+  assert.ok(sw.includes('"./data/hymns.json"'));
+  assert.match(appSource, /if \(path === "\/install"\)/);
+  assert.equal(welcomeCopy.request.text.includes("we read every one"), true);
+
+  for (const item of welcomeCopy.features.items) {
+    if (item.href) assert.match(appSource, new RegExp(`path === "${item.href.slice(1) === "/" ? "\\/" : item.href.slice(1).replace("/", "\\/")}"`), item.href);
+  }
+  // The four things a visitor is asked to do.
+  assert.deepEqual(Object.keys(welcomeCopy.actions), ["browse", "seasons", "install", "request"]);
+  for (const href of ['href: "#/"', 'href: "#/themes"', 'href: "#/install"', 'href: "#/requests"']) {
+    assert.ok(appSource.slice(appSource.indexOf("function welcomeShell()")).includes(href), href);
+  }
+});
+
+test("the welcome search opens a hymn by number, or the list with the search filled in", () => {
+  assert.deepEqual(searchTarget(hymns, " 203 "), { hash: "#/hymn/203", query: "" });
+  assert.deepEqual(searchTarget(hymns, "742"), { hash: "#/", query: "742" });
+  assert.deepEqual(searchTarget(hymns, "herald angels"), { hash: "#/", query: "herald angels" });
+  assert.deepEqual(searchTarget(hymns, ""), { hash: "#/", query: "" });
+  assert.deepEqual(searchTarget([], "203"), { hash: "#/", query: "203" });
+});
+
+// Runs the script in index.html that picks the opening view, the way a
+// browser would, with the storage and the worker it is given.
+function runEntry({ hash = "", installed = false, worker = false, stored = {}, storage = "works" }) {
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const script = page.match(/<script id="entry-script">([\s\S]*?)<\/script>/);
+  assert.ok(script, "entry script");
+  const store = { ...stored };
+  const dataset = installed ? { installed: "true" } : {};
+  const localStorage = {
+    getItem(key) {
+      if (storage === "blocked") throw new Error("blocked");
+      return key in store ? store[key] : null;
+    },
+    setItem(key, value) {
+      if (storage === "blocked") throw new Error("blocked");
+      store[key] = String(value);
+    },
+  };
+  const navigator = worker === null ? {} : { serviceWorker: { controller: worker ? {} : null } };
+  vm.runInNewContext(script[1], {
+    document: { documentElement: { dataset } },
+    localStorage,
+    navigator,
+    location: { hash },
+  });
+  return { entry: dataset.entry, view: dataset.view, store };
+}
+
+test("a first visit opens on the welcome page, and returning readers go straight to the hymns", () => {
+  // Someone new: the welcome page, and the browser is marked as a newcomer.
+  const first = runEntry({});
+  assert.deepEqual(first, { entry: "welcome", view: "welcome", store: { [NEWCOMER_KEY]: "1" } });
+
+  // The same person back again, now with the worker running, and no hymn
+  // opened yet: still the welcome page.
+  const second = runEntry({ worker: true, stored: first.store });
+  assert.equal(second.entry, "welcome");
+  assert.equal(second.view, "welcome");
+  assert.equal(second.store[RETURNING_KEY], undefined);
+
+  // After they open a hymn the app marks them, and the bare address is the list.
+  const third = runEntry({ worker: true, stored: { ...first.store, [RETURNING_KEY]: "1" } });
+  assert.equal(third.entry, "hymns");
+  assert.equal(third.view, undefined);
+
+  // Someone who used Hark before the welcome page existed has a worker
+  // running and neither mark. They are not shown it, now or later.
+  const existing = runEntry({ worker: true });
+  assert.equal(existing.entry, "hymns");
+  assert.equal(existing.view, undefined);
+  assert.deepEqual(existing.store, { [RETURNING_KEY]: "1" });
+  assert.equal(runEntry({ worker: false, stored: existing.store }).entry, "hymns");
+
+  // The installed app always opens on the hymns, on its very first launch too.
+  const installed = runEntry({ installed: true });
+  assert.equal(installed.entry, "hymns");
+  assert.equal(installed.view, undefined);
+  assert.equal(installed.store[RETURNING_KEY], "1");
+  assert.equal(runEntry({ installed: true, stored: { [NEWCOMER_KEY]: "1" } }).entry, "hymns");
+
+  // A deep link is never redirected, whoever follows it.
+  for (const hash of ["#/", "#/number", "#/title", "#/author", "#/themes", "#/theme/advent", "#/sins", "#/requests", "#/comments", "#/install", "#/hymn/203"]) {
+    assert.equal(runEntry({ hash }).view, undefined, hash);
+  }
+  // The welcome page has its own address, open to anyone.
+  assert.equal(runEntry({ hash: "#/welcome", installed: true }).view, "welcome");
+  assert.equal(runEntry({ hash: "#/welcome", stored: { [RETURNING_KEY]: "1" } }).view, "welcome");
+  assert.equal(runEntry({ hash: "#" }).view, "welcome");
+
+  // Storage that throws, or a browser with no workers, does not break it.
+  assert.equal(runEntry({ storage: "blocked" }).entry, "welcome");
+  assert.equal(runEntry({ storage: "blocked", worker: true }).entry, "hymns");
+  assert.equal(runEntry({ storage: "blocked", installed: true }).entry, "hymns");
+  assert.equal(runEntry({ worker: null }).entry, "welcome");
+
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  // The script that sets data-installed runs before the one that reads it.
+  assert.ok(page.indexOf("dataset.installed = \"true\"") < page.indexOf('<script id="entry-script">'));
+  assert.ok(page.indexOf('<script id="entry-script">') < page.indexOf('<link rel="stylesheet"'));
+  assert.ok(page.includes(`"${RETURNING_KEY}"`) && page.includes(`"${NEWCOMER_KEY}"`));
+  assert.match(page, /<a class="about-link" id="about-link" href="#\/welcome">About Hark<\/a>/);
+});
+
+test("the app routes the welcome page and leaves every other route alone", () => {
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  const routeSource = appSource.slice(appSource.indexOf("function route()"), appSource.indexOf("function indexHref("));
+
+  // The bare address follows the choice made in index.html. "#/" is the list.
+  assert.match(appSource, /const opensOnWelcome = document\.documentElement\.dataset\.entry === "welcome";/);
+  assert.match(routeSource, /if \(\(hash === "" \|\| hash === "#"\) && opensOnWelcome\) return \{ view: "welcome" \};/);
+  assert.match(routeSource, /if \(path === "\/welcome"\) return \{ view: "welcome" \};/);
+  for (const line of [
+    'if (path === "/" || path === "/number") return { view: "index", index: "number" };',
+    'if (path === "/title") return { view: "index", index: "title" };',
+    'if (path === "/author") return { view: "index", index: "author" };',
+    'if (path === "/themes") return { view: "themes" };',
+    'if (path === "/sins") return { view: "sins" };',
+    'if (path === "/requests") return { view: "requests" };',
+    'if (path === "/install") return { view: "install" };',
+    'location.replace("#/requests");',
+    "/^\\/theme\\/([a-z0-9-]+)\\/?$/",
+    "/^\\/hymn\\/(\\d+)\\/?$/",
+  ]) {
+    assert.ok(routeSource.includes(line), line);
+  }
+
+  // Opening a hymn is what marks a reader as returning.
+  const hymnSource = appSource.slice(appSource.indexOf("function renderHymn("), appSource.indexOf("function requestField("));
+  assert.match(hymnSource, /markReturning\(\);/);
+  assert.match(appSource, /localStorage\.setItem\(RETURNING_KEY, "1"\)/);
+  // Back from a hymn opened on the welcome page returns there.
+  assert.match(appSource, /if \(index === "welcome"\) return "#\/welcome";/);
+  assert.match(hymnSource, /\["Welcome", "welcome page"\]/);
+
+  // The welcome page is drawn before the hymnal has loaded, and filled in after.
+  assert.match(appSource, /if \(!ready\) \{[\s\S]*?if \(current\.view === "welcome"\) \{\s*renderWelcome\(\);/);
+  assert.match(appSource, /if \(ready\) fillWelcome\(page\);/);
+  // The Install button uses the same handler as the header link, and is not
+  // offered inside the installed app.
+  assert.match(appSource, /install\.addEventListener\("click", installClick\)/);
+  assert.match(appSource, /installLink\.addEventListener\("click", installClick\)/);
+  assert.match(appSource, /if \(!runningAsApp\(\)\) \{\s*const install = el\("a", \{ class: "btn btn-install", href: "#\/install" \}/);
+  // The mark is decorative. The card is a real link with the hymn title as its name.
+  assert.match(appSource, /src: "favicon\.svg", width: "56", height: "56", alt: "" \}/);
+  assert.match(appSource, /el\("a", \{ href: `#\/hymn\/\$\{hymn\.number\}` \}, hymn\.title\)/);
+
+  // It works offline: the new module and the mark it shows are precached.
+  assert.ok(sw.includes('"./welcome.js"'));
+  assert.ok(sw.includes('"./favicon.svg"'));
+  assert.match(sw, /const CACHE = "hark-v\d+";/);
+  // No new fonts, images, or outside addresses came with it.
+  const welcomeSource = readFileSync(new URL("../welcome.js", import.meta.url), "utf8");
+  assert.equal(/https?:\/\//.test(welcomeSource), false);
+  const welcomeCss = css.slice(css.indexOf("/* Welcome page */"));
+  assert.equal(/url\(/.test(welcomeCss), false);
+  assert.equal(/@font-face|@import/.test(welcomeCss), false);
+  // The search box and tabs are hidden by the stylesheet from the first paint.
+  assert.match(css, /html\[data-view="welcome"\] \.search,[\s\S]*?html\[data-view="welcome"\] \.count-row \{\s*display: none;/);
+  assert.match(css, /--paper: #f3eee4;/);
 });
