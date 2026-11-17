@@ -5,6 +5,8 @@ import vm from "node:vm";
 import { requestConfig, requestsOpen } from "../config/requests.js";
 import { INSTALL_URL, installGuide } from "../install.js";
 import { isLiked, likeButtonState, likedHymns, readLikes, toggleLike } from "../likes.js";
+import { changelogDateLabel, groupChangelog } from "../changelog.js";
+import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import {
   authorIndex,
   browse,
@@ -1189,6 +1191,7 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "hymn-model.js",
     "install.js",
     "likes.js",
+    "changelog.js",
     "welcome.js",
     "config/requests.js",
     "worker/src/index.js",
@@ -1197,6 +1200,8 @@ test("shell files exist and UI copy has no en or em dashes", () => {
     "README.md",
     "docs/data.md",
     "docs/recordings.md",
+    "docs/push.md",
+    "scripts/build-feed.mjs",
     "data/themes.json",
     "data/sins.json",
     "data/sermons.json",
@@ -1716,4 +1721,82 @@ test("a like toggles and stays in storage", () => {
   assert.match(appSource, /type: "button", class: "like-btn"/);
   assert.match(appSource, /No liked hymns yet/);
   assert.match(appSource, /path === "\/liked"/);
+});
+
+test("the changelog lists hymns that are in the book, newest first", () => {
+  const changelog = JSON.parse(readFileSync(new URL("../data/changelog.json", import.meta.url), "utf8"));
+  const hymns = JSON.parse(readFileSync(new URL("../data/hymns.json", import.meta.url), "utf8"));
+  const numbers = new Set(hymns.map((hymn) => hymn.number));
+  assert.ok(Array.isArray(changelog) && changelog.length > 0);
+  let previous = "9999-99-99";
+  const seen = new Set();
+  for (const entry of changelog) {
+    assert.match(entry.date, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(entry.date <= previous, entry.date);
+    previous = entry.date;
+    assert.ok(Array.isArray(entry.hymns) && entry.hymns.length > 0);
+    assert.equal(new Set(entry.hymns).size, entry.hymns.length);
+    for (const number of entry.hymns) {
+      assert.equal(typeof number, "number", String(number));
+      assert.equal(numbers.has(number), true, String(number));
+      assert.equal(seen.has(number), false, String(number));
+      seen.add(number);
+    }
+    if ("note" in entry) {
+      assert.equal(typeof entry.note, "string");
+      assert.ok(entry.note.trim().length > 0);
+      assert.equal(/\u2013|\u2014/.test(entry.note), false, entry.note);
+    }
+  }
+  assert.equal(seen.size, hymns.length);
+  assert.equal(changelogDateLabel("2026-11-16"), "November 16, 2026");
+  const groups = groupChangelog(changelog);
+  assert.equal(groups[0].date, changelog[0].date);
+  assert.equal(groups[0].batches.length, changelog.filter((entry) => entry.date === groups[0].date).length);
+  assert.deepEqual(
+    groups.flatMap((group) => group.batches),
+    changelog,
+  );
+});
+
+test("the RSS feed is generated from the changelog", () => {
+  const changelog = JSON.parse(readFileSync(new URL("../data/changelog.json", import.meta.url), "utf8"));
+  const hymns = JSON.parse(readFileSync(new URL("../data/hymns.json", import.meta.url), "utf8"));
+  const xml = buildFeed({ changelog, hymns });
+  const onDisk = readFileSync(new URL("../feed.xml", import.meta.url), "utf8");
+  assert.equal(onDisk, xml);
+  assert.match(xml, /^<\?xml version="1.0" encoding="UTF-8"\?>/);
+  assert.match(xml, /<rss version="2.0"/);
+  assert.match(xml, /<title>Hark<\/title>/);
+  assert.ok(xml.includes(`${SITE}feed.xml`));
+  assert.ok(xml.includes("Whate'er My God Ordains Is Right"));
+  assert.equal(/\u2013|\u2014/.test(xml), false);
+  const first = hymns.find((hymn) => hymn.number === changelog[0].hymns[0]).title;
+  const last = hymns.find((hymn) => hymn.number === changelog[changelog.length - 1].hymns[0]).title;
+  assert.ok(xml.indexOf(first) < xml.indexOf(last));
+  const escaped = buildFeed({
+    changelog: [{ date: "2026-11-17", hymns: [1], note: "A & B" }],
+    hymns: [{ number: 1, title: "Grace & Peace" }],
+  });
+  assert.match(escaped, /Grace &amp; Peace/);
+  assert.match(escaped, /A &amp; B/);
+  assert.equal(escaped.includes("Grace & Peace"), false);
+  assert.match(escaped, /<guid isPermaLink="false">/);
+
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.match(page, /<link rel="alternate" type="application\/rss\+xml" title="Hark" href="feed\.xml">/);
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /path === "\/whats-new"/);
+  assert.match(appSource, /Subscribe \(RSS\)/);
+  assert.match(appSource, /#\/whats-new/);
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  assert.match(sw, /const CACHE = "hark-v33";/);
+  assert.ok(sw.includes('"./changelog.js"'));
+  assert.ok(sw.includes('"./data/changelog.json"'));
+  assert.ok(sw.includes('"./feed.xml"'));
+  const workflow = readFileSync(new URL("../.github/workflows/pages.yml", import.meta.url), "utf8");
+  assert.ok(workflow.indexOf("node scripts/build-feed.mjs") < workflow.indexOf("rsync"));
+  const docs = readFileSync(new URL("../docs/data.md", import.meta.url), "utf8");
+  assert.match(docs, /Every hymn addition must append a `changelog\.json` entry/);
+  assert.match(docs, /Monday bulletin routine/);
 });

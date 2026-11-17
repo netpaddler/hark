@@ -5,6 +5,7 @@ import {
   likedHymns,
   toggleLike,
 } from "./likes.js";
+import { changelogDateLabel, groupChangelog } from "./changelog.js";
 import {
   attributionParts,
   browse,
@@ -71,6 +72,7 @@ const scrollMemory = { number: 0, title: 0, author: 0, liked: 0, themes: 0, sins
 // returns to the page the reader left.
 const opensOnWelcome = document.documentElement.dataset.entry === "welcome";
 let hymns = [];
+let changelog = [];
 let recordingCatalog = {};
 let themeCatalog = { seasons: [], topics: [], hymns: {} };
 let sinsCatalog = null;
@@ -190,6 +192,7 @@ function route() {
   }
   if (path === "/requests") return { view: "requests" };
   if (path === "/install") return { view: "install" };
+  if (path === "/whats-new") return { view: "whats-new" };
   const themeMatch = path.match(/^\/theme\/([a-z0-9-]+)\/?$/);
   if (themeMatch) return { view: "theme", id: themeMatch[1] };
   const match = path.match(/^\/hymn\/(\d+)\/?$/);
@@ -205,6 +208,7 @@ function indexHref(index) {
   if (index === "sins") return "#/sins";
   if (index === "comments" || index === "requests") return "#/requests";
   if (index === "welcome") return "#/welcome";
+  if (index === "whats-new") return "#/whats-new";
   if (typeof index === "string" && index.startsWith("theme:")) return `#/theme/${index.slice(6)}`;
   return "#/";
 }
@@ -225,7 +229,8 @@ function storedIndex() {
       stored === "themes" ||
       stored === "sins" ||
       stored === "requests" ||
-      stored === "welcome"
+      stored === "welcome" ||
+      stored === "whats-new"
     ) {
       return stored;
     }
@@ -1214,6 +1219,7 @@ function renderHymn(number) {
   else if (listIndex === "title") listName = "title index";
   else if (listIndex === "author") listName = "author index";
   else if (listIndex === "liked") [backLabel, listName] = ["Liked", "liked hymns"];
+  else if (listIndex === "whats-new") [backLabel, listName] = ["What's New", "What's New page"];
   back.replaceChildren(icon("back"), document.createTextNode(backLabel));
   back.setAttribute("aria-label", `Back to the ${listName}`);
 
@@ -1794,6 +1800,7 @@ function render() {
   else if (current.view === "sins") renderSins();
   else if (current.view === "requests") renderRequests();
   else if (current.view === "install") renderInstall();
+  else if (current.view === "whats-new") renderWhatsNew();
   else renderIndex(current.index);
   syncSticky();
 }
@@ -1817,13 +1824,14 @@ function showError() {
 
 async function load() {
   try {
-    const [hymnResponse, recordingResponse, themeResponse, sinsResponse, sermonResponse, musicResponse] = await Promise.all([
+    const [hymnResponse, recordingResponse, themeResponse, sinsResponse, sermonResponse, musicResponse, changelogResponse] = await Promise.all([
       fetch(new URL("data/hymns.json", import.meta.url)),
       fetch(new URL("data/recordings.json", import.meta.url)),
       fetch(new URL("data/themes.json", import.meta.url)),
       fetch(new URL("data/sins.json", import.meta.url)),
       fetch(new URL("data/sermons.json", import.meta.url)),
       fetch(new URL("data/music.json", import.meta.url)),
+      fetch(new URL("data/changelog.json", import.meta.url)),
     ]);
     if (!hymnResponse.ok) throw new Error(String(hymnResponse.status));
     const data = await hymnResponse.json();
@@ -1853,6 +1861,11 @@ async function load() {
     if (musicResponse.ok) {
       const catalog = await musicResponse.json();
       if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) musicCatalog = catalog;
+    }
+    changelog = [];
+    if (changelogResponse.ok) {
+      const catalog = await changelogResponse.json();
+      if (Array.isArray(catalog)) changelog = catalog;
     }
     ready = true;
     buildChips();
@@ -1904,6 +1917,7 @@ document.addEventListener("click", (event) => {
   if (link) rememberScroll();
   // About Hark opens the welcome page from the top, not where it was left.
   if (event.target.closest("#about-link")) scrollMemory.welcome = 0;
+  if (event.target.closest("#whats-new-link")) scrollMemory["whats-new"] = 0;
 });
 
 window.addEventListener("hashchange", render);
@@ -1985,6 +1999,50 @@ async function promptInstall() {
   }
   syncInstallButton();
   return true;
+}
+
+function renderWhatsNew() {
+  homeBar.hidden = false;
+  hymnBar.hidden = true;
+  setBrowseChrome(false, { hideTabs: true });
+  activeIndex = "whats-new";
+  saveIndex("whats-new");
+  syncTabs("whats-new");
+  main.classList.remove("has-jump");
+  main.removeAttribute("role");
+  main.removeAttribute("aria-labelledby");
+  count.textContent = "";
+  document.title = "What's New · Hark";
+  const page = el("article", { class: "whats-new" });
+  page.append(el("p", { class: "theme-back" }, el("a", { href: "#/" }, "Hymns")));
+  page.append(el("h2", {}, "What's New"));
+  page.append(el("p", { class: "whats-new-lead" }, "Hymns added to Hark, newest first."));
+  page.append(
+    el("p", { class: "whats-new-subscribe" }, el("a", { href: "feed.xml" }, "Subscribe (RSS)")),
+  );
+  const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
+  const groups = groupChangelog(changelog);
+  if (!groups.length) page.append(el("p", {}, "No hymns have been added yet."));
+  for (const group of groups) {
+    const section = el("section");
+    section.append(el("h3", {}, changelogDateLabel(group.date)));
+    for (const batch of group.batches) {
+      if (batch.note) section.append(el("p", { class: "whats-new-note" }, batch.note));
+      const list = el("ul");
+      for (const number of batch.hymns) {
+        const hymn = byNumber.get(number);
+        if (!hymn) continue;
+        list.append(
+          el("li", {}, el("a", { href: `#/hymn/${hymn.number}` }, `${hymn.number}. ${hymn.title}`)),
+        );
+      }
+      section.append(list);
+    }
+    page.append(section);
+  }
+  main.replaceChildren(page);
+  const y = scrollMemory["whats-new"] || 0;
+  requestAnimationFrame(() => window.scrollTo(0, y));
 }
 
 function renderInstall() {

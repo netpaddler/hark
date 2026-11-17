@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Hark">
     <title>Hark</title>
+    <link rel="alternate" type="application/rss+xml" title="Hark" href="feed.xml">
     <script>
       (function () {
         try {
@@ -104,7 +105,10 @@
         </div>
         <div class="count-row" id="count-row">
           <p class="count" id="count" aria-live="polite"></p>
-          <a class="about-link" id="about-link" href="#/welcome">About Hark</a>
+          <span class="home-links">
+            <a class="about-link" id="whats-new-link" href="#/whats-new">What's New</a>
+            <a class="about-link" id="about-link" href="#/welcome">About Hark</a>
+          </span>
         </div>
       </header>
 

@@ -460,8 +460,15 @@ a {
   font-size: 0.82rem;
 }
 
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.9rem;
+  margin-left: auto;
+}
+
 .about-link {
-  margin: -0.35rem 0 -0.35rem auto;
+  margin: -0.35rem 0;
   padding: 0.35rem 0;
   color: var(--muted);
   font-size: 0.82rem;
@@ -2141,6 +2148,55 @@ html[data-installed="true"] .btn-install {
   .feature-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* What's New */
+
+.whats-new {
+  padding-bottom: 1.5rem;
+}
+
+.whats-new h2 {
+  margin: 0.2rem 0 0.35rem;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.whats-new-lead,
+.whats-new-note {
+  margin: 0 0 0.45rem;
+  color: var(--muted);
+}
+
+.whats-new-subscribe {
+  margin: 0 0 1.1rem;
+}
+
+.whats-new h3 {
+  margin: 1.15rem 0 0.35rem;
+  font-size: 1rem;
+}
+
+.whats-new ul {
+  list-style: none;
+  margin: 0 0 0.4rem;
+  padding: 0;
+}
+
+.whats-new li {
+  border-top: 1px solid var(--line);
+}
+
+.whats-new li a {
+  display: block;
+  padding: 0.55rem 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.whats-new li a:hover {
+  color: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
