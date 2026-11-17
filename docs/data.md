@@ -6,6 +6,16 @@ File: `data/hymns.json`. It holds 45 entries: Trinity Hymnal (1990) nos. 193-233
 
 A heart on the hymn page stores that hymn number in the browser under `hark-likes`. The Liked tab reads the same list. Nothing is sent to a server, and the hymn files are not changed. The list still works when the device is offline, because the page and this store are both on the device.
 
+## What's New
+
+`data/changelog.json` is the list of hymns added to Hark. The What's New page and the RSS feed (`feed.xml`) both read it. Each entry has a `date` (`YYYY-MM-DD`), a `hymns` array of hymn numbers, and an optional `note` such as "From the Nov 15 AM and PM services". Entries are newest first. Batches that share a date appear together under that date.
+
+Every hymn addition must append a `changelog.json` entry. The Monday bulletin routine will do that when it adds hymns. Put the new entry first, and list only numbers that are in `data/hymns.json`. If a hymn is later removed from the book, take its number out of the changelog so the page and the feed do not link to a hymn that is gone. Do not use an en dash or an em dash in a note.
+
+After the changelog changes, run `npm run build:feed` (`scripts/build-feed.mjs`) and commit `feed.xml` with it. The deploy workflow runs that same script before it publishes the site, so the feed updates whenever `changelog.json` changes. Bump the cache name in `sw.js` in the same change, or an installed copy keeps the previous list.
+
+The first three entries are a seed from the git history of `data/hymns.json`. They are all dated 2026-11-16, the day those commits landed, and they list only numbers that are still in the book. A web push design, not built yet, is in [push.md](push.md).
+
 ## Fields
 These are the requested fields plus one extra, `stanza_numbers`. It gives the hymnal's stanza number for each entry in `stanzas`. It matters for no. 196, where only stanzas 1 and 4 are given. Stanza numbers and "[Refrain]" markers have been removed from the lines. `refrain` is printed once. `refrain_after_each_stanza` is true wherever the source marks the refrain as repeated.
 
