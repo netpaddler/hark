@@ -44,42 +44,68 @@ function trackFrom(hymn, item, stop) {
   };
 }
 
+function timedTrack(hymn, recordings) {
+  if (!hymn) return null;
+  const chosen = faithRecordings(recordings, hymn.number).find(
+    (item) =>
+      item.kind === "youtube" &&
+      item.embeddable !== false &&
+      item.id &&
+      captionEnd(item) != null,
+  );
+  if (!chosen) return null;
+  return trackFrom(hymn, chosen, playbackStop(chosen, hymn));
+}
+
+// Songs in the order given, keeping the first copy of a number.
+// A theme is not required. Songs without a caption end are left out.
+export function tracksForHymns({ hymns, recordings }) {
+  const tracks = [];
+  const seen = new Set();
+  for (const hymn of hymns || []) {
+    if (!hymn || seen.has(hymn.number)) continue;
+    seen.add(hymn.number);
+    const track = timedTrack(hymn, recordings);
+    if (track) tracks.push(track);
+  }
+  return tracks;
+}
+
 // Newest Faith Presbyterian recording that has a caption end.
 export function themeTracks({ hymns, themes, recordings, themeId }) {
   const byNumber = new Map((hymns || []).map((hymn) => [hymn.number, hymn]));
-  const tracks = [];
-  for (const number of hymnsInTheme(themes, themeId)) {
-    const hymn = byNumber.get(number);
-    if (!hymn) continue;
-    const chosen = faithRecordings(recordings, number).find(
-      (item) =>
-        item.kind === "youtube" &&
-        item.embeddable !== false &&
-        item.id &&
-        captionEnd(item) != null,
-    );
-    if (!chosen) continue;
-    tracks.push(trackFrom(hymn, chosen, playbackStop(chosen, hymn)));
-  }
-  return tracks;
+  const listed = hymnsInTheme(themes, themeId)
+    .map((number) => byNumber.get(number))
+    .filter(Boolean);
+  return tracksForHymns({ hymns: listed, recordings });
 }
 
 // Every song in the book that has a caption end, in hymn number order.
 export function songsWithEndings({ hymns, recordings }) {
   const sorted = [...(hymns || [])].sort((a, b) => a.number - b.number);
-  const tracks = [];
-  for (const hymn of sorted) {
-    const chosen = faithRecordings(recordings, hymn.number).find(
-      (item) =>
-        item.kind === "youtube" &&
-        item.embeddable !== false &&
-        item.id &&
-        captionEnd(item) != null,
-    );
-    if (!chosen) continue;
-    tracks.push(trackFrom(hymn, chosen, playbackStop(chosen, hymn)));
-  }
-  return tracks;
+  return tracksForHymns({ hymns: sorted, recordings });
+}
+
+// Timed songs from `number` through the end of the book. No wrap.
+export function songsFromNumber(tracks, number) {
+  if (!Array.isArray(tracks)) return [];
+  return tracks.filter((track) => track.number >= number);
+}
+
+// The song that should start after the one at `index`.
+// Auto play all follows hymn number through `catalog` and wraps.
+// It does not stay inside a theme, a search, or the list that started playback.
+// With auto off, a list continues in list order. A single song steps to the
+// next higher number and stops after the last one.
+export function nextPlay({ catalog, queue, index, auto, singleAdvance = false }) {
+  const list = Array.isArray(queue) ? queue : [];
+  const at = Number.isInteger(index) ? index : 0;
+  const current = list[at];
+  if (!current) return null;
+  if (auto) return nextEndingSong(catalog, current.number, { wrap: true });
+  if (at + 1 < list.length) return list[at + 1];
+  if (singleAdvance) return nextEndingSong(catalog, current.number, { wrap: false });
+  return null;
 }
 
 // The next timed song after `number`. With wrap, the last song returns the first.
