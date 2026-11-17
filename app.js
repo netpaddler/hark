@@ -4,7 +4,6 @@ import {
   browse,
   faithRecordings,
   filterHymns,
-  isWithheld,
   wordsPending,
   listRecordings,
   listSections,
@@ -777,33 +776,6 @@ function renderIndex(index) {
   requestAnimationFrame(() => window.scrollTo(0, y));
 }
 
-function copyrightNotice(hymn) {
-  const notice = el("div", { class: "notice copyright-note" });
-  notice.append(el("h2", {}, hymn.title));
-  const people = [hymn.author, hymn.translator ? `Translator: ${hymn.translator}` : ""]
-    .filter(Boolean)
-    .join(". ");
-  if (people) notice.append(el("p", {}, people));
-  const credit = [hymn.copyright_holder, hymn.copyright_year].filter(Boolean).join(", ");
-  if (credit) notice.append(el("p", { class: "copyright-holder" }, credit));
-  notice.append(el("p", {}, "Words are under copyright and are not reproduced here."));
-  const href = hymn.copyright_url || hymn.source_url;
-  if (href) {
-    notice.append(
-      el(
-        "p",
-        {},
-        el(
-          "a",
-          { href, target: "_blank", rel: "noopener noreferrer" },
-          "Read the words",
-        ),
-      ),
-    );
-  }
-  return notice;
-}
-
 function linesEl(lines, className) {
   const paragraph = el("p", { class: className });
   for (const line of lines) paragraph.append(el("span", { class: "line" }, line));
@@ -1182,9 +1154,7 @@ function renderHymn(number) {
     const heard = faithSection(hymn);
     const choir = recordingSection(hymn);
 
-    if (isWithheld(hymn)) {
-      article.append(copyrightNotice(hymn));
-    } else if (wordsPending(hymn)) {
+    if (wordsPending(hymn)) {
       // Listed from a bulletin so it can be found by number or title. Say that
       // plainly rather than showing an empty page.
       const notice = el("div", { class: "notice" });

@@ -308,10 +308,6 @@
       "seasons": ["christmas"],
       "topics": ["incarnation", "deity", "joy", "angels", "grace"]
     },
-    "212": {
-      "seasons": ["christmas"],
-      "topics": []
-    },
     "213": {
       "seasons": ["christmas", "epiphany"],
       "topics": ["incarnation", "king", "magi", "grace"]
@@ -379,18 +375,6 @@
     "229": {
       "seasons": ["christmas", "epiphany"],
       "topics": ["incarnation", "deity", "angels", "magi"]
-    },
-    "230": {
-      "seasons": ["christmas"],
-      "topics": ["incarnation"]
-    },
-    "231": {
-      "seasons": ["christmas"],
-      "topics": []
-    },
-    "232": {
-      "seasons": ["christmas"],
-      "topics": []
     },
     "233": {
       "seasons": ["christmas"],

@@ -1145,10 +1145,6 @@ main.has-jump {
   font-weight: 600;
 }
 
-.copyright-holder {
-  color: var(--muted);
-}
-
 .text {
   margin-top: 1rem;
   border-top: 1px solid var(--line);

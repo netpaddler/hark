@@ -50,7 +50,7 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 96);
+  assert.equal(hymns.length, 92);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
@@ -78,7 +78,7 @@ test("sections and copyright flags stay intact", () => {
   }
   assert.deepEqual(
     hymns.filter((hymn) => isWithheld(hymn)).map((hymn) => hymn.number),
-    [212, 230, 231, 232],
+    [],
   );
 });
 
@@ -118,7 +118,7 @@ test("title index is alphabetical and ignores a leading article", () => {
   assert.equal(titleLetter("A Mighty Fortress"), "M");
   assert.equal(titleLetter("An Upper Room"), "U");
   assert.equal(titleLetter("All Creatures of Our God and King"), "A");
-  assert.ok(titleSortKey("The First Noel") < titleSortKey("Thou Who Wast Rich"));
+  assert.ok(titleSortKey("The First Noel") < titleSortKey("While Shepherds Watched"));
   assert.equal(titleLetter("Hark! The Herald Angels Sing"), "H");
   const listed = browse(hymns, { mode: "title" }).letters.flatMap((bucket) =>
     bucket.hymns.map((hymn) => hymn.title),
@@ -134,7 +134,7 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 49);
+  assert.equal(all.length, 45);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
@@ -158,10 +158,7 @@ test("author index files people by surname and keeps translators", () => {
   );
   assert.deepEqual(
     group("Hunt, Mark E.").hymns.map((item) => [item.hymn.number, item.mark]),
-    [
-      [196, null],
-      [232, "tr."],
-    ],
+    [[196, null]],
   );
   assert.equal(
     group("Anonymous").hymns.find((item) => item.hymn.number === 215).mark,
@@ -196,7 +193,7 @@ test("partial and withheld hymns describe what is missing", () => {
     ],
   );
   assert.match(partialNote(byNumber.get(196)), /^Stanzas 2 and 3 are by Mark E\. Hunt/);
-  assert.equal(partialNote(byNumber.get(212)), null);
+  assert.equal(partialNote(byNumber.get(108)), null);
   const emmanuel = stanzaPlan(byNumber.get(194));
   assert.equal(emmanuel.filter((block) => block.type === "refrain").length, 5);
   assert.deepEqual(
@@ -942,8 +939,8 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
   assert.equal(wordsPending(stub), true);
   assert.match(stub.notes, /Faith Presbyterian Tacoma bulletin/);
   // A hymn whose words are withheld for copyright is a different state.
-  assert.equal(wordsPending(byNumber.get(212)), false);
-  assert.equal(isWithheld(byNumber.get(212)), true);
+  assert.equal(wordsPending(byNumber.get(53)), true);
+  assert.equal(isWithheld(byNumber.get(53)), false);
   // A hymn with words is neither.
   assert.equal(wordsPending(byNumber.get(108)), false);
   assert.equal(isWithheld(byNumber.get(108)), false);
@@ -965,27 +962,6 @@ test("hymns listed from a bulletin are findable but say the words are missing", 
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.match(appSource, /wordsPending\(hymn\)/);
   assert.match(appSource, /Words not added yet/);
-});
-
-test("copyrighted hymns name the holder and do not print the words", () => {
-  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
-  assert.match(appSource, /Words are under copyright and are not reproduced here\./);
-  const expected = {
-    212: ["Hope Publishing Co.", "1968", "https://www.hopepublishing.com/"],
-    230: ["CMF International (OMF International)", null, "https://hymnary.org/hymn/TH1990/230"],
-    231: ["Augsburg Publishing House", "1968", "https://hymnary.org/hymn/TH1990/231"],
-    232: ["InterVarsity Christian Fellowship", "1978", "https://hymnary.org/hymn/TH1990/232"],
-  };
-  const withheld = hymns.filter((hymn) => isWithheld(hymn));
-  assert.deepEqual(withheld.map((hymn) => hymn.number), [212, 230, 231, 232]);
-  for (const hymn of withheld) {
-    const [holder, year, url] = expected[hymn.number];
-    assert.equal(hymn.stanzas.length, 0, String(hymn.number));
-    assert.equal(hymn.copyright_holder, holder);
-    assert.equal(hymn.copyright_year, year);
-    assert.equal(hymn.copyright_url, url);
-    assert.ok(hymn.author || hymn.translator, String(hymn.number));
-  }
 });
 
 test("the Hark title links home on the list and on a hymn", () => {

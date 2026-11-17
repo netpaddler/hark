@@ -626,8 +626,16 @@
       4
     ],
     "copyright_stanzas": [
-      {"number": 2, "holder": "InterVarsity Christian Fellowship", "year": "1978"},
-      {"number": 3, "holder": "InterVarsity Christian Fellowship", "year": "1978"}
+      {
+        "number": 2,
+        "holder": "InterVarsity Christian Fellowship",
+        "year": "1978"
+      },
+      {
+        "number": 3,
+        "holder": "InterVarsity Christian Fellowship",
+        "year": "1978"
+      }
     ],
     "refrain": null,
     "refrain_after_each_stanza": false,
@@ -1509,27 +1517,6 @@
     ],
     "refrain_after_each_stanza": true,
     "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Refrain follows each stanza. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
-    "number": 212,
-    "title": "Within a Crib My Savior Lay",
-    "section": "Christmas",
-    "author": "Timothy Dudley-Smith",
-    "translator": null,
-    "composer": "Norman L. Warren, b. 1934",
-    "tune": "LORD OF LOVE",
-    "year_text": "text 1968",
-    "public_domain": false,
-    "copyright_note": "Text by Timothy Dudley-Smith (1968), copyright 1968 Hope Publishing Co. Licensed words: Trinity Hymnal (1990) no. 212; Hope Publishing (hopepublishing.com); CCLI SongSelect or OneLicense for congregational reprint.",
-    "copyright_holder": "Hope Publishing Co.",
-    "copyright_year": "1968",
-    "copyright_url": "https://www.hopepublishing.com/",
-    "source_url": "https://hymnary.org/hymn/TH1990/212",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
   },
   {
     "number": 213,
@@ -2512,69 +2499,6 @@
     "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Joseph Simpson Cook text first published 1919, so public domain in the US. MacMillan's 1930 arrangement may be under copyright; the text is not. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
   },
   {
-    "number": 230,
-    "title": "Thou Who Wast Rich beyond All Splendor",
-    "section": "Christmas",
-    "author": "Frank Houghton, 1894-1972",
-    "translator": null,
-    "composer": "French carol melody; arr. Charles Herbert Kitson",
-    "tune": "QUELLE EST CETTE ODEUR AGREABLE",
-    "year_text": null,
-    "public_domain": false,
-    "copyright_note": "Text by Frank Houghton (1894-1972), copyright CMF International (OMF International). Licensed words: Trinity Hymnal (1990) no. 230; OMF International; CCLI SongSelect for reprint.",
-    "copyright_holder": "CMF International (OMF International)",
-    "copyright_year": null,
-    "copyright_url": "https://hymnary.org/hymn/TH1990/230",
-    "source_url": "https://hymnary.org/hymn/TH1990/230",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
-    "number": 231,
-    "title": "Lovely Child, Holy Child",
-    "section": "Christmas",
-    "author": "David N. Johnson",
-    "translator": null,
-    "composer": "Folk carol; arr. David N. Johnson",
-    "tune": "BETHLEHEM (Johnson)",
-    "year_text": "text 1968; Mod.",
-    "public_domain": false,
-    "copyright_note": "Text and tune by David N. Johnson, copyright 1968 Augsburg Publishing House (Augsburg Fortress). Licensed words: Trinity Hymnal (1990) no. 231; Augsburg Fortress; OneLicense for reprint.",
-    "copyright_holder": "Augsburg Publishing House",
-    "copyright_year": "1968",
-    "copyright_url": "https://hymnary.org/hymn/TH1990/231",
-    "source_url": "https://hymnary.org/hymn/TH1990/231",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
-    "number": 232,
-    "title": "O Jesus Sweet, O Jesus Mild",
-    "section": "Christmas",
-    "author": "Samuel Scheidt",
-    "translator": "Mark E. Hunt",
-    "composer": "Johann Sebastian Bach, 1685-1750",
-    "tune": "O JESULEIN SÜSS",
-    "year_text": "text 1650; tr. 1976; alt. 1990",
-    "public_domain": false,
-    "copyright_note": "Translation by Mark E. Hunt (1976, alt. 1990), copyright 1978 InterVarsity Christian Fellowship. Licensed words: Trinity Hymnal (1990) no. 232; permission from InterVarsity Christian Fellowship (or the Trinity Hymnal publisher, Great Commission Publications).",
-    "copyright_holder": "InterVarsity Christian Fellowship",
-    "copyright_year": "1978",
-    "copyright_url": "https://hymnary.org/hymn/TH1990/232",
-    "source_url": "https://hymnary.org/hymn/TH1990/232",
-    "stanzas": [],
-    "stanza_numbers": [],
-    "refrain": null,
-    "refrain_after_each_stanza": false,
-    "notes": "Retrieved via Internet Archive Wayback Machine snapshot of this hymnary.org Trinity Hymnal (1990) instance page; live hymnary.org blocked automated fetches. Withheld: text under copyright. Only metadata is given. Section 'Christmas' inferred from hymn order (199-233) between the Advent hymns and 234 ('His Life'); not checked against the printed table of contents."
-  },
-  {
     "number": 233,
     "title": "To Us a Child of Hope is Born",
     "section": "Christmas",
@@ -2730,7 +2654,13 @@
         "in willing bonds beneath thy feet."
       ]
     ],
-    "stanza_numbers": [1, 2, 3, 4, 5],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
     "notes": "Text from the Trinity Hymnal (1990) instance page https://hymnary.org/hymn/TH1990/301. Isaac Watts, 1707. The page shows no alteration and no copyright notice. The Faith Presbyterian Tacoma bulletin for 2026-08-09-pm (https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf) prints the same five stanzas, with the same lines, and credits Isaac Watts, 1707."
@@ -2937,7 +2867,14 @@
         "whilst all ages run."
       ]
     ],
-    "stanza_numbers": [1, 2, 3, 4, 5, 6],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "refrain": null,
     "refrain_after_each_stanza": false,
     "notes": "Text from the Trinity Hymnal (1990) instance page https://hymnary.org/hymn/TH1990/406. Sabine Baring-Gould, 1865. The page shows no alteration and no copyright notice. The Faith Presbyterian Tacoma bulletin for 2026-08-23-pm (https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf) prints the same six stanzas, with the same lines, and credits Sabine Baring-Gould, 1865."
