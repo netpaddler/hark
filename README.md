@@ -20,9 +20,29 @@ Tests, with no install step:
 node --test
 ```
 
+## Welcome page
+
+A first visit to the bare address opens on a welcome page, `#/welcome`. It says what Hark is and has four buttons: Browse the hymns, Browse by season, Install Hark, and Request a hymn. A search box opens a hymn by its number, or the list with the search filled in. Below that are a hymn for today, a few figures, what Hark offers, and the seasons.
+
+Nothing on the page is written down by hand that the data can answer. The copy and the rules are in `welcome.js`.
+
+- **The figures** are counted from `data/hymns.json`, `data/recordings.json`, and `data/music.json` each time the page is drawn: hymns with their words, hymns listed by number and title, recordings, and tunes with music. A hymn whose words are withheld is left out of every figure.
+- **The featured hymns** come from the season the day falls in: Advent from the fourth Sunday before Christmas to Christmas Eve, Christmas from December 25 to January 5, and Epiphany from January 6 to the end of January. The rest of the year they come from All Year, and in the four weeks before Advent a line says when Advent begins. The first hymn moves on by one each day. Only a hymn whose words are shown whole is featured. A withheld hymn, a hymn with no words yet, and a hymn with stanzas left out for copyright are never featured.
+- **The public domain line** ("Every hymn text in Hark is in the public domain.") is shown only while every hymn that has words in `data/hymns.json` is marked `public_domain: true`.
+
+Returning readers do not see the welcome page unless they ask for it:
+
+- The installed app always opens on the hymn list.
+- So does anyone who has opened a hymn before. Opening a hymn sets `hark-returning` in the browser's storage.
+- So does anyone who used Hark before the welcome page existed. They have a service worker running and no mark in storage, and that is how they are told apart from a newcomer, who is marked `hark-newcomer` on the first visit.
+- `#/` is still the hymn list for everyone, and every other address works as before. Only the bare address, with nothing after it, can open on the welcome page.
+- An About Hark link beside the hymn count opens the welcome page at any time.
+
+The choice is made by a small script in `index.html` before the first paint, so the list and the welcome page never flash one after the other.
+
 ## Browse
 
-The home screen has a search box, section chips, and tabs for Number, Title, Author, Themes, and Sins.
+The hymn list has a search box, section chips, and tabs for Number, Title, Author, Themes, and Sins.
 
 - **Number** keeps hymnal order. Each row shows the number, title, and tune.
 - **Title** is a table of contents, alphabetical by title. A leading A, An, or The is skipped when sorting, so a later hymn called "The First Noel" files under F. The A to Z bar on the right jumps to a letter. Drag it the way you would a contacts index.

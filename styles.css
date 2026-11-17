@@ -33,6 +33,7 @@
   --accent-ink: #fffaf3;
   --notice: #f4e6d0;
   --chip-border: #d9cbb8;
+  --glow: #e6b15a;
   --serif: "Newsreader", "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
   --sans: "Segoe UI", system-ui, sans-serif;
   --sticky-h: 12rem;
@@ -53,6 +54,7 @@ html[data-installed="true"] .install-link {
   --accent-ink: #1a140c;
   --notice: #2a2318;
   --chip-border: #4a4036;
+  --glow: #9a6f2c;
 }
 
 *,
@@ -445,10 +447,34 @@ a {
   box-shadow: 0 1px 2px rgba(33, 28, 22, 0.08);
 }
 
+.count-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .count {
   margin: 0;
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.about-link {
+  margin: -0.35rem 0 -0.35rem auto;
+  padding: 0.35rem 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-decoration: underline;
+  text-decoration-color: var(--chip-border);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.about-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: 4px;
 }
 
 .theme-jumps {
@@ -1430,6 +1456,634 @@ main.has-jump {
   gap: 0.4rem;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+/* Welcome page */
+
+/* index.html sets data-view before the first paint, so a first visit never
+   shows the search box and tabs for a moment before the welcome page. */
+html[data-view="welcome"] .app {
+  width: min(100%, 68rem);
+}
+
+html[data-view="welcome"] .search,
+html[data-view="welcome"] .chips,
+html[data-view="welcome"] .tabs,
+html[data-view="welcome"] .count-row {
+  display: none;
+}
+
+.welcome {
+  padding-bottom: 0.5rem;
+}
+
+.welcome-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 2rem;
+  padding: clamp(1.6rem, 6vw, 4rem) 0 clamp(1.75rem, 4vw, 3rem);
+}
+
+.welcome-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 -1.1rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 95% 55% at 100% 0%,
+    color-mix(in srgb, var(--glow) 22%, transparent),
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.welcome-intro {
+  min-width: 0;
+}
+
+.welcome-mark {
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 8px 20px -10px rgba(33, 28, 22, 0.55);
+}
+
+.welcome-title {
+  margin: 1.2rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2.3rem, 4.6vw + 1.1rem, 3.9rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.welcome-lead {
+  max-width: 36rem;
+  margin: 1rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(1.18rem, 0.6vw + 1.05rem, 1.35rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.welcome-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.welcome-actions .btn:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--chip-border);
+  border-radius: 999px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.btn-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+html[data-installed="true"] .btn-install {
+  display: none;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--accent) 86%, var(--ink));
+    color: var(--accent-ink);
+  }
+}
+
+.welcome-search {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 30rem;
+  margin-top: 0.9rem;
+}
+
+.welcome-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--chip-border);
+  border-radius: 12px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.welcome-search input::placeholder {
+  color: var(--muted);
+}
+
+.welcome-search input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.welcome-search button {
+  min-height: 3rem;
+  padding: 0 1.1rem;
+  border: 1px solid var(--chip-border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.kicker {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 2.75rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.more-link .icon {
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  transition: transform 0.15s;
+}
+
+@media (hover: hover) {
+  a.more-link:hover .icon,
+  .today-card:hover .today-cue .icon {
+    transform: translateX(3px);
+  }
+}
+
+.welcome-today {
+  min-width: 0;
+}
+
+.today-card {
+  position: relative;
+  padding: 1.4rem 1.4rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-raised);
+  box-shadow:
+    0 1px 2px rgba(33, 28, 22, 0.05),
+    0 22px 44px -24px rgba(33, 28, 22, 0.35);
+  transition: border-color 0.15s;
+}
+
+@media (hover: hover) {
+  .today-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  }
+}
+
+.today-number {
+  margin: 1rem 0 0;
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.today-title {
+  margin: 0.1rem 0 0.9rem;
+  font-family: var(--serif);
+  font-size: clamp(1.55rem, 1.4vw + 1.2rem, 2rem);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.today-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The whole card is the link, without making a screen reader read all of it
+   as the link's name. */
+.today-title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+}
+
+.today-title a:focus-visible {
+  outline: none;
+}
+
+.today-title a:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.today-lines {
+  margin: 0;
+  padding-left: 0.9rem;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.today-lines .line {
+  font-size: 1.2rem;
+}
+
+.today-credit {
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  overflow-wrap: break-word;
+}
+
+.today-cue {
+  margin-top: 0.3rem;
+}
+
+.welcome-facts {
+  padding: clamp(1.4rem, 4vw, 2.2rem) 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.welcome-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 1rem;
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.stat dd {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 2.5vw + 1.8rem, 3.2rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat dt {
+  max-width: 13rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.welcome-pd {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.welcome-stats + .welcome-pd {
+  margin-top: clamp(1.4rem, 4vw, 2rem);
+  padding-top: clamp(1.2rem, 3vw, 1.6rem);
+  border-top: 1px solid var(--line);
+}
+
+.welcome-pd .icon {
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-top: 0.1rem;
+  color: var(--accent);
+}
+
+.welcome-pd p {
+  max-width: 44rem;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.welcome-pd strong {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.welcome-section {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0 1.25rem;
+}
+
+.section-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.65rem, 1.6vw + 1.25rem, 2.15rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.kicker + .section-title {
+  margin-top: 0.3rem;
+}
+
+.featured-list {
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.upcoming {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.6rem;
+  margin: 1.1rem 0 0;
+  padding: 0.3rem 1rem;
+  border-radius: 12px;
+  background: var(--notice);
+}
+
+.upcoming > .icon {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--accent);
+}
+
+.upcoming span {
+  margin-right: auto;
+  padding: 0.5rem 0;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+}
+
+.feature-grid {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* On a phone the icon sits beside the words, which keeps six of these short. */
+.feature {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr;
+  column-gap: 0.9rem;
+  padding: 1.1rem 1.1rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-raised);
+}
+
+.feature > * {
+  grid-column: 2;
+}
+
+.feature > .feature-icon {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+}
+
+.feature-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  color: var(--accent);
+}
+
+.feature h3 {
+  margin: 0.15rem 0 0.3rem;
+  font-family: var(--serif);
+  font-size: 1.28rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.feature p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.feature .more-link {
+  justify-self: start;
+  align-self: end;
+  margin-top: 0.2rem;
+}
+
+.season-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.35rem 1.3rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+@media (hover: hover) {
+  .season-links a:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+.welcome-closing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  padding: clamp(1.8rem, 5vw, 3rem) 1.25rem;
+  border-radius: 20px;
+  background: var(--notice);
+  text-align: center;
+}
+
+.welcome-closing .section-title {
+  margin-top: 0.9rem;
+}
+
+.welcome-closing p {
+  max-width: 32rem;
+  margin: 0.5rem 0 1.2rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.welcome-closing .btn {
+  padding-inline: 1.5rem;
+}
+
+.welcome-about {
+  max-width: 34rem;
+  margin: clamp(2rem, 5vw, 3rem) auto 0;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.welcome .colophon {
+  margin-top: 0.8rem;
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .welcome-actions {
+    grid-template-columns: repeat(2, max-content);
+  }
+
+  .welcome-actions .btn:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .btn {
+    padding-inline: 1.25rem;
+    font-size: 1rem;
+  }
+
+  .welcome-stats {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-template-columns: none;
+  }
+
+  .featured-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2.5rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feature {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    padding: 1.3rem 1.3rem 0.5rem;
+  }
+
+  .feature > *,
+  .feature > .feature-icon {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .feature > .feature-icon {
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  html[data-view="welcome"] .app {
+    padding-inline: 2rem;
+  }
+
+  .welcome-hero::before {
+    inset: 0 -2rem;
+  }
+}
+
+@media (min-width: 60rem) {
+  .welcome-hero {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .welcome-hero::before {
+    background: radial-gradient(
+      closest-side at 80% 50%,
+      color-mix(in srgb, var(--glow) 30%, transparent),
+      transparent
+    );
+  }
+
+  .today-card {
+    padding: 1.8rem 1.8rem 1rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

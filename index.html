@@ -31,6 +31,40 @@
         if (standalone) document.documentElement.dataset.installed = "true";
       })();
     </script>
+    <script id="entry-script">
+      // Decides, once and before the first paint, what a visit to the bare
+      // address opens on. The installed app and anyone who has used Hark
+      // before go straight to the hymns. A first visit opens on the welcome
+      // page, and keeps doing so until that reader opens a hymn.
+      (function () {
+        var root = document.documentElement;
+        var returning = false;
+        var newcomer = false;
+        try {
+          returning = localStorage.getItem("hark-returning") === "1";
+          newcomer = localStorage.getItem("hark-newcomer") === "1";
+        } catch (e) {}
+        // A worker already running this page means Hark was open here before
+        // the welcome page existed, unless this browser was marked a newcomer.
+        var worker = "serviceWorker" in navigator && Boolean(navigator.serviceWorker.controller);
+        var entry = "welcome";
+        var mark = "";
+        if (returning) entry = "hymns";
+        else if (root.dataset.installed === "true" || (worker && !newcomer)) {
+          entry = "hymns";
+          mark = "hark-returning";
+        } else if (!newcomer) mark = "hark-newcomer";
+        if (mark) {
+          try {
+            localStorage.setItem(mark, "1");
+          } catch (e) {}
+        }
+        root.dataset.entry = entry;
+        var hash = location.hash;
+        var bare = hash === "" || hash === "#";
+        if (hash === "#/welcome" || (bare && entry === "welcome")) root.dataset.view = "welcome";
+      })();
+    </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -67,7 +101,10 @@
           <button type="button" role="tab" id="tab-sins" aria-controls="main" aria-selected="false" tabindex="-1">Sins</button>
           <button type="button" role="tab" id="tab-requests" aria-controls="main" aria-selected="false" tabindex="-1">Comments/Requests</button>
         </div>
-        <p class="count" id="count" aria-live="polite"></p>
+        <div class="count-row" id="count-row">
+          <p class="count" id="count" aria-live="polite"></p>
+          <a class="about-link" id="about-link" href="#/welcome">About Hark</a>
+        </div>
       </header>
 
       <header class="hymn-bar" id="hymn-bar" hidden>

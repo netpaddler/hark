@@ -20,6 +20,17 @@ import {
   youtubeBlock,
 } from "./hymn-model.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
+import {
+  RETURNING_KEY,
+  everyTextPublicDomain,
+  exampleHymns,
+  featuredHymns,
+  searchTarget,
+  seasonLinks,
+  statItems,
+  welcomeCopy,
+  welcomeStats,
+} from "./welcome.js";
 
 const homeBar = document.getElementById("home-bar");
 const hymnBar = document.getElementById("hymn-bar");
@@ -30,6 +41,7 @@ const clearButton = document.getElementById("clear");
 const chips = document.getElementById("chips");
 const tabs = document.getElementById("tabs");
 const count = document.getElementById("count");
+const countRow = document.getElementById("count-row");
 const bubble = document.getElementById("jump-bubble");
 const themeButtons = [
   document.getElementById("theme-home"),
@@ -45,7 +57,12 @@ const TAB_IDS = [
   ["tab-requests", "requests"],
 ];
 
-const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0, requests: 0 };
+const scrollMemory = { number: 0, title: 0, author: 0, themes: 0, sins: 0, requests: 0, welcome: 0 };
+
+// Set in index.html before the first paint. The bare address keeps opening on
+// the same view for as long as this page is loaded, so Back from a hymn
+// returns to the page the reader left.
+const opensOnWelcome = document.documentElement.dataset.entry === "welcome";
 let hymns = [];
 let recordingCatalog = {};
 let themeCatalog = { seasons: [], topics: [], hymns: {} };
@@ -95,6 +112,15 @@ function icon(name) {
     prev: "M14.5 5.5 8 12l6.5 6.5",
     next: "M9.5 5.5 16 12l-6.5 6.5",
     close: "M7 7l10 10M17 7 7 17",
+    arrow: "M5 12h14M13 6l6 6-6 6",
+    search: "M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM15.3 15.3 20 20",
+    play: "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM10 8.6v6.8l5.4-3.4z",
+    note: "M9 17.5V6l10-2v11.5M9 17.5a2.5 2 0 1 1-5 0 2.5 2 0 0 1 5 0zM19 15.5a2.5 2 0 1 1-5 0 2.5 2 0 0 1 5 0z",
+    star: "M12 3.5l2.5 5.4 5.9.7-4.4 4 1.2 5.9L12 16.6l-5.2 2.9L8 13.6l-4.4-4 5.9-.7z",
+    book: "M12 6.5c-1.8-1.3-4.2-1.8-7.5-1.5v12.5c3.3-.3 5.7.2 7.5 1.5m0-12.5c1.8-1.3 4.2-1.8 7.5-1.5v12.5c-3.3-.3-5.7.2-7.5 1.5m0-12.5V19",
+    phone: "M8.5 3.5h7A1.5 1.5 0 0 1 17 5v14a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 7 19V5a1.5 1.5 0 0 1 1.5-1.5zM12 8v6.5M9.5 12l2.5 2.5 2.5-2.5",
+    chat: "M5 5.5h14A1.5 1.5 0 0 1 20.5 7v8a1.5 1.5 0 0 1-1.5 1.5h-7L7.5 20v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z",
+    seal: "M12 3.5 5.5 6v5.5c0 4 2.7 7.2 6.5 8.8 3.8-1.6 6.5-4.8 6.5-8.8V6zM9 12l2.2 2.2 3.9-4.2",
   };
   path.setAttribute("d", paths[name]);
   svg.append(path);
@@ -140,7 +166,10 @@ function toggleTheme() {
 }
 
 function route() {
-  const path = (location.hash || "#/").replace(/^#/, "").split("?")[0] || "/";
+  const hash = location.hash;
+  if ((hash === "" || hash === "#") && opensOnWelcome) return { view: "welcome" };
+  const path = (hash || "#/").replace(/^#/, "").split("?")[0] || "/";
+  if (path === "/welcome") return { view: "welcome" };
   if (path === "/" || path === "/number") return { view: "index", index: "number" };
   if (path === "/title") return { view: "index", index: "title" };
   if (path === "/author") return { view: "index", index: "author" };
@@ -165,6 +194,7 @@ function indexHref(index) {
   if (index === "themes") return "#/themes";
   if (index === "sins") return "#/sins";
   if (index === "comments" || index === "requests") return "#/requests";
+  if (index === "welcome") return "#/welcome";
   if (typeof index === "string" && index.startsWith("theme:")) return `#/theme/${index.slice(6)}`;
   return "#/";
 }
@@ -183,7 +213,8 @@ function storedIndex() {
       stored === "number" ||
       stored === "themes" ||
       stored === "sins" ||
-      stored === "requests"
+      stored === "requests" ||
+      stored === "welcome"
     ) {
       return stored;
     }
@@ -437,6 +468,7 @@ function setBrowseChrome(shown, options = {}) {
   searchForm.hidden = !shown;
   chips.hidden = !shown;
   count.hidden = !shown;
+  countRow.hidden = !shown;
   tabs.hidden = Boolean(options.hideTabs);
 }
 
@@ -1107,21 +1139,15 @@ function renderHymn(number) {
   const back = document.getElementById("back-link");
   back.href = indexHref(listIndex);
   const fromThemes = listIndex === "themes" || (typeof listIndex === "string" && listIndex.startsWith("theme:"));
-  const fromSins = listIndex === "sins";
-  const fromRequests = listIndex === "requests";
-  const backLabel = fromRequests ? "Comments/Requests" : fromSins ? "Sins" : fromThemes ? "Themes" : "Hymns";
+  let backLabel = "Hymns";
+  let listName = "hymn list";
+  if (listIndex === "welcome") [backLabel, listName] = ["Welcome", "welcome page"];
+  else if (listIndex === "requests") [backLabel, listName] = ["Comments/Requests", "comments and requests"];
+  else if (listIndex === "sins") [backLabel, listName] = ["Sins", "Sins page"];
+  else if (fromThemes) [backLabel, listName] = ["Themes", "themes"];
+  else if (listIndex === "title") listName = "title index";
+  else if (listIndex === "author") listName = "author index";
   back.replaceChildren(icon("back"), document.createTextNode(backLabel));
-  const listName = fromRequests
-    ? "comments and requests"
-    : fromSins
-      ? "Sins page"
-      : fromThemes
-        ? "themes"
-        : listIndex === "title"
-          ? "title index"
-          : listIndex === "author"
-            ? "author index"
-            : "hymn list";
   back.setAttribute("aria-label", `Back to the ${listName}`);
 
   const found = neighbors(hymns, number);
@@ -1140,6 +1166,7 @@ function renderHymn(number) {
     );
   } else {
     const hymn = found.hymn;
+    markReturning();
     document.title = `${hymn.number} ${hymn.title} · Hark`;
     const article = el("article", { class: "hymn" });
     article.append(el("p", { class: "hymn-number" }, `No. ${hymn.number}`));
@@ -1395,11 +1422,304 @@ function renderRequests() {
   requestAnimationFrame(() => window.scrollTo(0, y));
 }
 
+// Opening a hymn is what makes a reader a returning one. From the next visit
+// on, the bare address goes straight to the hymns.
+function markReturning() {
+  try {
+    localStorage.setItem(RETURNING_KEY, "1");
+  } catch {
+    /* ignore private mode */
+  }
+}
+
+function arrowLink(href, label, className) {
+  return el("a", { class: className || "more-link", href }, [label, icon("arrow")]);
+}
+
+function welcomeSearch() {
+  const copy = welcomeCopy.search;
+  const form = el("form", { class: "welcome-search", role: "search" });
+  const input = el("input", {
+    id: "welcome-q",
+    type: "search",
+    placeholder: copy.placeholder,
+    autocomplete: "off",
+    autocapitalize: "off",
+    autocorrect: "off",
+    spellcheck: "false",
+    enterkeyhint: "go",
+  });
+  form.append(
+    el("label", { class: "visually-hidden", for: "welcome-q" }, copy.label),
+    input,
+    el("button", { type: "submit" }, copy.button),
+  );
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const target = searchTarget(hymns, input.value);
+    queryInput.value = target.query;
+    clearButton.hidden = target.query.length === 0;
+    scrollMemory.number = 0;
+    location.hash = target.hash;
+  });
+  return form;
+}
+
+// The part of the welcome page that needs nothing from the data files, so it
+// can be on screen before they arrive.
+function welcomeShell() {
+  const copy = welcomeCopy;
+  const page = el("div", { class: "welcome" });
+  const hero = el("section", { class: "welcome-hero", "aria-labelledby": "welcome-title" });
+  const intro = el("div", { class: "welcome-intro" });
+  intro.append(
+    el("img", { class: "welcome-mark", src: "favicon.svg", width: "56", height: "56", alt: "" }),
+    el("h2", { class: "welcome-title", id: "welcome-title" }, copy.title),
+    el("p", { class: "welcome-lead" }, copy.lead),
+  );
+  const actions = el("div", { class: "welcome-actions" });
+  actions.append(
+    el("a", { class: "btn btn-primary", href: "#/" }, copy.actions.browse),
+    el("a", { class: "btn", href: "#/themes" }, copy.actions.seasons),
+  );
+  if (!runningAsApp()) {
+    const install = el("a", { class: "btn btn-install", href: "#/install" }, copy.actions.install);
+    install.addEventListener("click", installClick);
+    actions.append(install);
+  }
+  actions.append(el("a", { class: "btn", href: "#/requests" }, copy.actions.request));
+  intro.append(actions, welcomeSearch());
+  hero.append(intro, el("div", { class: "welcome-today", "data-slot": "today" }));
+  page.append(hero, el("div", { class: "welcome-rest", "data-slot": "rest" }));
+  return page;
+}
+
+function todayCard(pick) {
+  const copy = welcomeCopy.today;
+  const hymn = pick.hymn;
+  const card = el("article", { class: "today-card" });
+  card.append(
+    el("p", { class: "kicker" }, copy.kicker),
+    el("p", { class: "today-number" }, `No. ${hymn.number}`),
+    el("h3", { class: "today-title" }, el("a", { href: `#/hymn/${hymn.number}` }, hymn.title)),
+  );
+  if (pick.lines.length) card.append(linesEl(pick.lines, "today-lines"));
+  const credit = attributionParts(hymn);
+  if (credit.people) card.append(el("p", { class: "today-credit" }, credit.people));
+  // The title is the link, stretched over the card. This line is the cue.
+  card.append(
+    el("span", { class: "more-link today-cue", "aria-hidden": "true" }, [copy.link, icon("arrow")]),
+  );
+  return card;
+}
+
+function welcomeFacts() {
+  const copy = welcomeCopy;
+  const items = statItems(welcomeStats({ hymns, recordings: recordingCatalog, music: musicCatalog }));
+  const claim = everyTextPublicDomain(hymns);
+  if (items.length === 0 && !claim) return null;
+  const panel = el("section", { class: "welcome-facts", "aria-labelledby": "welcome-facts-title" });
+  panel.append(el("h2", { class: "visually-hidden", id: "welcome-facts-title" }, copy.stats.heading));
+  if (items.length) {
+    const list = el("dl", { class: "welcome-stats" });
+    for (const item of items) {
+      list.append(
+        el("div", { class: "stat" }, [el("dt", {}, item.label), el("dd", {}, String(item.value))]),
+      );
+    }
+    panel.append(list);
+  }
+  if (claim) {
+    const note = el("div", { class: "welcome-pd" });
+    note.append(
+      icon("seal"),
+      el("p", {}, [el("strong", {}, copy.publicDomain.claim), " ", copy.publicDomain.detail]),
+    );
+    panel.append(note);
+  }
+  return panel;
+}
+
+function welcomeFeatured(feature) {
+  const copy = welcomeCopy.featured;
+  const rest = feature.hymns.slice(1);
+  if (rest.length === 0 && !feature.upcoming) return null;
+  const block = el("section", { class: "welcome-section", "aria-labelledby": "welcome-featured-title" });
+  const title = feature.theme ? feature.theme.title : "";
+  const kicker =
+    feature.kind === "season" ? copy.seasonKicker : feature.kind === "year" ? copy.yearKicker : copy.plainKicker;
+  const heading =
+    feature.kind === "season"
+      ? copy.seasonHeading(title)
+      : feature.kind === "year"
+        ? copy.yearHeading
+        : copy.plainHeading;
+  const head = el("div", { class: "section-head" });
+  head.append(
+    el("div", {}, [
+      el("p", { class: "kicker" }, kicker),
+      el("h2", { class: "section-title", id: "welcome-featured-title" }, heading),
+    ]),
+  );
+  if (feature.theme) {
+    const label = feature.kind === "season" ? copy.seasonLink(title) : copy.yearLink(title);
+    head.append(arrowLink(`#/theme/${feature.theme.id}`, label));
+  } else head.append(arrowLink("#/", welcomeCopy.actions.browse));
+  block.append(head);
+  if (rest.length) {
+    block.append(
+      el(
+        "ul",
+        { class: "hymn-list featured-list" },
+        rest.map((pick) => hymnRow(pick.hymn)),
+      ),
+    );
+  }
+  if (feature.upcoming) {
+    const next = feature.upcoming.theme;
+    block.append(
+      el("p", { class: "upcoming" }, [
+        icon("star"),
+        el("span", {}, copy.upcoming(next.title, feature.upcoming.when)),
+        arrowLink(`#/theme/${next.id}`, copy.upcomingLink(next.title)),
+      ]),
+    );
+  }
+  return block;
+}
+
+function welcomeFeatures(examples) {
+  const copy = welcomeCopy.features;
+  const block = el("section", { class: "welcome-section", "aria-labelledby": "welcome-features-title" });
+  block.append(el("h2", { class: "section-title", id: "welcome-features-title" }, copy.heading));
+  const grid = el("ul", { class: "feature-grid" });
+  for (const item of copy.items) {
+    let href = item.href;
+    let label = item.link;
+    if (item.id === "hear" || item.id === "music") {
+      // These two only appear when there is a hymn that has what they promise.
+      const hymn = item.id === "hear" ? examples.recorded : examples.score;
+      if (!hymn) continue;
+      href = `#/hymn/${hymn.number}`;
+      label = item.link(hymn);
+    }
+    const tile = el("li", { class: "feature" });
+    tile.append(
+      el("span", { class: "feature-icon" }, icon(item.icon)),
+      el("h3", {}, item.title),
+      el("p", {}, item.text),
+      arrowLink(href, label),
+    );
+    grid.append(tile);
+  }
+  block.append(grid);
+  return block;
+}
+
+function welcomeSeasons() {
+  const copy = welcomeCopy.seasons;
+  const seasons = seasonLinks(themeCatalog, hymns);
+  if (seasons.length === 0) return null;
+  const block = el("section", { class: "welcome-section", "aria-labelledby": "welcome-seasons-title" });
+  const head = el("div", { class: "section-head" });
+  head.append(
+    el("h2", { class: "section-title", id: "welcome-seasons-title" }, copy.heading),
+    arrowLink("#/themes", copy.all),
+  );
+  block.append(head);
+  block.append(
+    el(
+      "ul",
+      { class: "season-links" },
+      seasons.map((season) => el("li", {}, el("a", { href: `#/theme/${season.id}` }, season.title))),
+    ),
+  );
+  return block;
+}
+
+function welcomeClosing() {
+  const copy = welcomeCopy;
+  const block = el("section", { class: "welcome-closing", "aria-labelledby": "welcome-request-title" });
+  block.append(
+    el("span", { class: "feature-icon" }, icon("chat")),
+    el("h2", { class: "section-title", id: "welcome-request-title" }, copy.request.heading),
+    el("p", {}, copy.request.text),
+    el("a", { class: "btn btn-primary", href: "#/requests" }, copy.request.button),
+  );
+  return block;
+}
+
+// Everything on the welcome page that is counted or chosen from the data.
+function fillWelcome(page) {
+  const feature = featuredHymns({
+    hymns,
+    themes: themeCatalog,
+    recordings: recordingCatalog,
+    music: musicCatalog,
+    date: new Date(),
+  });
+  const today = page.querySelector('[data-slot="today"]');
+  today.replaceChildren(...(feature.hymns.length ? [todayCard(feature.hymns[0])] : []));
+  const examples = exampleHymns({
+    hymns,
+    recordings: recordingCatalog,
+    music: musicCatalog,
+    prefer: feature.hymns.map((pick) => pick.hymn),
+  });
+  const parts = [
+    welcomeFacts(),
+    welcomeFeatured(feature),
+    welcomeFeatures(examples),
+    welcomeSeasons(),
+    welcomeClosing(),
+    el("p", { class: "welcome-about" }, welcomeCopy.about),
+    el("p", { class: "colophon" }, "Trinity Hymnal, 1990"),
+  ];
+  page.querySelector('[data-slot="rest"]').replaceChildren(...parts.filter(Boolean));
+}
+
+function renderWelcome() {
+  homeBar.hidden = false;
+  hymnBar.hidden = true;
+  setBrowseChrome(false, { hideTabs: true });
+  activeIndex = "welcome";
+  saveIndex("welcome");
+  syncTabs("welcome");
+  main.classList.remove("has-jump");
+  main.removeAttribute("role");
+  main.removeAttribute("aria-labelledby");
+  count.textContent = "";
+  document.title = welcomeCopy.documentTitle;
+  // The first pass runs before the hymnal has loaded and the second after.
+  // Keeping the page that is already there means a reader who has started
+  // typing in the search box does not lose it.
+  let page = main.querySelector(":scope > .welcome");
+  const fresh = !page;
+  if (fresh) {
+    page = welcomeShell();
+    main.replaceChildren(page);
+  }
+  if (ready) fillWelcome(page);
+  if (fresh) {
+    const y = ready ? scrollMemory.welcome || 0 : 0;
+    requestAnimationFrame(() => window.scrollTo(0, y));
+  }
+}
+
 function render() {
-  if (!ready) return;
-  bubble.hidden = true;
   const current = route();
-  if (current.view === "hymn") renderHymn(current.number);
+  document.documentElement.dataset.view = current.view;
+  if (!ready) {
+    // The welcome page has words to show before the hymnal has loaded.
+    if (current.view === "welcome") {
+      renderWelcome();
+      syncSticky();
+    }
+    return;
+  }
+  bubble.hidden = true;
+  if (current.view === "welcome") renderWelcome();
+  else if (current.view === "hymn") renderHymn(current.number);
   else if (current.view === "themes") renderThemes();
   else if (current.view === "theme") renderTheme(current.id);
   else if (current.view === "sins") renderSins();
@@ -1513,6 +1833,8 @@ tabs.addEventListener("keydown", (event) => {
 document.addEventListener("click", (event) => {
   const link = event.target.closest("a[href^='#/hymn/']");
   if (link) rememberScroll();
+  // About Hark opens the welcome page from the top, not where it was left.
+  if (event.target.closest("#about-link")) scrollMemory.welcome = 0;
 });
 
 window.addEventListener("hashchange", render);
@@ -1649,21 +1971,26 @@ window.addEventListener("appinstalled", () => {
   syncInstallButton();
 });
 
-if (installLink) {
-  installLink.addEventListener("click", (event) => {
-    if (runningAsApp()) return;
-    if (installEvent) {
-      event.preventDefault();
-      promptInstall();
-      return;
-    }
-    // No native prompt on this browser, so show the steps. If the dialog is not
-    // supported the link falls through to the install page.
-    if (openInstallHelp()) event.preventDefault();
-  });
+// Shared by the header link and the welcome page button.
+function installClick(event) {
+  if (runningAsApp()) return;
+  if (installEvent) {
+    event.preventDefault();
+    promptInstall();
+    return;
+  }
+  // No native prompt on this browser, so show the steps. If the dialog is not
+  // supported the link falls through to the install page.
+  if (openInstallHelp()) event.preventDefault();
 }
 
+if (installLink) installLink.addEventListener("click", installClick);
+
 syncInstallButton();
+
+// load() is still waiting on the hymnal here. This first pass is what puts the
+// welcome page on screen without waiting for it.
+render();
 
 if ("serviceWorker" in navigator) {
   let reloading = false;
