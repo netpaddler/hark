@@ -285,8 +285,8 @@ test("every recording belongs to a hymn that is in the book", () => {
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
-  assert.equal(Object.keys(recordings).length, 65);
-  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 277);
+  assert.equal(Object.keys(recordings).length, 67);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 281);
   assert.equal(faithRecordings(recordings, 108)[0].dateSort, "2025-12-14");
   assert.equal(faithRecordings(recordings, 401).length, 1);
   assert.equal(faithRecordings(recordings, 559)[0].dateSort, "2026-07-19");
@@ -306,6 +306,28 @@ test("Faith Presbyterian recordings stay out of the hymn file and sort newest fi
   );
   assert.equal(faithRecordings(recordings, 200).length, 0);
   assert.equal(faithRecordings(recordings, 211).length, 2);
+  const bethlehem = faithRecordings(recordings, 201);
+  assert.equal(bethlehem.length, 3);
+  assert.deepEqual(
+    bethlehem.map((item) => item.label),
+    [
+      "Christmas Eve Candlelight Service, 9:00 pm, Dec 24, 2023, congregation",
+      "Christmas Eve Candlelight Service, 4:00 pm, Dec 24, 2023, congregation",
+      "Sunday Morning Worship, Dec 19, 2021, congregation",
+    ],
+  );
+  assert.deepEqual(
+    bethlehem.map((item) => item.url),
+    [
+      "https://www.youtube.com/watch?v=QBbNqTNJB_E&t=2223s",
+      "https://www.youtube.com/watch?v=GcyYETKpWVI&t=2040s",
+      "https://www.youtube.com/watch?v=Sw8wfS8jI68&t=5486s",
+    ],
+  );
+  assert.equal(
+    faithRecordings(recordings, 221)[0].url,
+    "https://www.youtube.com/watch?v=pThh6ak-Jfw&t=4794s",
+  );
   const away = faithRecordings(recordings, 204);
   const awayOther = faithRecordings(recordings, 205);
   assert.equal(away.length, 1);
