@@ -1,6 +1,11 @@
 [
   {
     "date": "2026-11-18",
+    "hymns": [],
+    "note": "On a computer, the player now sits right above the words of the song that is playing. A button on the player bar lets it float in a corner instead."
+  },
+  {
+    "date": "2026-11-18",
     "hymns": [
       801
     ],

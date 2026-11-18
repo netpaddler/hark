@@ -2451,6 +2451,17 @@ html[data-stage="float"] .song-float-close {
   flex: 1 1 8.5rem;
 }
 
+/* Only a computer browser can choose where the player sits. */
+.song-place {
+  display: none;
+}
+
+@media (min-width: 60rem) {
+  .song-place:not([hidden]) {
+    display: inline-block;
+  }
+}
+
 .play-auto {
   background: var(--paper-raised);
   color: var(--ink);
