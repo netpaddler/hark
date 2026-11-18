@@ -1264,6 +1264,28 @@ main.has-jump {
   padding-top: 0.35rem;
 }
 
+.bulletin-note {
+  margin: 1rem 0 0;
+}
+
+.bulletin-note p {
+  margin: 0 0 0.45rem;
+}
+
+.bulletin-note a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.bulletin-preview {
+  display: block;
+  width: min(100%, 11rem);
+  height: 15rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper-raised);
+}
+
 .stanza {
   display: grid;
   grid-template-columns: 1.7rem 1fr;

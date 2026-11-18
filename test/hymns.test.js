@@ -37,6 +37,7 @@ import {
   youtubeEmbedSrc,
   youtubeBlock,
   listSermons,
+  faithBulletin,
 } from "../hymn-model.js";
 import {
   NEWCOMER_KEY,
@@ -1170,6 +1171,24 @@ test("bulletin hymns keep the printed words and drop fully copyrighted numbers",
   assert.match(stand.notes, /James Montgomery, 1824, 1825; mod\./);
   assert.equal(byNumber.get(700).stanzas[4][2], "we're marching through Immanuel's ground");
   assert.equal(byNumber.get(647).stanzas[2][2], "my never-failing treas'ry filled");
+
+  const linked = hymns.filter((hymn) => faithBulletin(hymn));
+  assert.equal(linked.length, 55);
+  for (const hymn of hymns) {
+    const bulletin = faithBulletin(hymn);
+    if (!bulletin) {
+      assert.equal(/faithtacoma\.sfo2\.cdn\.digitaloceanspaces\.com\/.*Bulletin-/.test(hymn.source_url || ""), false);
+      continue;
+    }
+    assert.equal(bulletin.url, hymn.source_url);
+    assert.match(bulletin.label, /^Faith Presbyterian bulletin, /);
+    assert.equal(/\u2013|\u2014/.test(bulletin.label), false);
+  }
+  assert.equal(faithBulletin(byNumber.get(108)), null);
+  assert.match(faithBulletin(byNumber.get(2)).label, /September 20, 2026, morning/);
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(appSource, /function bulletinNote/);
+  assert.match(appSource, /class: "bulletin-preview"/);
 });
 
 test("the Hark title links home on the list and on a hymn", () => {
@@ -1816,7 +1835,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v45";/);
+  assert.match(sw, /const CACHE = "hark-v46";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
