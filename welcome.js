@@ -5,6 +5,7 @@ import {
   faithRecordings,
   findTheme,
   hymnsInTheme,
+  inHymnal,
   isWithheld,
   listRecordings,
   sortByNumber,
@@ -96,7 +97,7 @@ export const welcomeCopy = {
         title: "Hear it at Faith Presbyterian",
         text:
           "Recordings from worship at Faith Presbyterian Church, Tacoma. Each one opens at the hymn.",
-        link: (hymn) => `Hear no. ${hymn.number}`,
+        link: (hymn) => (inHymnal(hymn) ? `Hear no. ${hymn.number}` : `Hear ${hymn.title}`),
       },
       {
         id: "music",
@@ -104,7 +105,8 @@ export const welcomeCopy = {
         title: "Music to read and play",
         text:
           "Where a public domain score is on file, open the music and play the tune at the tempo you choose.",
-        link: (hymn) => `See the music for no. ${hymn.number}`,
+        link: (hymn) =>
+          inHymnal(hymn) ? `See the music for no. ${hymn.number}` : `See the music for ${hymn.title}`,
       },
       {
         id: "themes",
@@ -342,7 +344,7 @@ export function searchTarget(hymns, query) {
   const text = String(query || "").trim();
   if (/^\d+$/.test(text)) {
     const number = Number(text);
-    if ((Array.isArray(hymns) ? hymns : []).some((hymn) => hymn.number === number)) {
+    if ((Array.isArray(hymns) ? hymns : []).some((hymn) => hymn.number === number && inHymnal(hymn))) {
       return { hash: `#/hymn/${number}`, query: "" };
     }
   }

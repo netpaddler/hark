@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { changelogDateLabel, changelogPubDate } from "../changelog.js";
+import { numberedTitle } from "../hymn-model.js";
 
 export const SITE = "https://hark.theweightofglory.com/";
 
@@ -21,7 +22,7 @@ function itemDescription(entry, byNumber, site) {
     const hymn = byNumber.get(number);
     if (!hymn) continue;
     const href = `${site}#/hymn/${hymn.number}`;
-    items.push(`<li><a href="${xml(href)}">${xml(`${hymn.number}. ${hymn.title}`)}</a></li>`);
+    items.push(`<li><a href="${xml(href)}">${xml(numberedTitle(hymn))}</a></li>`);
   }
   if (items.length) parts.push(`<ul>${items.join("")}</ul>`);
   return parts.join("");

@@ -396,6 +396,10 @@
     "642": {
       "seasons": ["all-year"],
       "topics": []
+    },
+    "801": {
+      "seasons": ["all-year"],
+      "topics": ["evening", "light"]
     }
   }
 }

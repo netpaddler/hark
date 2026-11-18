@@ -18,6 +18,27 @@ const NON_PERSON =
 const PARTICLE = /^(von|van|de|del|della|di|da|du|la|le|st\.?|saint)$/i;
 const SUFFIX = /^(jr\.?|sr\.?|ii|iii|iv)$/i;
 
+// The 1990 Trinity Hymnal runs to 742. A song that is not in the hymnal is
+// filed under a higher number. That number is only its place in the list and
+// its address. It is never shown or searched as a hymnal number.
+export const HYMNAL_LAST = 742;
+
+export function inHymnal(hymn) {
+  const number = hymn ? hymn.number : null;
+  return Number.isInteger(number) && number >= 1 && number <= HYMNAL_LAST;
+}
+
+// The hymnal number as text, or an empty string for a song with none.
+export function numberLabel(hymn) {
+  return inHymnal(hymn) ? String(hymn.number) : "";
+}
+
+// "642. Be Thou My Vision", or the bare title for a song with no number.
+export function numberedTitle(hymn, separator = ". ") {
+  if (!hymn) return "";
+  return inHymnal(hymn) ? `${hymn.number}${separator}${hymn.title}` : String(hymn.title);
+}
+
 export function sortByNumber(hymns) {
   return [...hymns].sort((a, b) => a.number - b.number);
 }
@@ -68,7 +89,7 @@ function hymnSearchText(hymn) {
     hymn.translator,
     hymn.tune,
     hymn.composer,
-    String(hymn.number),
+    numberLabel(hymn),
   ];
   for (const stanza of hymn.stanzas || []) parts.push(stanza.join(" "));
   if (hymn.refrain) parts.push(hymn.refrain.join(" "));
@@ -78,8 +99,8 @@ function hymnSearchText(hymn) {
 export function hymnMatches(hymn, query) {
   const q = foldText(query);
   if (!q) return true;
-  const number = String(hymn.number);
-  if (/^\d+$/.test(q) && (number === q || number.startsWith(q))) return true;
+  const number = numberLabel(hymn);
+  if (number && /^\d+$/.test(q) && (number === q || number.startsWith(q))) return true;
   return hymnSearchText(hymn).includes(q);
 }
 

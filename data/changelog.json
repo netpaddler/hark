@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-11-18",
+    "hymns": [
+      801
+    ],
+    "note": "Hail, Gladdening Light, a reader request, from the September 13 evening service. It is not in the Trinity Hymnal, so it has no hymn number."
+  },
+  {
+    "date": "2026-11-18",
     "hymns": [],
     "note": "Be Thou My Vision has a recording from the November 15 evening service. It stops by itself when the song ends."
   },
