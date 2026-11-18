@@ -10,7 +10,7 @@ import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
 import { captionEnd, estimatedEnd, nextEndingSong, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "../playlist.js";
-import { stageCorner, stageMostlyOff, stagePointerMove } from "../stage.js";
+import { stageCorner, stageMostlyOff, stagePlacement, stagePointerMove } from "../stage.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -1902,7 +1902,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v50";/);
+  assert.match(sw, /const CACHE = "hark-v51";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2228,6 +2228,23 @@ test("a song started outside a theme continues through the book", () => {
   assert.equal(fromHere[0].number, listed[0].number);
   assert.ok(fromHere.every((track) => track.number >= listed[0].number));
   assert.ok(fromHere.length < catalog.length);
+});
+
+test("a computer browser puts the player above the words unless the reader floats it", () => {
+  assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: "words" }), "words");
+  assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: undefined }), "words");
+  assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: "float" }), "float");
+  assert.equal(stagePlacement({ wide: true, onSongPage: false, choice: "words" }), "float");
+  // A phone keeps what it had, whatever was chosen on a computer.
+  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "float" }), "dock");
+  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "words" }), "dock");
+  assert.equal(stagePlacement({ wide: false, onSongPage: false, choice: "words" }), "float");
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const dock = appSource.slice(appSource.indexOf("function dockAboveWords("), appSource.indexOf("function removeDock("));
+  assert.equal(/songStage|song-player-host/.test(dock), false);
+  assert.match(appSource, /\(min-width: 60rem\)/);
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.match(page, /id="song-place"/);
 });
 
 test("a floating player snaps to a corner and a swipe off dismisses it", () => {

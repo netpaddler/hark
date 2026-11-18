@@ -34,3 +34,13 @@ export function stageMostlyOff(rect, screen) {
   const visible = Math.max(0, visibleW) * Math.max(0, visibleH);
   return visible < width * height * 0.5;
 }
+
+// Where the player sits. "float" is a corner of the screen. "dock" follows the
+// placeholder the hymn page was drawn with, which is how a phone has always
+// worked. "words" is for a computer browser: the player is put right above the
+// words of the song that is playing, unless the reader chose to float it.
+export function stagePlacement({ wide, onSongPage, choice }) {
+  if (!onSongPage) return "float";
+  if (!wide) return "dock";
+  return choice === "float" ? "float" : "words";
+}

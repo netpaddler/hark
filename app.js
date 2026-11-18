@@ -33,7 +33,7 @@ import {
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
 import { sendListen } from "./listen.js";
 import { gaEvent, gaPage, startAnalytics } from "./ga.js";
-import { stageCorner, stageMostlyOff, stagePointerMove } from "./stage.js";
+import { stageCorner, stageMostlyOff, stagePlacement, stagePointerMove } from "./stage.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
@@ -2073,16 +2073,79 @@ function revealDock() {
   syncInlineStage();
 }
 
+// A computer browser, by the same width the wide page layouts use.
+const WIDE_SCREEN = "(min-width: 60rem)";
+const PLACE_KEY = "hark-player-place";
+
+function wideScreen() {
+  try {
+    return typeof window.matchMedia === "function" && window.matchMedia(WIDE_SCREEN).matches;
+  } catch {
+    return false;
+  }
+}
+
+function placeChoice() {
+  try {
+    return localStorage.getItem(PLACE_KEY) === "float" ? "float" : "words";
+  } catch {
+    return "words";
+  }
+}
+
+function setPlaceChoice(choice) {
+  try {
+    localStorage.setItem(PLACE_KEY, choice);
+  } catch {
+    /* storage can be blocked */
+  }
+}
+
+// Puts the placeholder right above the words. Only the empty placeholder moves.
+// The player itself is never moved in the page, so the video keeps playing.
+function dockAboveWords() {
+  const article = main && typeof main.querySelector === "function" ? main.querySelector("article.hymn") : null;
+  if (!article) return;
+  const dock = document.getElementById("song-dock") || el("div", { id: "song-dock", class: "song-dock" });
+  const words = article.querySelector(".text");
+  if (words) {
+    if (dock.nextElementSibling !== words) words.before(dock);
+    return;
+  }
+  if (dock.parentNode) return;
+  const controls = article.querySelector(".play-all");
+  if (controls) controls.after(dock);
+  else article.append(dock);
+}
+
+function removeDock() {
+  const dock = document.getElementById("song-dock");
+  if (dock) dock.remove();
+}
+
+function syncPlaceButton(onSongPage) {
+  if (!songPlace) return;
+  songPlace.hidden = !onSongPage;
+  const floating = placeChoice() === "float";
+  songPlace.textContent = floating ? "Pin above words" : "Float player";
+}
+
 function placeStage() {
   if (!songStage || !songBar || document.documentElement.dataset.player !== "on") return;
   songBar.hidden = false;
+  const onSongPage = songIsOpen();
+  songOnPage = onSongPage;
+  syncPlaceButton(onSongPage);
   document.documentElement.style.setProperty("--song-bar-h", `${songBar.offsetHeight || 0}px`);
-  if (songIsOpen()) {
+  const place = stagePlacement({ wide: wideScreen(), onSongPage, choice: placeChoice() });
+  if (place === "words") dockAboveWords();
+  if (place !== "float") {
     document.documentElement.dataset.stage = "inline";
     clearStagePosition();
     syncInlineStage();
     return;
   }
+  if (onSongPage) removeDock();
   document.documentElement.dataset.stage = "float";
   if (!document.documentElement.dataset.corner) document.documentElement.dataset.corner = "se";
   if (document.documentElement.dataset.dragging !== "1") clearStagePosition();
@@ -2095,7 +2158,8 @@ function syncStageToSong() {
     placeStage();
     return;
   }
-  if (document.documentElement.dataset.stage === "inline") {
+  // The reader was on the page of the song that just ended, so follow the music.
+  if (songOnPage) {
     location.hash = `#/hymn/${track.number}`;
     return;
   }
@@ -2543,6 +2607,8 @@ async function toggleNotify() {
 
 const songBar = document.getElementById("song-bar");
 const songStage = document.getElementById("song-stage");
+const songPlace = document.getElementById("song-place");
+let songOnPage = false;
 const songFloatHit = document.getElementById("song-float-hit");
 const songFloatClose = document.getElementById("song-float-close");
 const songTitle = document.getElementById("song-bar-title");
@@ -2779,7 +2845,9 @@ function stopSongs() {
   document.documentElement.dataset.stage = "";
   document.documentElement.dataset.corner = "";
   delete document.documentElement.dataset.dragging;
+  songOnPage = false;
   clearStagePosition();
+  removeDock();
   clearNowPlaying();
   try {
     if (ytPlayer) ytPlayer.stopVideo();
@@ -2895,6 +2963,14 @@ setToggleLabel(true);
 if (songToggle) songToggle.addEventListener("click", toggleSong);
 if (songStop) songStop.addEventListener("click", stopSongs);
 if (songKeep) songKeep.addEventListener("click", keepWatchingService);
+if (songPlace) {
+  songPlace.addEventListener("click", () => {
+    const next = placeChoice() === "float" ? "words" : "float";
+    setPlaceChoice(next);
+    placeStage();
+    if (next === "words" && songIsOpen()) revealDock();
+  });
+}
 if (songFloatClose) {
   songFloatClose.replaceChildren(icon("close"));
   songFloatClose.addEventListener("click", (event) => {
