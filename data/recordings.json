@@ -2884,6 +2884,19 @@
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: higher than i to our strong tower him 624 624 through all the changing scenes of life through all the changing scenes of life oh my my my gosh gosh gosh is"
     }
   ],
+  "642": [
+    {
+      "label": "Sunday Evening Worship, Nov 15, 2026, congregation",
+      "video_title": "Sunday Evening Worship - November 15, 2026",
+      "video_date": "2026-11-15",
+      "url": "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=4131s",
+      "start_seconds": 4131,
+      "confidence": "medium",
+      "notes": "Bulletin closing hymn. This video has no auto captions, so the times come from the audio: a local transcript and the sound level. Starts at the spoken announcement: So let's stand now for our final hymn, number 642, Be Thou My Vision. The organ begins at 4136 and all five stanzas are sung. The last chord dies at 4340, just before the minister says: In just a moment we'll have a brief time of silent prayer.",
+      "end_seconds": 4340,
+      "end_source": "audio"
+    }
+  ],
   "644": [
     {
       "label": "Sunday Evening Worship, Nov 15, 2026, congregation",
