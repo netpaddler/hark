@@ -5,6 +5,7 @@
 // Bindings: RATE_LIMIT (optional), PUSH_SUBSCRIPTIONS (push subscriptions only)
 
 import { handleNotify, handleSubscribe, handleUnsubscribe } from "./push-routes.js";
+import { handleListen, handleStats } from "./listen.js";
 
 const LIMIT = 5;
 const WINDOW_MS = 60 * 60 * 1000;
@@ -266,6 +267,8 @@ export default {
     const url = new URL(request.url);
     // GitHub Actions calls this with a bearer secret and no browser Origin.
     if (url.pathname === "/notify") return handleNotify(request, env);
+    if (url.pathname === "/listen") return handleListen(request, env);
+    if (url.pathname === "/stats") return handleStats(request, env);
     if (!originAllowed(request, env)) return json({ error: "This origin is not allowed." }, 403);
     if (request.method === "OPTIONS") return cors(new Response(null, { status: 204 }), env, request);
     if (url.pathname === "/subscribe" || url.pathname === "/unsubscribe") {

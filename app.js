@@ -28,6 +28,8 @@ import {
   faithBulletin,
 } from "./hymn-model.js";
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
+import { sendListen } from "./listen.js";
+import { gaEvent, gaPage, startAnalytics } from "./ga.js";
 import { stageCorner, stageMostlyOff, stagePointerMove } from "./stage.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
@@ -1960,9 +1962,53 @@ function render() {
   else if (current.view === "whats-new") renderWhatsNew();
   else renderIndex(current.index);
   syncSticky();
+  notePage();
   // A route change only replaces #main. The YouTube player stays in #song-bar,
   // which is outside that view, so playback is not paused, stopped, or rebuilt.
   holdPlayer();
+}
+
+function notePage() {
+  try {
+    const path = location.hash || "#/";
+    sendListen({ type: "page", path });
+    gaPage(path);
+  } catch {
+    /* counting must never affect the page */
+  }
+}
+
+function notePlay(track) {
+  try {
+    sendListen({ type: "play", hymn: track.number, path: location.hash || "#/" });
+    gaEvent("play_start", { hymn_number: track.number, hymn_title: track.title });
+  } catch {
+    /* counting must never affect playback */
+  }
+}
+
+function noteBeat() {
+  try {
+    if (!ytPlayer || typeof ytPlayer.getPlayerState !== "function" || ytPlayer.getPlayerState() !== 1) return;
+    const track = currentSong();
+    if (!track) return;
+    sendListen({ type: "beat", hymn: track.number, path: location.hash || "#/" });
+    gaEvent("listening_heartbeat", { hymn_number: track.number, transport_type: "beacon" });
+  } catch {
+    /* counting must never affect playback */
+  }
+}
+
+let listenTimer = 0;
+function armHeartbeat() {
+  try {
+    window.clearInterval(listenTimer);
+    listenTimer = 0;
+    if (!ytPlayer || typeof ytPlayer.getPlayerState !== "function" || ytPlayer.getPlayerState() !== 1) return;
+    listenTimer = window.setInterval(noteBeat, 60000);
+  } catch {
+    /* ignore */
+  }
 }
 
 function holdPlayer() {
@@ -2651,6 +2697,8 @@ function loadSong() {
   });
   watchSong(track);
   syncStageToSong();
+  notePlay(track);
+  armHeartbeat();
 }
 
 function finishSong() {
@@ -2695,6 +2743,7 @@ function onSongState(event) {
   if (!event || event.data !== 0) {
     if (event && event.data === 1) setToggleLabel(true);
     if (event && event.data === 2 && songKeep && songKeep.hidden) setToggleLabel(false);
+    armHeartbeat();
     return;
   }
   finishSong();
@@ -2718,6 +2767,8 @@ function beginSongs(tracks, playMode) {
 
 function stopSongs() {
   window.clearInterval(songPoll);
+  window.clearInterval(listenTimer);
+  listenTimer = 0;
   songHolding = true;
   songQueue = [];
   songIndex = 0;
@@ -2959,6 +3010,7 @@ refreshNotify();
 
 // load() is still waiting on the hymnal here. This first pass is what puts the
 // welcome page on screen without waiting for it.
+startAnalytics();
 render();
 
 if ("serviceWorker" in navigator) {

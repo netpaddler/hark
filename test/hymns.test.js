@@ -1835,7 +1835,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v46";/);
+  assert.match(sw, /const CACHE = "hark-v48";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2177,4 +2177,117 @@ test("a floating player snaps to a corner and a swipe off dismisses it", () => {
   const hold = appSource.slice(appSource.indexOf("function holdPlayer("), appSource.indexOf("function songIsOpen("));
   assert.equal(/\.append\(/.test(hold), false);
   assert.match(appSource, /id: "song-dock"/);
+});
+
+test("listening counts stay anonymous and the stats page is locked", async () => {
+  const { GA4_MEASUREMENT_ID } = await import("../config/analytics.js");
+  assert.equal(GA4_MEASUREMENT_ID, "G-FG4EHLSGLE");
+  const { trackingOff } = await import("../listen.js");
+  assert.equal(trackingOff({ doNotTrack: "1" }), true);
+  assert.equal(trackingOff({ globalPrivacyControl: true }), true);
+  assert.equal(trackingOff({ doNotTrack: "0" }), false);
+
+  const { allowListen, readListen, summarizeEvents, handleListen, handleStats } = await import(
+    `../worker/src/listen.js?stats=${Date.now()}`
+  );
+  assert.equal(readListen({ visitor: "nope", session: "x", type: "page" }), null);
+  const visitor = "11111111-1111-4111-8111-111111111111";
+  const session = "22222222-2222-4222-8222-222222222222";
+  assert.equal(readListen({ visitor, session, type: "beat", hymn: 86, path: "#/hymn/86" }).hymn, 86);
+  assert.equal(allowListen(visitor, "198.51.100.8", 1_000), true);
+  for (let i = 0; i < 119; i += 1) allowListen(visitor, "198.51.100.8", 1_000 + i);
+  assert.equal(allowListen(visitor, "198.51.100.8", 2_000), false);
+
+  const rows = [];
+  const db = {
+    prepare() {
+      return {
+        bind(...args) {
+          return {
+            async run() {
+              if (args.length) {
+                rows.push({ day: args[0], visitor: args[1], session: args[2], type: args[3], hymn: args[4], path: args[5] });
+              }
+              return { success: true };
+            },
+            async all() {
+              return { results: rows };
+            },
+          };
+        },
+      };
+    },
+  };
+  const beats = Array.from({ length: 60 }, () => ({
+    day: "2026-11-17",
+    visitor,
+    session,
+    type: "beat",
+    hymn: 86,
+  }));
+  const summary = summarizeEvents([
+    ...beats,
+    { day: "2026-11-17", visitor, session, type: "play", hymn: 86 },
+    { day: "2026-11-17", visitor: "33333333-3333-4333-8333-333333333333", session: "44444444-4444-4444-8444-444444444444", type: "page", hymn: null },
+  ]);
+  assert.equal(summary.total.visitors, 2);
+  assert.equal(summary.total.sessions, 2);
+  assert.equal(summary.total.minutes, 60);
+  assert.equal(summary.total.longest, 60);
+  assert.equal(summary.total.longSessions, 1);
+  assert.deepEqual(summary.total.hymns[0], [86, 61]);
+
+  const other = "55555555-5555-4555-8555-555555555555";
+  const post = (body, ip = "198.51.100.20") =>
+    handleListen(
+      new Request("https://hark-requests.example/listen", {
+        method: "POST",
+        headers: { origin: "https://hark.theweightofglory.com", "cf-connecting-ip": ip, "content-type": "text/plain" },
+        body: JSON.stringify(body),
+      }),
+      { LISTEN: db },
+    );
+  assert.equal((await post({ visitor: other, session, type: "play", hymn: 2, path: "#/" })).status, 200);
+  assert.equal(rows[0].hymn, 2);
+  assert.equal(rows[0].visitor, other);
+  assert.equal((await post({ visitor: "bad", session, type: "page" }, "198.51.100.21")).status, 400);
+  assert.equal(
+    (await post({ visitor: other, session, type: "page" }, "198.51.100.22")).status,
+    200,
+  );
+  const wrongOrigin = await handleListen(
+    new Request("https://hark-requests.example/listen", {
+      method: "POST",
+      headers: { origin: "https://example.com", "content-type": "text/plain" },
+      body: JSON.stringify({ visitor, session, type: "page" }),
+    }),
+    { LISTEN: db },
+  );
+  assert.equal(wrongOrigin.status, 403);
+
+  const locked = await handleStats(new Request("https://hark-requests.example/stats"), { LISTEN: db, LISTEN_STATS_KEY: "test-key" });
+  assert.equal(locked.status, 404);
+  const open = await handleStats(new Request("https://hark-requests.example/stats?key=test-key"), {
+    LISTEN: db,
+    LISTEN_STATS_KEY: "test-key",
+  });
+  assert.equal(open.status, 200);
+  const html = await open.text();
+  assert.match(html, /Listening minutes/);
+  assert.match(html, /Sessions over 1 hour/);
+  assert.equal(/\u2013|\u2014/.test(html), false);
+
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.match(page, /static\.cloudflareinsights\.com\/beacon\.min\.js/);
+  assert.match(page, /567430717ceb466babf1905d0b1cd19a/);
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  assert.match(sw, /static\.cloudflareinsights\.com/);
+  assert.match(sw, /googletagmanager\.com/);
+  assert.match(sw, /google-analytics\.com/);
+  const ga = readFileSync(new URL("../ga.js", import.meta.url), "utf8");
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(ga, /page_view/);
+  assert.match(appSource, /play_start/);
+  assert.match(appSource, /listening_heartbeat/);
+  assert.match(appSource, /transport_type: "beacon"/);
 });
