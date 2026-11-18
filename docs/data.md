@@ -6,6 +6,8 @@ File: `data/hymns.json`. It holds 45 entries: Trinity Hymnal (1990) nos. 193-233
 
 The Trinity Hymnal (1990) ends at no. 742. A song Faith Presbyterian has sung that is not in the hymnal is filed under a number from 801 up. That number is only the song's place in the list and its address (`#/hymn/801`), and it keys `recordings.json`, `themes.json`, `music.json`, and `changelog.json` like any other. Hark never shows it or searches by it: `inHymnal`, `numberLabel`, and `numberedTitle` in `hymn-model.js` decide what is shown. Keep these numbers at 999 or below, because the listening counter does not take a higher one.
 
+The page for such a song never names the Trinity Hymnal. `sourceWording` in `hymn-model.js` gives the lines that name a source: a hymnal hymn gets the Trinity Hymnal wording, and any other song gets its Faith Presbyterian bulletin, or no line when it has none. Do not write the hymnal's name into the page code.
+
 - 801 Hail, Gladdening Light. The Phos Hilaron in John Keble's 1834 translation, to John Stainer's SEBASTE, from the September 13, 2026 evening bulletin. Asked for by a reader in issue #52.
 
 ## Likes

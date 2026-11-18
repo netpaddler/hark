@@ -29,6 +29,7 @@ import {
   formatRecordingDate,
   youtubeBlock,
   faithBulletin,
+  sourceWording,
 } from "./hymn-model.js";
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
 import { sendListen } from "./listen.js";
@@ -1259,6 +1260,7 @@ function musicBlock(hymn) {
   const key = String(hymn.number);
   const score = musicCatalog.scores && musicCatalog.scores[key];
   const omitted = musicCatalog.omitted && musicCatalog.omitted[key];
+  const wording = sourceWording(hymn);
   if (score) {
     const details = el("details", { class: "music-block" });
     details.append(el("summary", {}, "Music"));
@@ -1266,7 +1268,7 @@ function musicBlock(hymn) {
       el(
         "p",
         { class: "music-credit" },
-        `Tune: ${score.tune}. Harmony: ${score.harmony_credit}. May differ from the Trinity Hymnal setting.`,
+        [`Tune: ${score.tune}.`, `Harmony: ${score.harmony_credit}.`, wording.setting].filter(Boolean).join(" "),
       ),
     );
     const scoreEl = el("div", { class: "music-score", "aria-label": `Music for ${score.tune}` });
@@ -1325,7 +1327,7 @@ function musicBlock(hymn) {
     const box = el("div", { class: "notice" });
     box.append(el("h2", {}, "Music not shown"));
     box.append(el("p", {}, omitted.reason));
-    box.append(el("p", {}, "See the printed Trinity Hymnal for the music."));
+    if (wording.music) box.append(el("p", {}, wording.music));
     return box;
   }
   return null;
@@ -1400,7 +1402,8 @@ function renderHymn(number) {
       notice.append(
         el("p", {}, "This hymn is here because the congregation sings it. The words are still to come."),
       );
-      notice.append(el("p", {}, "See the printed Trinity Hymnal for the words."));
+      const wordsLine = sourceWording(hymn).words;
+      if (wordsLine) notice.append(el("p", {}, wordsLine));
       article.append(notice);
     } else {
       const note = partialNote(hymn);
@@ -1455,7 +1458,8 @@ function renderHymn(number) {
     if (previous) nav.append(previous);
     if (next) nav.append(next);
     if (previous || next) article.append(nav);
-    article.append(el("p", { class: "colophon" }, "Trinity Hymnal, 1990"));
+    const colophon = sourceWording(hymn).colophon;
+    if (colophon) article.append(el("p", { class: "colophon" }, colophon));
     main.replaceChildren(article);
   }
 
