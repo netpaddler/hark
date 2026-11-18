@@ -24,10 +24,9 @@ id = "4d08aacef7c848f88fd1cee2c85e617e"
 binding = "PUSH_SUBSCRIPTIONS"
 id = "5f3c756101f94303acc4b7a0f5749018"
 
-# Listening stats use a free D1 database. Create it, apply worker/schema.sql,
-# uncomment the block below, and paste the database id. Then:
+# Listening stats. Apply worker/schema.sql if the tables are not already there.
 # npx wrangler secret put LISTEN_STATS_KEY
-# [[d1_databases]]
-# binding = "LISTEN"
-# database_name = "hark-listen"
-# database_id = "paste-the-id-here"
+[[d1_databases]]
+binding = "LISTEN"
+database_name = "hark-listen"
+database_id = "e252ef37-1854-4037-a793-7f70506ccfea"
