@@ -25,6 +25,7 @@ import {
   listSermons,
   formatRecordingDate,
   youtubeBlock,
+  faithBulletin,
 } from "./hymn-model.js";
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
 import { stageCorner, stageMostlyOff, stagePointerMove } from "./stage.js";
@@ -1431,6 +1432,9 @@ function renderHymn(number) {
       article.append(text);
     }
 
+    const bulletin = bulletinNote(hymn);
+    if (bulletin) article.append(bulletin);
+
     const music = musicBlock(hymn);
     if (music) article.append(music);
 
@@ -1453,6 +1457,26 @@ function renderHymn(number) {
   window.scrollTo(0, 0);
   const heading = document.getElementById("hymn-title");
   if (heading) heading.focus({ preventScroll: true });
+}
+
+function bulletinNote(hymn) {
+  const bulletin = faithBulletin(hymn);
+  if (!bulletin) return null;
+  const figure = el("figure", { class: "bulletin-note" });
+  const link = el(
+    "a",
+    { href: bulletin.url, target: "_blank", rel: "noopener noreferrer" },
+    bulletin.label,
+  );
+  figure.append(el("p", {}, link));
+  const frame = el("iframe", {
+    class: "bulletin-preview",
+    src: `${bulletin.url}#page=1&toolbar=0&navpanes=0`,
+    title: bulletin.label,
+    loading: "lazy",
+  });
+  figure.append(frame);
+  return figure;
 }
 
 function requestField(id, label, control) {

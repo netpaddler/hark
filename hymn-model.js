@@ -582,3 +582,38 @@ function presentSermon(entry) {
   if (entry.embeddable === false) item.embeddable = false;
   return item;
 }
+
+const BULLETIN_MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+// A Faith Presbyterian bulletin PDF on the church file host. Other sources,
+// including hymnary.org, are not a church bulletin.
+const BULLETIN_URL =
+  /^https:\/\/faithtacoma\.sfo2\.cdn\.digitaloceanspaces\.com\/\d{4}\/\d{2}\/(\d{1,2})\.(\d{1,2})\.(\d{2})Bulletin-(am|pm)-6x9-1\.pdf$/;
+
+export function faithBulletin(hymn) {
+  const url = hymn && typeof hymn.source_url === "string" ? hymn.source_url : "";
+  const match = BULLETIN_URL.exec(url);
+  if (!match) return null;
+  const month = Number(match[1]);
+  const day = Number(match[2]);
+  const year = 2000 + Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  const service = match[4] === "am" ? "morning" : "evening";
+  return {
+    url,
+    label: `Faith Presbyterian bulletin, ${BULLETIN_MONTHS[month - 1]} ${day}, ${year}, ${service}`,
+  };
+}

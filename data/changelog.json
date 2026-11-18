@@ -2,6 +2,11 @@
   {
     "date": "2026-11-17",
     "hymns": [],
+    "note": "Songs taken from a Faith Presbyterian bulletin now link to that bulletin."
+  },
+  {
+    "date": "2026-11-17",
+    "hymns": [],
     "note": "Moving the pointer over the small player does not drag it. A click opens the song, and it follows only while the button is down."
   },
   {
