@@ -1835,7 +1835,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v47";/);
+  assert.match(sw, /const CACHE = "hark-v48";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2181,7 +2181,7 @@ test("a floating player snaps to a corner and a swipe off dismisses it", () => {
 
 test("listening counts stay anonymous and the stats page is locked", async () => {
   const { GA4_MEASUREMENT_ID } = await import("../config/analytics.js");
-  assert.equal(GA4_MEASUREMENT_ID, "");
+  assert.equal(GA4_MEASUREMENT_ID, "G-FG4EHLSGLE");
   const { trackingOff } = await import("../listen.js");
   assert.equal(trackingOff({ doNotTrack: "1" }), true);
   assert.equal(trackingOff({ globalPrivacyControl: true }), true);
