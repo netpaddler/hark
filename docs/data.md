@@ -2,6 +2,12 @@
 
 File: `data/hymns.json`. It holds 45 entries: Trinity Hymnal (1990) nos. 193-233, plus nos. 108, 162, 401, and 559.
 
+## Songs that are not in the Trinity Hymnal
+
+The Trinity Hymnal (1990) ends at no. 742. A song Faith Presbyterian has sung that is not in the hymnal is filed under a number from 801 up. That number is only the song's place in the list and its address (`#/hymn/801`), and it keys `recordings.json`, `themes.json`, `music.json`, and `changelog.json` like any other. Hark never shows it or searches by it: `inHymnal`, `numberLabel`, and `numberedTitle` in `hymn-model.js` decide what is shown. Keep these numbers at 999 or below, because the listening counter does not take a higher one.
+
+- 801 Hail, Gladdening Light. The Phos Hilaron in John Keble's 1834 translation, to John Stainer's SEBASTE, from the September 13, 2026 evening bulletin. Asked for by a reader in issue #52.
+
 ## Likes
 
 A heart on the hymn page stores that hymn number in the browser under `hark-likes`. The Liked tab reads the same list. Nothing is sent to a server, and the hymn files are not changed. The list still works when the device is offline, because the page and this store are both on the device.

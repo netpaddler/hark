@@ -5363,5 +5363,44 @@
     "refrain": null,
     "refrain_after_each_stanza": false,
     "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-pm-6x9-1.pdf. Credit: Isaac Watts, 1707; alt. Tune ST. THOMAS, Aaron Williams, 1763. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
+  },
+  {
+    "number": 801,
+    "title": "Hail, Gladdening Light",
+    "section": null,
+    "author": "Greek hymn, 3rd cent. or earlier",
+    "translator": "John Keble",
+    "composer": "John Stainer",
+    "tune": "SEBASTE",
+    "year_text": "Greek 3rd cent. or earlier; tr. 1834",
+    "public_domain": true,
+    "copyright_note": null,
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.13.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "Hail, gladdening Light, of His pure glory poured",
+        "who is the immortal Father, heav'nly, blest,",
+        "Holiest of Holies, Jesus Christ our Lord!"
+      ],
+      [
+        "Now we are come to the sun's hour of rest,",
+        "the lights of evening round us shine,",
+        "we hymn the Father, Son, and Holy Spirit Divine."
+      ],
+      [
+        "Worthiest art thou at all times to be sung",
+        "with undefiled tongue,",
+        "Son of our God, Giver of life, Alone:",
+        "therefore in all the world thy glories, Lord, they own."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3
+    ],
+    "refrain": null,
+    "refrain_after_each_stanza": false,
+    "notes": "Not in the Trinity Hymnal. The number 801 is only this song's place in Hark, after the hymnal's last hymn, 742, and it is not shown as a hymnal number. Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.13.26Bulletin-pm-6x9-1.pdf. Credit: Greek hymn of the 3rd century or earlier. Trans. by Rev. John Keble (1791-1866). Tune SEBASTE, John Stainer (1840-1901). This is the Phos Hilaron in Keble's translation, first published in 1834. The date is from standard sources; the bulletin gives only Keble's life dates. The bulletin prints the words as a music underlay in free rhythm, without stanza numbers. The three stanzas and the line breaks follow Keble's poem. Syllable hyphens in the music underlay are joined into words. The sung Amen at the close is not shown. The credit line shows no copyright notice on the text or the tune."
   }
 ]

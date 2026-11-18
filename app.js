@@ -21,6 +21,9 @@ import {
   themesForHymn,
   findTheme,
   hymnsInTheme,
+  inHymnal,
+  numberLabel,
+  numberedTitle,
   tuneCaution,
   listSermons,
   formatRecordingDate,
@@ -341,7 +344,7 @@ function likeControl(number) {
 
 function hymnRow(hymn, mark) {
   const link = el("a", { class: "hymn-link", href: `#/hymn/${hymn.number}` });
-  link.append(el("span", { class: "num" }, String(hymn.number)));
+  link.append(el("span", { class: "num" }, numberLabel(hymn)));
   const text = el("span", { class: "hymn-link-text" });
   const title = el("span", { class: "title" }, hymn.title);
   if (mark) title.append(el("span", { class: "badge" }, mark));
@@ -373,7 +376,7 @@ function titleList(letters) {
       const heart = likeMark(hymn.number);
       if (heart) text.append(heart);
       if (hymn.tune) text.append(el("span", { class: "toc-tune" }, hymn.tune));
-      link.append(text, el("span", { class: "toc-num" }, String(hymn.number)));
+      link.append(text, el("span", { class: "toc-num" }, numberLabel(hymn)));
       return el("li", {}, link);
     });
     root.append(el("ul", { class: "toc-list" }, items));
@@ -1173,7 +1176,7 @@ function setPager(link, hymn, direction) {
   link.href = `#/hymn/${hymn.number}`;
   link.removeAttribute("aria-disabled");
   const word = direction === "prev" ? "Previous" : "Next";
-  link.setAttribute("aria-label", `${word} hymn, ${hymn.number} ${hymn.title}`);
+  link.setAttribute("aria-label", `${word} hymn, ${numberedTitle(hymn, " ")}`);
 }
 
 function endLink(hymn, direction) {
@@ -1182,11 +1185,11 @@ function endLink(hymn, direction) {
   const link = el("a", {
     href: `#/hymn/${hymn.number}`,
     class: direction === "next" ? "next" : "prev",
-    "aria-label": `${word} hymn, ${hymn.number} ${hymn.title}`,
+    "aria-label": `${word} hymn, ${numberedTitle(hymn, " ")}`,
   });
   link.append(
     el("span", { class: "end-kicker" }, word),
-    el("span", { class: "end-num" }, String(hymn.number)),
+    el("span", { class: "end-num" }, numberLabel(hymn)),
     el("span", { class: "end-title" }, hymn.title),
   );
   return link;
@@ -1357,7 +1360,7 @@ function renderHymn(number) {
   const found = neighbors(hymns, number);
   setPager(document.getElementById("prev-link"), found.prev, "prev");
   setPager(document.getElementById("next-link"), found.next, "next");
-  document.getElementById("pager-num").textContent = found.hymn ? String(found.hymn.number) : "";
+  document.getElementById("pager-num").textContent = found.hymn ? numberLabel(found.hymn) : "";
 
   if (!found.hymn) {
     document.title = "Hymn not found · Hark";
@@ -1371,9 +1374,9 @@ function renderHymn(number) {
   } else {
     const hymn = found.hymn;
     markReturning();
-    document.title = `${hymn.number} ${hymn.title} · Hark`;
+    document.title = `${numberedTitle(hymn, " ")} · Hark`;
     const article = el("article", { class: "hymn" });
-    article.append(el("p", { class: "hymn-number" }, `No. ${hymn.number}`));
+    if (inHymnal(hymn)) article.append(el("p", { class: "hymn-number" }, `No. ${hymn.number}`));
     const title = el("h1", { class: "hymn-title", id: "hymn-title", tabindex: "-1" }, hymn.title);
     const head = el("div", { class: "hymn-head" });
     head.append(title, likeControl(hymn.number));
@@ -1729,11 +1732,9 @@ function todayCard(pick) {
   const copy = welcomeCopy.today;
   const hymn = pick.hymn;
   const card = el("article", { class: "today-card" });
-  card.append(
-    el("p", { class: "kicker" }, copy.kicker),
-    el("p", { class: "today-number" }, `No. ${hymn.number}`),
-    el("h3", { class: "today-title" }, el("a", { href: `#/hymn/${hymn.number}` }, hymn.title)),
-  );
+  card.append(el("p", { class: "kicker" }, copy.kicker));
+  if (inHymnal(hymn)) card.append(el("p", { class: "today-number" }, `No. ${hymn.number}`));
+  card.append(el("h3", { class: "today-title" }, el("a", { href: `#/hymn/${hymn.number}` }, hymn.title)));
   if (pick.lines.length) card.append(linesEl(pick.lines, "today-lines"));
   const credit = attributionParts(hymn);
   if (credit.people) card.append(el("p", { class: "today-credit" }, credit.people));
@@ -2353,7 +2354,7 @@ function renderWhatsNew() {
         const hymn = byNumber.get(number);
         if (!hymn) continue;
         list.append(
-          el("li", {}, el("a", { href: `#/hymn/${hymn.number}` }, `${hymn.number}. ${hymn.title}`)),
+          el("li", {}, el("a", { href: `#/hymn/${hymn.number}` }, numberedTitle(hymn))),
         );
       }
       section.append(list);
@@ -2607,7 +2608,7 @@ function publishNowPlaying(track) {
   if (!session || !track || typeof MediaMetadata !== "function") return;
   try {
     session.metadata = new MediaMetadata({
-      title: `${track.number}. ${track.title}`,
+      title: numberedTitle(track),
       artist: NOW_PLAYING_ARTIST,
       album: "Hark",
     });
@@ -2663,7 +2664,7 @@ function paintSong() {
   if (!songBar || !track) return;
   songBar.hidden = false;
   document.documentElement.dataset.player = "on";
-  songTitle.textContent = `${track.number}. ${track.title}`;
+  songTitle.textContent = numberedTitle(track);
   setToggleLabel(true);
   publishNowPlaying(track);
 }

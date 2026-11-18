@@ -82,6 +82,10 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
   - It is also announced for the close of Christmas Eve 2020 at 4:00 pm (video gyux6d9UtBM, roughly 3680s to 4160s) and 2023 at 4:00 pm (video GcyYETKpWVI, roughly 3365s to 3750s).
   - In both, the sung captions are too garbled to place a start, so they are not in `data/recordings.json`.
 
+## Hail, Gladdening Light (Sep 13, 2026 evening)
+
+Filed under 801, since it is not in the Trinity Hymnal. Video qsIlxwIVZqY. The video carries auto-dubbed audio tracks in other languages, so the original English track was the one downloaded and analyzed, in a temporary folder that was deleted after. The start, 1073, is the spoken announcement: "Let's continue our worship now with the hymn printed in your order of service. Hail, gladdening light." The organ begins at 1080 and the singing at 1107. The end, 1216, is where the final Amen dies, just before the minister says "Let's pray together."
+
 ## Caveats
 - Dates come from the stream start time in Pacific time. Untitled 2020 and 2021 streams were labeled morning or evening, or Christmas Eve, from that time.
 - Some 2024 titles say "2023" by mistake. The stream timestamp was used instead.

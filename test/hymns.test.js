@@ -38,6 +38,10 @@ import {
   youtubeBlock,
   listSermons,
   faithBulletin,
+  HYMNAL_LAST,
+  inHymnal,
+  numberLabel,
+  numberedTitle,
 } from "../hymn-model.js";
 import {
   NEWCOMER_KEY,
@@ -76,14 +80,22 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 90);
+  assert.equal(hymns.length, 91);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
-  // The 1990 Trinity Hymnal runs to 742.
-  for (const number of numbers) assert.ok(number >= 1 && number <= 742, String(number));
+  // The 1990 Trinity Hymnal runs to 742. A song that is not in the hymnal is
+  // filed from 801. The listening counter takes numbers up to 999.
+  assert.equal(HYMNAL_LAST, 742);
+  for (const number of numbers) {
+    assert.ok((number >= 1 && number <= 742) || (number >= 801 && number <= 999), String(number));
+  }
+  assert.deepEqual(
+    hymns.filter((hymn) => !inHymnal(hymn)).map((hymn) => hymn.number),
+    [801],
+  );
   assert.deepEqual(numbers.slice(0, 6), [2, 15, 31, 34, 38, 56]);
-  assert.deepEqual(numbers.slice(-4), [652, 656, 691, 700]);
+  assert.deepEqual(numbers.slice(-4), [656, 691, 700, 801]);
   assert.deepEqual(listSections(hymns), [
     "Advent",
     "Christmas",
@@ -95,6 +107,60 @@ test("loads the Trinity Hymnal hymns in number order", () => {
   assert.equal(byNumber.get(401).tune, "TALLIS' CANON");
   assert.equal(byNumber.get(559).composer, "Charles Steggal, 1826-1905");
   assert.equal(byNumber.get(203).stanzas[0][0], "Hark! the herald angels sing,");
+});
+
+test("a song that is not in the Trinity Hymnal shows no hymn number", () => {
+  const light = byNumber.get(801);
+  assert.equal(light.title, "Hail, Gladdening Light");
+  assert.equal(inHymnal(light), false);
+  assert.equal(numberLabel(light), "");
+  assert.equal(numberedTitle(light), "Hail, Gladdening Light");
+  assert.equal(numberedTitle(light, " "), "Hail, Gladdening Light");
+  const vision = byNumber.get(642);
+  assert.equal(inHymnal(vision), true);
+  assert.equal(numberLabel(vision), "642");
+  assert.equal(numberedTitle(vision), "642. Be Thou My Vision");
+  assert.equal(numberedTitle(vision, " "), "642 Be Thou My Vision");
+  // A track from the player carries the same number and title.
+  assert.equal(numberedTitle({ number: 801, title: "Hail, Gladdening Light" }), "Hail, Gladdening Light");
+  // Its filing number is not a hymnal number, so a number search does not find it.
+  assert.deepEqual(filterHymns(hymns, "801"), []);
+  assert.deepEqual(searchTarget(hymns, "801"), { hash: "#/", query: "801" });
+  assert.deepEqual(filterHymns(hymns, "80").map((hymn) => hymn.number), [80]);
+  assert.deepEqual(filterHymns(hymns, "gladdening light").map((hymn) => hymn.number), [801]);
+  assert.ok(filterHymns(hymns, "keble").some((hymn) => hymn.number === 801));
+
+  // Keble's 1834 translation, as the September 13, 2026 evening bulletin prints it.
+  assert.equal(light.public_domain, true);
+  assert.equal(light.translator, "John Keble");
+  assert.equal(light.tune, "SEBASTE");
+  assert.equal(light.stanzas.length, 3);
+  assert.equal(light.stanzas[0][0], "Hail, gladdening Light, of His pure glory poured");
+  assert.equal(light.stanzas[2][3], "therefore in all the world thy glories, Lord, they own.");
+  assert.equal(
+    faithBulletin(light).label,
+    "Faith Presbyterian bulletin, September 13, 2026, evening",
+  );
+
+  const heard = faithRecordings(recordings, 801);
+  assert.equal(heard.length, 1);
+  assert.equal(heard[0].id, "qsIlxwIVZqY");
+  assert.equal(heard[0].start, 1073);
+  assert.equal(heard[0].endSource, "audio");
+  const stop = playbackStop(heard[0], light);
+  assert.equal(stop.trustworthy, true);
+  assert.equal(stop.at, 1216);
+
+  const xml = buildFeed({ changelog: [{ date: "2026-11-18", hymns: [801, 642] }], hymns });
+  assert.ok(xml.includes(">Hail, Gladdening Light</a>"));
+  assert.ok(xml.includes(">642. Be Thou My Vision</a>"));
+  assert.equal(xml.includes("801."), false);
+
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.equal(/String\(hymn\.number\)\)/.test(appSource.replace(/const key = String\(hymn\.number\);/g, "")), false);
+  assert.equal(appSource.includes("${hymn.number}. ${hymn.title}"), false);
+  assert.equal(appSource.includes("${track.number}. ${track.title}"), false);
+  assert.match(appSource, /if \(inHymnal\(hymn\)\) article\.append\(el\("p", \{ class: "hymn-number" \}/);
 });
 
 test("sections and copyright flags stay intact", () => {
@@ -160,7 +226,7 @@ test("title index is alphabetical and ignores a leading article", () => {
 
 test("author index files people by surname and keeps translators", () => {
   const all = groups();
-  assert.equal(all.length, 70);
+  assert.equal(all.length, 71);
   assert.deepEqual(group("Rodigast, Samuel").hymns.map((item) => item.hymn.number), [108]);
   assert.deepEqual(group("Ken, Thomas").hymns.map((item) => item.hymn.number), [401]);
   assert.deepEqual(group("Waring, Anna Laetitia").hymns.map((item) => item.hymn.number), [559]);
@@ -235,7 +301,8 @@ test("neighbors follow hymnal number", () => {
   assert.equal(neighbors(hymns, 108).prev.number, 99);
   assert.equal(neighbors(hymns, 162).prev.number, 115);
   assert.equal(neighbors(hymns, 227).next.number, 253);
-  assert.equal(neighbors(hymns, 700).next, null, "700 is the highest number held");
+  assert.equal(neighbors(hymns, 700).next.number, 801, "the song with no hymnal number comes last");
+  assert.equal(neighbors(hymns, 801).next, null);
   assert.equal(neighbors(hymns, 999).hymn, null);
 });
 
@@ -279,7 +346,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   for (const number of [108, 401, 559]) assert.ok(allYear.includes(number), String(number));
   // Bulletin hymns land here until someone sorts them into a season.
   assert.ok(allYear.includes(15) && allYear.includes(691));
-  assert.equal(allYear.length, 60);
+  assert.equal(allYear.length, 61);
 });
 
 test("every recording belongs to a hymn that is in the book", () => {
@@ -291,8 +358,8 @@ test("every recording belongs to a hymn that is in the book", () => {
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
-  assert.equal(Object.keys(recordings).length, 90);
-  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 304);
+  assert.equal(Object.keys(recordings).length, 91);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 305);
   assert.equal(faithRecordings(recordings, 108)[0].dateSort, "2025-12-14");
   assert.equal(faithRecordings(recordings, 401).length, 1);
   assert.equal(faithRecordings(recordings, 559)[0].dateSort, "2026-07-19");
@@ -1173,7 +1240,7 @@ test("bulletin hymns keep the printed words and drop fully copyrighted numbers",
   assert.equal(byNumber.get(647).stanzas[2][2], "my never-failing treas'ry filled");
 
   const linked = hymns.filter((hymn) => faithBulletin(hymn));
-  assert.equal(linked.length, 55);
+  assert.equal(linked.length, 56);
   for (const hymn of hymns) {
     const bulletin = faithBulletin(hymn);
     if (!bulletin) {
@@ -1835,7 +1902,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v49";/);
+  assert.match(sw, /const CACHE = "hark-v50";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2026,7 +2093,7 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.equal(counts.christmas, 20);
   assert.equal(counts.advent, 5);
   assert.equal(counts.epiphany, 4);
-  assert.equal(counts["all-year"], 50);
+  assert.equal(counts["all-year"], 51);
   const christmas = themeTracks({ hymns, themes, recordings, themeId: "christmas" });
   assert.ok(christmas.every((track) => track.trustworthy && track.end > track.start));
   assert.equal(new Set(christmas.map((track) => track.number)).size, christmas.length);

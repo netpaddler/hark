@@ -3087,5 +3087,18 @@
       "confidence": "medium",
       "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: calls us each by name and follow where he leads who with you and the Holy Spirit lives and Reigns one God forever let's worship now singing hymn 700 come we that love the Lord w..."
     }
+  ],
+  "801": [
+    {
+      "label": "Sunday Evening Worship, Sep 13, 2026, congregation",
+      "video_title": "Sunday Evening Worship - September 13, 2026",
+      "video_date": "2026-09-13",
+      "url": "https://www.youtube.com/watch?v=qsIlxwIVZqY&t=1073s",
+      "start_seconds": 1073,
+      "confidence": "medium",
+      "notes": "Bulletin hymn after the catechism. The times come from the audio: a local transcript of the original English track and the sound level. Starts at the spoken announcement: Let's continue our worship now with the hymn printed in your order of service. Hail, gladdening light. The organ begins at 1080 and the singing at 1107. The final Amen dies at 1216, just before the minister says: Let's pray together.",
+      "end_seconds": 1216,
+      "end_source": "audio"
+    }
   ]
 }
