@@ -10,14 +10,22 @@ const TYPES = new Set(["page", "play", "beat"]);
 const visitorHits = new Map();
 const ipHits = new Map();
 
-function json(body, status, origin) {
-  const headers = {
-    "content-type": "application/json; charset=utf-8",
+function corsHeaders(origin) {
+  return {
     "access-control-allow-origin": origin || ORIGIN,
     "access-control-allow-methods": "POST, OPTIONS",
     "access-control-allow-headers": "content-type",
     vary: "Origin",
   };
+}
+
+function json(body, status, origin) {
+  const headers = corsHeaders(origin);
+  // 204, 205, and 304 cannot carry a body. A JSON body on 204 crashes the Worker.
+  if (status === 204 || status === 205 || status === 304) {
+    return new Response(null, { status, headers });
+  }
+  headers["content-type"] = "application/json; charset=utf-8";
   return new Response(JSON.stringify(body), { status, headers });
 }
 
@@ -168,7 +176,7 @@ export async function handleListen(request, env) {
   const origin = request.headers.get("origin") || "";
   if (request.method === "OPTIONS") {
     if (origin !== ORIGIN) return json({ error: "This origin is not allowed." }, 403, ORIGIN);
-    return json({ ok: true }, 204, ORIGIN);
+    return json(null, 204, ORIGIN);
   }
   if (request.method !== "POST") return json({ error: "Send a POST request." }, 405, ORIGIN);
   if (origin !== ORIGIN) return json({ error: "This origin is not allowed." }, 403, ORIGIN);

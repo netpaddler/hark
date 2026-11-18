@@ -2255,6 +2255,17 @@ test("listening counts stay anonymous and the stats page is locked", async () =>
     (await post({ visitor: other, session, type: "page" }, "198.51.100.22")).status,
     200,
   );
+  const preflight = await handleListen(
+    new Request("https://hark-requests.example/listen", {
+      method: "OPTIONS",
+      headers: { origin: "https://hark.theweightofglory.com" },
+    }),
+    {},
+  );
+  assert.equal(preflight.status, 204);
+  assert.equal(await preflight.text(), "");
+  assert.equal(preflight.headers.get("access-control-allow-origin"), "https://hark.theweightofglory.com");
+  assert.match(preflight.headers.get("access-control-allow-methods"), /OPTIONS/);
   const wrongOrigin = await handleListen(
     new Request("https://hark-requests.example/listen", {
       method: "POST",
