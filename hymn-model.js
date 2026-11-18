@@ -406,7 +406,9 @@ function presentRecording(recording, fallbackLabel) {
   if (typeof recording.end_seconds === "number" && Number.isFinite(recording.end_seconds)) {
     item.end = Math.floor(recording.end_seconds);
   }
-  if (recording.end_source === "captions") item.endSource = "captions";
+  if (recording.end_source === "captions" || recording.end_source === "audio") {
+    item.endSource = recording.end_source;
+  }
   if (recording.embeddable === false) item.embeddable = false;
   return item;
 }

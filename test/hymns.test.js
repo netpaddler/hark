@@ -291,8 +291,8 @@ test("every recording belongs to a hymn that is in the book", () => {
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
-  assert.equal(Object.keys(recordings).length, 89);
-  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 303);
+  assert.equal(Object.keys(recordings).length, 90);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 304);
   assert.equal(faithRecordings(recordings, 108)[0].dateSort, "2025-12-14");
   assert.equal(faithRecordings(recordings, 401).length, 1);
   assert.equal(faithRecordings(recordings, 559)[0].dateSort, "2026-07-19");
@@ -1835,7 +1835,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v48";/);
+  assert.match(sw, /const CACHE = "hark-v49";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2026,7 +2026,7 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.equal(counts.christmas, 20);
   assert.equal(counts.advent, 5);
   assert.equal(counts.epiphany, 4);
-  assert.equal(counts["all-year"], 49);
+  assert.equal(counts["all-year"], 50);
   const christmas = themeTracks({ hymns, themes, recordings, themeId: "christmas" });
   assert.ok(christmas.every((track) => track.trustworthy && track.end > track.start));
   assert.equal(new Set(christmas.map((track) => track.number)).size, christmas.length);
@@ -2036,6 +2036,16 @@ test("play all keeps caption ends and every song still stops", () => {
   const known = playbackStop(shepherd, byNumber.get(86));
   assert.equal(known.trustworthy, true);
   assert.equal(known.at, 860);
+
+  const vision = faithRecordings(recordings, 642)[0];
+  assert.equal(vision.id, "yoZkY7OoPXU");
+  assert.equal(vision.start, 4131);
+  assert.equal(vision.endSource, "audio");
+  assert.equal(captionEnd(vision), 4340);
+  const heard = playbackStop(vision, byNumber.get(642));
+  assert.equal(heard.trustworthy, true);
+  assert.equal(heard.at, 4340);
+  assert.equal(captionEnd({ start: 10, end: 60, endSource: "guess" }), null);
 
   const bare = playbackStop({ start: 10, id: "abcdefghijk" }, { stanzas: [["a"], ["b"]] });
   assert.equal(bare.trustworthy, false);

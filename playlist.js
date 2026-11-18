@@ -1,6 +1,7 @@
 // Which songs can play straight through, and when each one must stop.
 // A caption end is a spoken handoff after the song (a prayer, a reading,
-// or the next announcement). Anything else stops on a short estimate so a
+// or the next announcement). An audio end is the same handoff, found by
+// listening to a video that has no captions. Anything else stops on a short estimate so a
 // worship video cannot run on into the rest of the service by itself.
 
 import { faithRecordings, hymnsInTheme } from "./hymn-model.js";
@@ -9,7 +10,7 @@ export const STANZA_SECONDS = 40;
 export const ESTIMATE_LEAD = 12;
 
 export function captionEnd(item) {
-  if (!item || item.endSource !== "captions") return null;
+  if (!item || (item.endSource !== "captions" && item.endSource !== "audio")) return null;
   const start = typeof item.start === "number" ? item.start : 0;
   const end = item.end;
   if (typeof end !== "number" || !Number.isFinite(end) || end <= start + 5) return null;
