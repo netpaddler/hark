@@ -640,3 +640,25 @@ export function faithBulletin(hymn) {
     label: `Faith Presbyterian bulletin, ${BULLETIN_MONTHS[month - 1]} ${day}, ${year}, ${service}`,
   };
 }
+
+// The lines on a hymn page that name where the song comes from. Only a hymn
+// that is in the Trinity Hymnal may name the hymnal. Any other song names the
+// bulletin it was taken from, or says nothing when there is none. An empty
+// string means the line is left out.
+export function sourceWording(hymn) {
+  if (inHymnal(hymn)) {
+    return {
+      music: "See the printed Trinity Hymnal for the music.",
+      words: "See the printed Trinity Hymnal for the words.",
+      setting: "May differ from the Trinity Hymnal setting.",
+      colophon: "Trinity Hymnal, 1990",
+    };
+  }
+  const bulletin = faithBulletin(hymn);
+  return {
+    music: bulletin ? "See the bulletin for the music." : "",
+    words: bulletin ? "See the bulletin for the words." : "",
+    setting: "",
+    colophon: bulletin ? bulletin.label : "",
+  };
+}

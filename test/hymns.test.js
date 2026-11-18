@@ -38,6 +38,7 @@ import {
   youtubeBlock,
   listSermons,
   faithBulletin,
+  sourceWording,
   HYMNAL_LAST,
   inHymnal,
   numberLabel,
@@ -1902,7 +1903,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v51";/);
+  assert.match(sw, /const CACHE = "hark-v52";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2395,4 +2396,58 @@ test("listening counts stay anonymous and the stats page is locked", async () =>
   assert.match(appSource, /play_start/);
   assert.match(appSource, /listening_heartbeat/);
   assert.match(appSource, /transport_type: "beacon"/);
+});
+
+test("a song that is not in the Trinity Hymnal never names the hymnal", () => {
+  const light = byNumber.get(801);
+  const wording = sourceWording(light);
+  assert.deepEqual(wording, {
+    music: "See the bulletin for the music.",
+    words: "See the bulletin for the words.",
+    setting: "",
+    colophon: "Faith Presbyterian bulletin, September 13, 2026, evening",
+  });
+  // With no bulletin to point to, the lines are left out.
+  assert.deepEqual(sourceWording({ number: 802, title: "A Song", source_url: null }), {
+    music: "",
+    words: "",
+    setting: "",
+    colophon: "",
+  });
+  // A hymn in the hymnal keeps its wording.
+  assert.deepEqual(sourceWording(byNumber.get(642)), {
+    music: "See the printed Trinity Hymnal for the music.",
+    words: "See the printed Trinity Hymnal for the words.",
+    setting: "May differ from the Trinity Hymnal setting.",
+    colophon: "Trinity Hymnal, 1990",
+  });
+
+  // Everything the page for such a song can show: the wording above and the
+  // song's own data. None of it names the hymnal or uses a long dash.
+  const music = JSON.parse(readFileSync(new URL("../data/music.json", import.meta.url), "utf8"));
+  for (const hymn of hymns.filter((entry) => !inHymnal(entry))) {
+    const key = String(hymn.number);
+    const shown = [
+      ...Object.values(sourceWording(hymn)),
+      hymn.title,
+      hymn.author,
+      hymn.translator,
+      hymn.composer,
+      hymn.tune,
+      hymn.year_text,
+      hymn.copyright_note,
+      JSON.stringify(hymn.stanzas),
+      JSON.stringify(hymn.refrain),
+      JSON.stringify((music.scores || {})[key] || null),
+      JSON.stringify((music.omitted || {})[key] || null),
+    ].join(" ");
+    assert.equal(/Trinity Hymnal/i.test(shown), false, `${hymn.title} names the Trinity Hymnal`);
+    assert.equal(/[\u2013\u2014]/.test(shown), false);
+  }
+
+  // The hymn page takes these lines from sourceWording alone. The only
+  // hymnal name left in app.js is the site credit on the welcome page.
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.equal(appSource.match(/Trinity Hymnal/g).length, 1);
+  assert.match(appSource, /welcomeCopy\.about\),\n\s*el\("p", \{ class: "colophon" \}, "Trinity Hymnal, 1990"\)/);
 });
