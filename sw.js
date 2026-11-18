@@ -1,4 +1,4 @@
-const CACHE = "hark-v46";
+const CACHE = "hark-v47";
 
 // vendor/abcjs-basic-min.js is deliberately absent. It is close to half a
 // megabyte, and precaching it meant every first visit paid for music the
@@ -10,6 +10,9 @@ const PRECACHE = [
   "./app.js",
   "./hymn-model.js",
   "./playlist.js",
+  "./listen.js",
+  "./ga.js",
+  "./config/analytics.js",
   "./stage.js",
   "./install.js",
   "./welcome.js",
@@ -118,6 +121,17 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET" || request.headers.has("range")) return;
   const url = new URL(request.url);
+  // Analytics hosts answer for themselves. Do not cache or intercept them.
+  if (
+    url.hostname === "static.cloudflareinsights.com" ||
+    url.hostname === "cloudflareinsights.com" ||
+    url.hostname.endsWith(".cloudflareinsights.com") ||
+    url.hostname === "www.googletagmanager.com" ||
+    url.hostname === "www.google-analytics.com" ||
+    url.hostname === "analytics.google.com"
+  ) {
+    return;
+  }
   if (url.origin !== self.location.origin) return;
   event.respondWith(isAppModule(url, request) ? networkFirst(request) : staleWhileRevalidate(request));
 });
