@@ -2008,7 +2008,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v58";/);
+  assert.match(sw, /const CACHE = "hark-v59";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2789,8 +2789,12 @@ test("a hymn sung to two melodies groups its recordings and says which one plays
   const first = playOrder(hymn, items)[0];
   assert.equal(first.tune, "WINCHESTER NEW");
   assert.equal(first.date, "Aug 16, 2026");
-  assert.equal(playSongCaption(hymn, items, first), "Plays the hymnal melody, WINCHESTER NEW. MARYTON is below.");
-  assert.equal(playSongCaption(hymn, items, items[0]), "Plays the melody MARYTON. WINCHESTER NEW is below.");
+  assert.equal(playSongCaption(hymn, items, first), "Play song plays the hymnal melody, WINCHESTER NEW.");
+  assert.equal(playSongCaption(hymn, items, items[0]), "Play song plays the melody MARYTON.");
+  // The melodies sit right under the buttons now, so nothing says "below".
+  assert.doesNotMatch(playSongCaption(hymn, items, first), /below/);
+  assert.doesNotMatch(tuneCaution(99), /below/);
+  assert.match(tuneCaution(99), /at the top of this page, grouped by melody\.$/);
   assert.equal(
     scoreMelodyNote(hymn, items, music.scores["99"].tune),
     "The music shown here is WINCHESTER NEW, the hymnal melody (Melody 1). It is not the music for MARYTON (Melody 2).",
@@ -2850,6 +2854,32 @@ test("a hymn whose recordings name one melody, or none, shows no melody notes", 
     melodyGroups({ number: 1, tune: "A" }, mixed).map((group) => group.heading),
     ["Melody 1: A (the hymnal melody)", "Melody 2: B (a different melody)", "Melody not noted"],
   );
+});
+
+test("the melodies of a hymn sung to more than one are near the top, once", () => {
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  const page = appSource.slice(appSource.indexOf("function renderHymn("));
+  // Under the play buttons and the docked video, above the words.
+  const buttons = page.indexOf("article.append(hymnPlayControls(hymn));");
+  const dock = page.indexOf('id: "song-dock"');
+  const top = page.indexOf("const melodies = melodyTop(hymn);");
+  const words = page.indexOf("stanzaPlan(hymn)");
+  assert.ok(buttons > 0 && dock > buttons && top > dock && words > top);
+  assert.match(page, /if \(melodies\) article\.append\(melodies\);/);
+  // A hymn with one melody gets no block at all.
+  const melodyTop = appSource.slice(appSource.indexOf("function melodyTop("), appSource.indexOf("function faithSection("));
+  assert.match(melodyTop, /if \(!groups\.length\) return null;/);
+  // The groups are drawn in one place only, and closed until opened.
+  assert.equal(appSource.split("melodyGroup(hymn, group)").length - 1, 2);
+  const lower = appSource.slice(appSource.indexOf("function faithSection("), appSource.indexOf("function recordingSection("));
+  assert.doesNotMatch(lower, /melodyGroup\(/);
+  assert.match(lower, /"Go to the melodies"/);
+  assert.doesNotMatch(appSource, /el\("details", \{ class: "earlier", open/);
+  assert.ok(css.includes(".melody-top .melody-group"));
+  // Only no. 99 has more than one melody today.
+  const many = hymns.filter((hymn) => melodyGroups(hymn, faithRecordings(recordings, hymn.number)).length);
+  assert.deepEqual(many.map((hymn) => hymn.number), [99]);
 });
 
 test("the hymn page and the player show the melody", () => {

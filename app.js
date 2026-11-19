@@ -1197,6 +1197,22 @@ function melodyGroup(hymn, group) {
   return box;
 }
 
+// The melodies of a hymn sung to more than one, near the top of the page:
+// under the play buttons and above the words. Each group stays closed, so the
+// words still start soon. A hymn with one melody has no such block.
+function melodyTop(hymn) {
+  const groups = melodyGroups(hymn, faithRecordings(recordingCatalog, hymn.number));
+  if (!groups.length) return null;
+  const sectionEl = el("section", {
+    class: "melody-top",
+    id: "melody-top",
+    tabindex: "-1",
+    "aria-label": "Recordings at Faith Presbyterian, by melody",
+  });
+  for (const group of groups) sectionEl.append(melodyGroup(hymn, group));
+  return sectionEl;
+}
+
 function faithSection(hymn) {
   const items = faithRecordings(recordingCatalog, hymn.number);
   if (items.length === 0) return null;
@@ -1207,9 +1223,17 @@ function faithSection(hymn) {
   sectionEl.append(el("h2", { class: "faith-heading" }, "Hear it at Faith Presbyterian"));
   const caution = tuneCaution(hymn.number);
   if (caution) sectionEl.append(el("p", { class: "faith-note" }, caution));
-  const groups = melodyGroups(hymn, items);
-  if (groups.length) {
-    for (const group of groups) sectionEl.append(melodyGroup(hymn, group));
+  // A hymn sung to more than one melody has its recordings at the top of the
+  // page, grouped by melody. Here a button leads back up to them.
+  if (melodyGroups(hymn, items).length) {
+    const up = el("button", { type: "button", class: "melody-up" }, "Go to the melodies");
+    up.addEventListener("click", () => {
+      const top = document.getElementById("melody-top");
+      if (!top) return;
+      top.scrollIntoView({ block: "start" });
+      top.focus({ preventScroll: true });
+    });
+    sectionEl.append(el("p", { class: "melody-up-row" }, up));
     return sectionEl;
   }
   sectionEl.append(faithCard(hymn, items[0], true));
@@ -1471,6 +1495,8 @@ function renderHymn(number) {
     if (chipsForHymn) article.append(chipsForHymn);
     article.append(hymnPlayControls(hymn));
     if (songOnThisHymn(hymn)) article.append(el("div", { id: "song-dock", class: "song-dock" }));
+    const melodies = melodyTop(hymn);
+    if (melodies) article.append(melodies);
 
     const heard = faithSection(hymn);
     const choir = recordingSection(hymn);
