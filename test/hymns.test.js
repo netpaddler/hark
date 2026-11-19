@@ -414,6 +414,19 @@ test("Faith Presbyterian recordings stay out of the hymn file and sort newest fi
   assert.match(tuneCaution(204), /no\. 205/);
   assert.match(tuneCaution(223), /no\. 222/);
   assert.equal(tuneCaution(203), "");
+  assert.match(tuneCaution(99), /WINCHESTER NEW/);
+  assert.match(tuneCaution(99), /Nov 15, 2026 Faith sang them to MARYTON/);
+  assert.match(tuneCaution("99"), /1961 \(blue\) Trinity Hymnal/);
+  assert.doesNotMatch(tuneCaution(99), /[\u2013\u2014]/);
+  assert.equal(byNumber.get(99).tune, "WINCHESTER NEW");
+  const record = faithRecordings(recordings, 99)[0];
+  assert.equal(record.url, "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=1949s");
+  assert.equal(record.start, 1949);
+  assert.equal(captionEnd(record), 2249);
+  const mind = faithRecordings(recordings, 644)[0];
+  assert.equal(mind.url, "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=346s");
+  assert.equal(mind.start, 346);
+  assert.equal(captionEnd(mind), 492);
   assert.equal(formatRecordingDate("2026-04-26"), "Apr 26, 2026");
   const reversed = faithRecordings(
     { 1: [recordings["203"][recordings["203"].length - 1], recordings["203"][0]] },
@@ -1903,7 +1916,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v54";/);
+  assert.match(sw, /const CACHE = "hark-v55";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));

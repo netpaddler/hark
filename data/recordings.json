@@ -396,10 +396,12 @@
       "label": "Sunday Evening Worship, Nov 15, 2026, congregation",
       "video_title": "Sunday Evening Worship - November 15, 2026",
       "video_date": "2026-11-15",
-      "url": "https://www.youtube.com/watch?v=yoZkY7OoPXU",
-      "start_seconds": null,
-      "confidence": "low",
-      "notes": "Bulletin lists this as the second hymn, after May the Mind of Christ My Savior (644) and before Be Thou My Vision (642). This video has no auto captions and no chapters, so a start time could not be placed."
+      "url": "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=1949s",
+      "start_seconds": 1949,
+      "confidence": "medium",
+      "notes": "Bulletin second hymn, after the Covenant High School sharing. Faith sang MARYTON that evening, from the 1961 (blue) Trinity Hymnal, not WINCHESTER NEW as in the 1990 hymnal. The minister says so before the hymn: the tune that we'll sing is a bit different, I believe, than what's in the bulletin. This video has no auto captions, so the times come from the audio: a local transcript and the sound level. Starts at the spoken announcement: Let's take time to continue to reflect more broadly on how God has been good to us as his people, as we sing from Psalm 89, My Song Forever Shall Record. No hymn number is spoken. The organ begins at 1970. The singing pauses at 2208 while the minister says: I think we have one more verse. The organ resumes at 2212 for the last stanza. The last chord dies at 2249, just before the minister says: Please be seated.",
+      "end_seconds": 2249,
+      "end_source": "audio"
     },
     {
       "label": "Sunday Morning Worship, Aug 16, 2026, congregation",
@@ -2902,10 +2904,12 @@
       "label": "Sunday Evening Worship, Nov 15, 2026, congregation",
       "video_title": "Sunday Evening Worship - November 15, 2026",
       "video_date": "2026-11-15",
-      "url": "https://www.youtube.com/watch?v=yoZkY7OoPXU",
-      "start_seconds": null,
-      "confidence": "low",
-      "notes": "Bulletin opening hymn of the Covenant High School service. This video has no auto captions and no chapters, so a start time could not be placed."
+      "url": "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=346s",
+      "start_seconds": 346,
+      "confidence": "medium",
+      "notes": "Bulletin opening hymn of the Covenant High School service. This video has no auto captions, so the times come from the audio: a local transcript and the sound level. Starts at the spoken announcement: Let's begin our worship as we sing together hymn 644, May the Mind of Christ My Savior. The organ begins at 352. The last chord dies between 491 and 492, just before the minister says: Please be seated as we hear now from several Covenant alumni and students.",
+      "end_seconds": 492,
+      "end_source": "audio"
     },
     {
       "label": "Sunday Evening Worship, Oct 12, 2025, congregation",

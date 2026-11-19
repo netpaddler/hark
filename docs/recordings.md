@@ -86,6 +86,13 @@ Output: `data/recordings.json`, keyed by Trinity Hymnal number. Each entry has a
 
 Filed under 801, since it is not in the Trinity Hymnal. Video qsIlxwIVZqY. The video carries auto-dubbed audio tracks in other languages, so the original English track was the one downloaded and analyzed, in a temporary folder that was deleted after. The start, 1073, is the spoken announcement: "Let's continue our worship now with the hymn printed in your order of service. Hail, gladdening light." The organ begins at 1080 and the singing at 1107. The end, 1216, is where the final Amen dies, just before the minister says "Let's pray together."
 
+## Nov 15, 2026 evening: hymns 644 and 99 timed from the audio
+
+Video yoZkY7OoPXU has no auto captions. The audio was downloaded to a temporary folder, transcribed locally, measured for sound level, and deleted after.
+
+- 644, May the Mind of Christ My Savior: start 346 (spoken announcement), end 492.
+- 99, My Song Forever Shall Record: start 1949 (spoken announcement, no hymn number spoken), end 2249. The minister says the tune differs from the bulletin. Faith's music director confirmed it was played from the 1961 (blue) Trinity Hymnal, which sets these words to MARYTON at no. 101 (https://hymnary.org/hymn/TH1961/101). The 1990 hymnal sets them to WINCHESTER NEW. The tune name was not checked by ear. The singing pauses at 2208 for a spoken aside and resumes at 2212 for the last stanza.
+
 ## Caveats
 - Dates come from the stream start time in Pacific time. Untitled 2020 and 2021 streams were labeled morning or evening, or Christmas Eve, from that time.
 - Some 2024 titles say "2023" by mistake. The stream timestamp was used instead.
