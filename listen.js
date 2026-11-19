@@ -4,10 +4,12 @@ const VISITOR_KEY = "hark-visitor";
 const SESSION_KEY = "hark-session";
 export const LISTEN_URL = "https://hark-requests.netpaddler.workers.dev/listen";
 
-export function trackingOff(nav = globalThis.navigator, win = globalThis) {
+// Global Privacy Control is the one browser signal that turns counting off.
+// It is a legal opt out in California and other states, so it is honored for
+// both these counts and Google Analytics. Do Not Track is deliberately not
+// checked: it was never legally binding and most browsers have dropped it.
+export function trackingOff(nav = globalThis.navigator) {
   try {
-    const dnt = (nav && nav.doNotTrack) || (win && win.doNotTrack);
-    if (dnt === "1" || dnt === "yes") return true;
     if (nav && nav.globalPrivacyControl === true) return true;
   } catch {
     return true;

@@ -3,6 +3,7 @@ import {
   isLiked,
   likeButtonState,
   likedHymns,
+  readLikes,
   toggleLike,
 } from "./likes.js";
 import { changelogDateLabel, groupChangelog } from "./changelog.js";
@@ -33,7 +34,7 @@ import {
 } from "./hymn-model.js";
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
 import { sendListen } from "./listen.js";
-import { gaEvent, gaPage, startAnalytics } from "./ga.js";
+import { gaEvent, gaPage, gaUserProps, hymnParams, likedBucket, progressMarks, startAnalytics } from "./ga.js";
 import { stageCorner, stageMostlyOff, stagePlacement, stagePointerMove } from "./stage.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
@@ -185,6 +186,7 @@ function toggleTheme() {
     /* ignore private mode */
   }
   syncTheme();
+  gaUserProps({ theme: next });
 }
 
 function route() {
@@ -337,8 +339,9 @@ function likeControl(number) {
   const button = el("button", { type: "button", class: "like-btn" });
   paintLikeButton(button, number);
   button.addEventListener("click", () => {
-    toggleLike(number);
+    const result = toggleLike(number);
     paintLikeButton(button, number);
+    noteLike(number, result);
   });
   return button;
 }
@@ -517,8 +520,14 @@ function playRow(tracks) {
   if (tracks.length) {
     const all = el("button", { type: "button", class: "play-song" }, "Play all");
     const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
-    all.addEventListener("click", () => beginSongs(tracks, "all"));
-    shuffle.addEventListener("click", () => beginSongs(shuffleTracks(tracks), "all"));
+    all.addEventListener("click", () => {
+      gaEvent("play_all", { list_size: tracks.length });
+      beginSongs(tracks, "all");
+    });
+    shuffle.addEventListener("click", () => {
+      gaEvent("shuffle", { list_size: tracks.length });
+      beginSongs(shuffleTracks(tracks), "all");
+    });
     row.append(all, shuffle);
   }
   row.append(autoPlayButton());
@@ -607,6 +616,9 @@ function themeGroup(group, open) {
     el("span", { class: "theme-count" }, countLabel(group.hymns.length)),
   );
   details.append(summary);
+  summary.addEventListener("click", () => {
+    if (!details.open) gaEvent("theme_open", { theme: group.title });
+  });
   const play = playAllControls(group.id);
   if (play) details.append(play);
   details.append(themeHymnList(group.hymns));
@@ -1316,6 +1328,7 @@ function musicBlock(hymn) {
     });
     play.addEventListener("click", async () => {
       details.open = true;
+      gaEvent("score_play", hymnParams(hymn));
       await playScore(await ensureScore(), Number(tempo.value) || 100);
     });
     stop.addEventListener("click", () => {
@@ -1477,6 +1490,7 @@ function bulletinNote(hymn) {
     { href: bulletin.url, target: "_blank", rel: "noopener noreferrer" },
     bulletin.label,
   );
+  link.addEventListener("click", () => gaEvent("bulletin_click", hymnParams(hymn)));
   figure.append(el("p", {}, link));
   const frame = el("iframe", {
     class: "bulletin-preview",
@@ -1558,6 +1572,8 @@ function requestForm() {
         }),
       });
       if (!response.ok) throw new Error(String(response.status));
+      // Only the fact of a sent form is counted. The name and message never go to analytics.
+      gaEvent("request_submit");
       form.reset();
       status.textContent = "Sent. It will show in the list below.";
       loadSubmissions(form.parentElement.querySelector(".request-list"));
@@ -1695,6 +1711,7 @@ function welcomeSearch() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const target = searchTarget(hymns, input.value);
+    noteSearch(input.value, true);
     queryInput.value = target.query;
     clearButton.hidden = target.query.length === 0;
     scrollMemory.number = 0;
@@ -1913,6 +1930,7 @@ function fillWelcome(page) {
     welcomeClosing(),
     el("p", { class: "welcome-about" }, welcomeCopy.about),
     el("p", { class: "colophon" }, "Trinity Hymnal, 1990"),
+    el("p", { class: "welcome-privacy", id: "privacy" }, welcomeCopy.privacy),
   ];
   page.querySelector('[data-slot="rest"]').replaceChildren(...parts.filter(Boolean));
 }
@@ -1967,26 +1985,124 @@ function render() {
   else if (current.view === "whats-new") renderWhatsNew();
   else renderIndex(current.index);
   syncSticky();
-  notePage();
+  notePage(current);
   // A route change only replaces #main. The YouTube player stays in #song-bar,
   // which is outside that view, so playback is not paused, stopped, or rebuilt.
   holdPlayer();
 }
 
-function notePage() {
+// render() runs again for every keystroke in the search box and twice while
+// the songbook loads, so a page is counted once each time the route changes.
+let notedPath = null;
+function notePage(current) {
   try {
     const path = location.hash || "#/";
+    if (path === notedPath) return;
+    if (!ready && !(current && current.view === "welcome")) return;
+    notedPath = path;
     sendListen({ type: "page", path });
-    gaPage(path);
+    gaPage(path, document.title);
+    if (current && current.view === "theme") {
+      const theme = findTheme(themeCatalog, current.id);
+      if (theme) gaEvent("theme_open", { theme: theme.title });
+    }
   } catch {
     /* counting must never affect the page */
   }
 }
 
+function hymnByNumber(number) {
+  return hymns.find((hymn) => hymn.number === Number(number)) || { number: Number(number) };
+}
+
+function noteLike(number, result) {
+  try {
+    gaEvent(result.liked ? "like" : "unlike", hymnParams(hymnByNumber(number)));
+    gaUserProps({ liked_count: likedBucket(result.likes.length) });
+  } catch {
+    /* counting must never affect the page */
+  }
+}
+
+// A search is counted once the reader stops typing, not on every keystroke.
+let searchTimer = 0;
+let notedSearch = "";
+function noteSearch(value, now) {
+  try {
+    window.clearTimeout(searchTimer);
+    const term = String(value || "").trim().toLowerCase();
+    if (!term) {
+      notedSearch = "";
+      return;
+    }
+    const send = () => {
+      try {
+        if (term === notedSearch) return;
+        notedSearch = term;
+        gaEvent("search", {
+          search_term: term,
+          results: filterHymns(hymns, term, "all").length,
+        });
+      } catch {
+        /* ignore */
+      }
+    };
+    if (now) send();
+    else searchTimer = window.setTimeout(send, 1500);
+  } catch {
+    /* counting must never affect the page */
+  }
+}
+
+function noteSelect(link) {
+  try {
+    if (!link.closest("#main")) return;
+    const number = Number((link.getAttribute("href") || "").split("/")[2]);
+    if (!Number.isInteger(number)) return;
+    gaEvent("select_hymn", hymnParams(hymnByNumber(number), { list: activeIndex || "" }));
+  } catch {
+    /* counting must never affect the page */
+  }
+}
+
+function noteSong(name, extra) {
+  try {
+    const track = currentSong();
+    if (track) gaEvent(name, hymnParams(track, extra));
+  } catch {
+    /* counting must never affect playback */
+  }
+}
+
+// listen_progress at 25, 50, 75, and 100 percent of the song's own span in
+// the service video. Each mark is sent once for each play.
+let progressSeen = new Set();
+function noteProgress(track, now) {
+  try {
+    for (const mark of progressMarks(track, now, progressSeen)) {
+      gaEvent("listen_progress", hymnParams(track, { percent: mark }));
+    }
+  } catch {
+    /* counting must never affect playback */
+  }
+}
+
+function analyticsUserProps() {
+  const props = {};
+  try {
+    props.display_mode = runningAsApp() ? "standalone" : "browser";
+    props.theme = appliedTheme();
+    props.liked_count = likedBucket(readLikes().length);
+  } catch {
+    /* ignore */
+  }
+  return props;
+}
+
 function notePlay(track) {
   try {
     sendListen({ type: "play", hymn: track.number, path: location.hash || "#/" });
-    gaEvent("play_start", { hymn_number: track.number, hymn_title: track.title });
+    gaEvent("play_start", hymnParams(track));
   } catch {
     /* counting must never affect playback */
   }
@@ -2267,6 +2383,7 @@ queryInput.addEventListener("input", () => {
   clearButton.hidden = queryInput.value.length === 0;
   if (activeIndex) scrollMemory[activeIndex] = 0;
   render();
+  noteSearch(queryInput.value);
 });
 clearButton.addEventListener("click", () => {
   queryInput.value = "";
@@ -2299,7 +2416,10 @@ tabs.addEventListener("keydown", (event) => {
 
 document.addEventListener("click", (event) => {
   const link = event.target.closest("a[href^='#/hymn/']");
-  if (link) rememberScroll();
+  if (link) {
+    rememberScroll();
+    noteSelect(link);
+  }
   // About Hark opens the welcome page from the top, not where it was left.
   if (event.target.closest("#about-link")) scrollMemory.welcome = 0;
   if (event.target.closest("#whats-new-link")) scrollMemory["whats-new"] = 0;
@@ -2377,6 +2497,7 @@ async function promptInstall() {
   if (!saved) return false;
   installEvent = null;
   try {
+    gaEvent("install_prompt");
     saved.prompt();
     await saved.userChoice;
   } catch {
@@ -2486,6 +2607,8 @@ window.addEventListener("appinstalled", () => {
   installEvent = null;
   document.documentElement.dataset.installed = "true";
   syncInstallButton();
+  gaEvent("app_installed");
+  gaUserProps({ display_mode: "standalone" });
 });
 
 // Shared by the header link and the welcome page button.
@@ -2570,6 +2693,7 @@ async function toggleNotify() {
       notifyOn = false;
       notifyMessage = "";
       paintNotify();
+      gaEvent("notify_unsubscribe");
       await fetch(new URL("/unsubscribe", pushConfig.endpoint), {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -2603,6 +2727,7 @@ async function toggleNotify() {
     notifyOn = true;
     notifyMessage = "";
     paintNotify();
+    gaEvent("notify_subscribe");
   } catch {
     notifyMessage = "Notifications could not be saved. Try again.";
     paintNotify();
@@ -2624,6 +2749,7 @@ let songIndex = 0;
 let songMode = "one";
 let songPoll = 0;
 let songHolding = false;
+let songPaused = false;
 
 function loadYouTubeApi() {
   if (window.YT && window.YT.Player) return Promise.resolve();
@@ -2751,6 +2877,7 @@ function watchSong(track) {
       return;
     }
     if (now >= track.start && now + 1 < track.end) songHolding = false;
+    if (!songHolding) noteProgress(track, now);
     if (!songHolding && now + 0.25 >= track.end) finishSong();
   }, 400);
 }
@@ -2759,6 +2886,8 @@ function loadSong() {
   const track = currentSong();
   if (!track || !ytPlayer) return;
   songHolding = true;
+  songPaused = false;
+  progressSeen = new Set();
   if (songKeep) songKeep.hidden = true;
   paintSong();
   ytPlayer.loadVideoById({
@@ -2784,6 +2913,9 @@ function finishSong() {
   }
   if (now + 0.25 < track.end) return;
   songHolding = true;
+  // The song reached its end and Hark is stopping it here.
+  noteProgress(track, track.end);
+  noteSong("complete");
   try {
     ytPlayer.pauseVideo();
   } catch {
@@ -2814,6 +2946,15 @@ function onSongState(event) {
   if (!event || event.data !== 0) {
     if (event && event.data === 1) setToggleLabel(true);
     if (event && event.data === 2 && songKeep && songKeep.hidden) setToggleLabel(false);
+    // songHolding is set while a song loads and when Hark itself stops one at
+    // its end, so only a pause the listener chose is counted.
+    if (event && event.data === 2 && !songHolding && !songPaused) {
+      songPaused = true;
+      noteSong("pause");
+    } else if (event && event.data === 1 && songPaused) {
+      songPaused = false;
+      noteSong("resume");
+    }
     armHeartbeat();
     return;
   }
@@ -2868,6 +3009,7 @@ function keepWatchingService() {
   songMode = "one";
   if (songKeep) songKeep.hidden = true;
   setToggleLabel(true);
+  noteSong("keep_watching");
   ytPlayer.loadVideoById({ videoId: track.videoId, startSeconds: track.end });
 }
 
@@ -2959,7 +3101,12 @@ if (songPrev) {
   songPrev.replaceChildren(icon("prev"));
   songPrev.addEventListener("click", () => stepSong(-1));
 }
-if (songNext) songNext.addEventListener("click", () => stepSong(1));
+if (songNext) {
+  songNext.addEventListener("click", () => {
+    noteSong("next_song");
+    stepSong(1);
+  });
+}
 if (songStop) {
   songStop.replaceChildren(icon("close"));
 }
@@ -2971,6 +3118,7 @@ if (songPlace) {
   songPlace.addEventListener("click", () => {
     const next = placeChoice() === "float" ? "words" : "float";
     setPlaceChoice(next);
+    gaEvent(next === "float" ? "player_float" : "player_pin");
     placeStage();
     if (next === "words" && songIsOpen()) revealDock();
   });
@@ -3091,7 +3239,7 @@ refreshNotify();
 
 // load() is still waiting on the hymnal here. This first pass is what puts the
 // welcome page on screen without waiting for it.
-startAnalytics();
+startAnalytics(analyticsUserProps());
 render();
 
 if ("serviceWorker" in navigator) {

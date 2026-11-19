@@ -1903,7 +1903,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v52";/);
+  assert.match(sw, /const CACHE = "hark-v53";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2278,9 +2278,12 @@ test("listening counts stay anonymous and the stats page is locked", async () =>
   const { GA4_MEASUREMENT_ID } = await import("../config/analytics.js");
   assert.equal(GA4_MEASUREMENT_ID, "G-FG4EHLSGLE");
   const { trackingOff } = await import("../listen.js");
-  assert.equal(trackingOff({ doNotTrack: "1" }), true);
+  // Global Privacy Control turns counting off. Do Not Track no longer does.
   assert.equal(trackingOff({ globalPrivacyControl: true }), true);
+  assert.equal(trackingOff({ doNotTrack: "1" }), false);
+  assert.equal(trackingOff({ doNotTrack: "1", globalPrivacyControl: true }), true);
   assert.equal(trackingOff({ doNotTrack: "0" }), false);
+  assert.equal(trackingOff({}), false);
 
   const { allowListen, readListen, summarizeEvents, handleListen, handleStats } = await import(
     `../worker/src/listen.js?stats=${Date.now()}`
@@ -2450,4 +2453,134 @@ test("a song that is not in the Trinity Hymnal never names the hymnal", () => {
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.equal(appSource.match(/Trinity Hymnal/g).length, 1);
   assert.match(appSource, /welcomeCopy\.about\),\n\s*el\("p", \{ class: "colophon" \}, "Trinity Hymnal, 1990"\)/);
+});
+
+test("analytics helpers: progress marks fire once, GPC turns tracking off, DNT does not", async () => {
+  const { cleanParams, hymnParams, likedBucket, progressMarks, gaEvent, gaPage, gaUserProps, startAnalytics } = await import("../ga.js");
+  const { trackingOff } = await import("../listen.js");
+
+  // listen_progress: each mark once for one play, measured over start to end.
+  const track = { number: 100, title: "Holy, Holy, Holy!", start: 600, end: 800 };
+  const seen = new Set();
+  assert.deepEqual(progressMarks(track, 600, seen), []);
+  assert.deepEqual(progressMarks(track, 649, seen), []);
+  assert.deepEqual(progressMarks(track, 650, seen), [25]);
+  assert.deepEqual(progressMarks(track, 660, seen), []);
+  // A seek forward passes two marks at once and still sends each one time.
+  assert.deepEqual(progressMarks(track, 755, seen), [50, 75]);
+  // A seek back does not send them again.
+  assert.deepEqual(progressMarks(track, 700, seen), []);
+  assert.deepEqual(progressMarks(track, 800, seen), [100]);
+  assert.deepEqual(progressMarks(track, 900, seen), []);
+  assert.deepEqual([...seen], [25, 50, 75, 100]);
+  // A new play starts with a new set.
+  assert.deepEqual(progressMarks(track, 800, new Set()), [25, 50, 75, 100]);
+  // A song with no usable span sends nothing and does not throw.
+  assert.deepEqual(progressMarks({ start: 10, end: 10 }, 10, new Set()), []);
+  assert.deepEqual(progressMarks({ start: 10 }, 50, new Set()), []);
+  assert.deepEqual(progressMarks(null, 50, new Set()), []);
+
+  assert.deepEqual(hymnParams(track), { hymn_number: 100, hymn_title: "Holy, Holy, Holy!" });
+  assert.deepEqual(hymnParams(track, { percent: 50 }), { hymn_number: 100, hymn_title: "Holy, Holy, Holy!", percent: 50 });
+  assert.deepEqual(hymnParams(null), {});
+  assert.deepEqual(cleanParams({ a: "", b: null, c: undefined, d: NaN, e: true, f: "x".repeat(150) }), { e: 1, f: "x".repeat(100) });
+  assert.deepEqual([0, 1, 4, 5, 9, 10, 24, 25, 300].map(likedBucket), ["0", "1-4", "1-4", "5-9", "5-9", "10-24", "10-24", "25+", "25+"]);
+
+  // The gtag wiring, run against a stand-in for the browser.
+  const saved = {};
+  for (const key of ["window", "document", "location", "navigator"]) saved[key] = Object.getOwnPropertyDescriptor(globalThis, key);
+  const put = (key, value) => Object.defineProperty(globalThis, key, { value, configurable: true, writable: true });
+  try {
+    const appended = [];
+    put("window", {});
+    put("document", { title: "Hark", head: { append: (node) => appended.push(node) }, createElement: () => ({}) });
+    put("location", { origin: "https://hark.theweightofglory.com", pathname: "/", search: "" });
+
+    // Global Privacy Control: nothing loads and nothing is sent.
+    put("navigator", { globalPrivacyControl: true, doNotTrack: "1" });
+    assert.equal(trackingOff(), true);
+    startAnalytics({ theme: "dark" });
+    gaEvent("like", { hymn_number: 1 });
+    assert.equal(window.gtag, undefined);
+    assert.equal(appended.length, 0);
+
+    // Do Not Track alone no longer turns tracking off.
+    put("navigator", { doNotTrack: "1" });
+    assert.equal(trackingOff(), false);
+    startAnalytics({ display_mode: "browser", theme: "dark", liked_count: "0" });
+    assert.equal(appended.length, 1);
+    assert.match(appended[0].src, /googletagmanager\.com\/gtag\/js\?id=G-FG4EHLSGLE/);
+    const calls = () => window.dataLayer.map((args) => Array.from(args));
+    const config = calls().find((args) => args[0] === "config");
+    assert.deepEqual(config, ["config", "G-FG4EHLSGLE", { send_page_view: false, allow_google_signals: true }]);
+    assert.deepEqual(calls().find((args) => args[0] === "set"), [
+      "set",
+      "user_properties",
+      { display_mode: "browser", theme: "dark", liked_count: "0" },
+    ]);
+
+    gaPage("#/hymn/100", "100 Holy, Holy, Holy! · Hark");
+    assert.deepEqual(calls().at(-1), [
+      "event",
+      "page_view",
+      {
+        page_title: "100 Holy, Holy, Holy! · Hark",
+        page_location: "https://hark.theweightofglory.com/#/hymn/100",
+        page_path: "#/hymn/100",
+        transport_type: "beacon",
+      },
+    ]);
+    gaEvent("like", hymnParams(track));
+    assert.deepEqual(calls().at(-1), ["event", "like", { hymn_number: 100, hymn_title: "Holy, Holy, Holy!" }]);
+    gaUserProps({ liked_count: likedBucket(1) });
+    assert.deepEqual(calls().at(-1), ["set", "user_properties", { liked_count: "1-4" }]);
+
+    // Turning GPC on later stops events even though gtag is loaded.
+    const before = window.dataLayer.length;
+    put("navigator", { globalPrivacyControl: true });
+    gaEvent("like", hymnParams(track));
+    gaPage("#/");
+    assert.equal(window.dataLayer.length, before);
+
+    // A broken gtag never throws into the caller.
+    put("navigator", {});
+    window.gtag = () => {
+      throw new Error("blocked");
+    };
+    gaEvent("like", hymnParams(track));
+    gaPage("#/");
+    gaUserProps({ theme: "light" });
+  } finally {
+    for (const [key, descriptor] of Object.entries(saved)) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+      else delete globalThis[key];
+    }
+  }
+
+  // Cookies stay on: no cookieless options in the tag.
+  const ga = readFileSync(new URL("../ga.js", import.meta.url), "utf8");
+  assert.equal(/client_storage\s*:|anonymize_ip\s*:|debug_mode/.test(ga), false);
+  const listen = readFileSync(new URL("../listen.js", import.meta.url), "utf8");
+  assert.equal(/\.doNotTrack/.test(listen), false);
+
+  // Every event the app sends is named here, and the request form sends no text.
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  for (const name of [
+    "play_start", "pause", "resume", "complete", "keep_watching", "listen_progress", "play_all", "shuffle",
+    "next_song", "score_play", "like", "unlike", "search", "theme_open", "select_hymn", "bulletin_click",
+    "install_prompt", "app_installed", "notify_subscribe", "notify_unsubscribe", "request_submit",
+    "player_float", "player_pin",
+  ]) {
+    assert.match(appSource, new RegExp(`"${name}"`), name);
+  }
+  assert.match(appSource, /gaEvent\("request_submit"\);/);
+
+  // The privacy note is on the welcome page, in plain words, with no long dashes.
+  const { welcomeCopy } = await import("../welcome.js");
+  assert.match(welcomeCopy.privacy, /cookies/);
+  assert.match(welcomeCopy.privacy, /Google Analytics/);
+  assert.match(welcomeCopy.privacy, /Cloudflare Web Analytics/);
+  assert.match(welcomeCopy.privacy, /Global Privacy Control/);
+  assert.equal(/[\u2013\u2014]/.test(welcomeCopy.privacy), false);
+  assert.match(appSource, /welcomeCopy\.privacy/);
 });

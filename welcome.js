@@ -147,6 +147,8 @@ export const welcomeCopy = {
   },
   about:
     "Hark was made for the people of Faith Presbyterian Church in Tacoma, and it is open to anyone who loves these songs.",
+  privacy:
+    "Hark uses cookies, Google Analytics, and Cloudflare Web Analytics to understand how people use it. It honors Global Privacy Control: if your browser sends that signal, Hark does not use Google Analytics or count your listening.",
 };
 
 // A hymn whose words Hark actually shows.
