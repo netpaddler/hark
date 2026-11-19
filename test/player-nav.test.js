@@ -193,12 +193,20 @@ class Element extends Node {
 
   before(...nodes) {
     if (!this.parentNode) return;
-    const index = this.parentNode.childNodes.indexOf(this);
+    const parent = this.parentNode;
     for (const node of nodes) {
       if (node.parentNode) node.parentNode.removeChild(node);
-      node.parentNode = this.parentNode;
-      this.parentNode.childNodes.splice(index, 0, node);
+      node.parentNode = parent;
+      // Looked up after the removal, as a node already in this parent shifts the rest.
+      parent.childNodes.splice(parent.childNodes.indexOf(this), 0, node);
     }
+  }
+
+  get nextElementSibling() {
+    if (!this.parentNode) return null;
+    const siblings = this.parentNode.childNodes.filter((node) => node.nodeType === 1);
+    const index = siblings.indexOf(this);
+    return index >= 0 && index + 1 < siblings.length ? siblings[index + 1] : null;
   }
 
   get previousElementSibling() {

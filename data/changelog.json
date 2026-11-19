@@ -2,6 +2,11 @@
   {
     "date": "2026-11-18",
     "hymns": [],
+    "note": "On a phone, a Play song button now sits beside Play all at the top of a song, and the video plays there, above the words. Leave the page and it floats as a small player that keeps playing. Tap it to go back to the song."
+  },
+  {
+    "date": "2026-11-18",
+    "hymns": [],
     "note": "Hark now uses cookies and Google Analytics to understand how people use it, and says so at the foot of the About page. It honors Global Privacy Control."
   },
   {

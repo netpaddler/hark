@@ -1903,7 +1903,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v53";/);
+  assert.match(sw, /const CACHE = "hark-v54";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2236,9 +2236,6 @@ test("a computer browser puts the player above the words unless the reader float
   assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: undefined }), "words");
   assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: "float" }), "float");
   assert.equal(stagePlacement({ wide: true, onSongPage: false, choice: "words" }), "float");
-  // A phone keeps what it had, whatever was chosen on a computer.
-  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "float" }), "dock");
-  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "words" }), "dock");
   assert.equal(stagePlacement({ wide: false, onSongPage: false, choice: "words" }), "float");
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   const dock = appSource.slice(appSource.indexOf("function dockAboveWords("), appSource.indexOf("function removeDock("));
@@ -2246,6 +2243,26 @@ test("a computer browser puts the player above the words unless the reader float
   assert.match(appSource, /\(min-width: 60rem\)/);
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   assert.match(page, /id="song-place"/);
+});
+
+test("a phone pins the player above the words and floats it on every other page", () => {
+  // On the song's own page a phone always pins, whatever was chosen on a computer.
+  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "words" }), "words");
+  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "float" }), "words");
+  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: undefined }), "words");
+  // Leaving the page floats it as a small player. It is never hidden.
+  assert.equal(stagePlacement({ wide: false, onSongPage: false, choice: "words" }), "float");
+  assert.equal(stagePlacement({ wide: false, onSongPage: false, choice: "float" }), "float");
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  // The hymn's own play button leads the row with Play all, Shuffle and Auto play all.
+  const controls = appSource.slice(appSource.indexOf("function hymnPlayControls("), appSource.indexOf("function hymnsOnScreen("));
+  assert.match(controls, /playControl\(hymn, item, "Play song"\)/);
+  assert.match(controls, /item \? playControl/);
+  const row = appSource.slice(appSource.indexOf("function playRow("), appSource.indexOf("function playAllControls("));
+  assert.ok(row.indexOf("row.append(lead)") > -1 && row.indexOf("row.append(lead)") < row.indexOf('"Play all"'));
+  // The toggle that floats a pinned player stays a computer-only choice.
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  assert.match(css, /\.song-place \{\s*display: none;\s*\}\s*@media \(min-width: 60rem\)/);
 });
 
 test("a floating player snaps to a corner and a swipe off dismisses it", () => {
