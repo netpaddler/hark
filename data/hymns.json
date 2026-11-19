@@ -794,6 +794,17 @@
     "translator": null,
     "composer": null,
     "tune": "WINCHESTER NEW",
+    "tune_book": "1990 Trinity Hymnal",
+    "alt_tunes": [
+      {
+        "tune": "MARYTON",
+        "composer": "H. Percy Smith, 1874",
+        "meter": "L.M.",
+        "book": "1961 Trinity Hymnal",
+        "number": 101,
+        "source_url": "https://hymnary.org/hymn/TH1961/101"
+      }
+    ],
     "year_text": "Psalm 89:1-4, 14-18, 28, 29; mod.",
     "public_domain": true,
     "copyright_note": null,

@@ -34,6 +34,9 @@ import {
   titleLetter,
   titleSortKey,
   tuneCaution,
+  recordingCaption,
+  altTunes,
+  attributionParts,
   youtubeEmbedSrc,
   youtubeBlock,
   listSermons,
@@ -415,7 +418,9 @@ test("Faith Presbyterian recordings stay out of the hymn file and sort newest fi
   assert.match(tuneCaution(223), /no\. 222/);
   assert.equal(tuneCaution(203), "");
   assert.match(tuneCaution(99), /WINCHESTER NEW/);
-  assert.match(tuneCaution(99), /Nov 15, 2026 Faith sang them to MARYTON/);
+  assert.match(tuneCaution(99), /^Faith sings these words to two tunes\./);
+  assert.match(tuneCaution(99), /MARYTON, which Faith sang on Nov 15, 2026\./);
+  assert.match(tuneCaution(99), /Each recording names its tune\.$/);
   assert.match(tuneCaution("99"), /1961 \(blue\) Trinity Hymnal/);
   assert.doesNotMatch(tuneCaution(99), /[\u2013\u2014]/);
   assert.equal(byNumber.get(99).tune, "WINCHESTER NEW");
@@ -423,6 +428,19 @@ test("Faith Presbyterian recordings stay out of the hymn file and sort newest fi
   assert.equal(record.url, "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=1949s");
   assert.equal(record.start, 1949);
   assert.equal(captionEnd(record), 2249);
+  // Each recording of no. 99 names the tune sung that day.
+  assert.deepEqual(
+    faithRecordings(recordings, 99).map((item) => recordingCaption(item)),
+    [
+      "Sunday Evening Worship, Nov 15, 2026, congregation, tune MARYTON",
+      "Sunday Morning Worship, Aug 16, 2026, congregation, tune WINCHESTER NEW",
+      "Sunday Evening Worship, Mar 15, 2026, congregation, tune WINCHESTER NEW",
+      "Sunday Evening Worship, Oct 26, 2025, congregation, tune WINCHESTER NEW",
+      "Sunday Evening Worship, Jun 11, 2023, congregation, tune WINCHESTER NEW",
+      "Sunday Evening Worship, Jan 30, 2022, congregation, tune WINCHESTER NEW",
+    ],
+  );
+  for (const recording of recordings["99"]) assert.match(recording.notes, /Tune check, Nov 18, 2026/);
   const mind = faithRecordings(recordings, 644)[0];
   assert.equal(mind.url, "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=346s");
   assert.equal(mind.start, 346);
@@ -1165,6 +1183,16 @@ test("every score parses, names its source, and matches a hymn", () => {
   assert.equal(music.scores["197"].harmony, "melody");
   assert.equal(music.scores["197"].unsure, true);
   assert.equal(music.scores["401"].tune, "TALLIS' CANON");
+  // No. 99 shows WINCHESTER NEW from a book of 1896. MARYTON has no score
+  // with a recorded source, and the page says so instead of showing one.
+  const winchester = music.scores["99"];
+  assert.equal(winchester.tune, "WINCHESTER NEW");
+  assert.equal(winchester.file, "WINCHESTER_NEW.abc");
+  assert.match(winchester.source, /The Church Hymnal, 1896, hymn 197, via the Open Hymnal Project/);
+  assert.equal(music.omitted["99"], undefined);
+  assert.deepEqual(winchester.also.map((item) => item.tune), ["MARYTON"]);
+  assert.match(winchester.also[0].reason, /^No score is shown for MARYTON\./);
+  assert.match(readFileSync(new URL("../app.js", import.meta.url), "utf8"), /for \(const other of Array\.isArray\(score\.also\) \? score\.also : \[\]\)/);
   assert.ok(music.omitted["108"]);
   assert.ok(music.omitted["559"]);
   assert.equal(/\u2013|\u2014/.test(JSON.stringify(music)), false);
@@ -1916,7 +1944,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v55";/);
+  assert.match(sw, /const CACHE = "hark-v56";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2613,4 +2641,59 @@ test("analytics helpers: progress marks fire once, GPC turns tracking off, DNT d
   assert.match(welcomeCopy.privacy, /Global Privacy Control/);
   assert.equal(/[\u2013\u2014]/.test(welcomeCopy.privacy), false);
   assert.match(appSource, /welcomeCopy\.privacy/);
+});
+
+test("a recording that names its tune shows it after the label", () => {
+  const base = { label: "Sunday Evening Worship, Nov 15, 2026, congregation", url: "https://www.youtube.com/watch?v=abcdefghijk&t=10s" };
+  const [named] = faithRecordings({ 1: [{ ...base, tune: " MARYTON " }] }, 1);
+  assert.equal(named.tune, "MARYTON");
+  assert.equal(named.label, base.label);
+  assert.equal(recordingCaption(named), "Sunday Evening Worship, Nov 15, 2026, congregation, tune MARYTON");
+  // No tune, a null tune, or a blank one: the label alone.
+  for (const tune of [undefined, null, "", "   ", 7]) {
+    const [plain] = faithRecordings({ 1: [{ ...base, tune }] }, 1);
+    assert.equal("tune" in plain, false);
+    assert.equal(recordingCaption(plain), base.label);
+  }
+  assert.equal(recordingCaption(null), "");
+  assert.equal(recordingCaption({ tune: "MARYTON" }), "Tune MARYTON");
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  // The caption is what the card, the YouTube link and the player show.
+  assert.match(appSource, /class: "faith-label" \}, recordingCaption\(item\)/);
+  assert.match(appSource, /`Play on YouTube, \$\{recordingCaption\(item\)\}`/);
+  assert.match(appSource, /label: recordingCaption\(item\)/);
+  const track = tracksForHymns({
+    hymns: [{ number: 1, title: "X", stanzas: [] }],
+    recordings: { 1: [{ ...base, tune: "MARYTON", end_seconds: 60, end_source: "audio" }] },
+  })[0];
+  assert.match(track.label, /, tune MARYTON$/);
+  // Any recording in the data that names a tune names one its hymn is sung to.
+  for (const [number, list] of Object.entries(recordings)) {
+    for (const recording of list) {
+      if (!("tune" in recording)) continue;
+      assert.ok(recording.tune === null || typeof recording.tune === "string", number);
+      if (recording.tune === null) continue;
+      const hymn = byNumber.get(Number(number));
+      const known = [hymn.tune, ...altTunes(hymn).map((item) => item.tune)];
+      assert.ok(known.includes(recording.tune), `${number} ${recording.tune}`);
+    }
+  }
+});
+
+test("a hymn sung to two tunes names both, each with its book", () => {
+  const hymn = byNumber.get(99);
+  assert.deepEqual(altTunes(hymn).map((item) => item.tune), ["MARYTON"]);
+  assert.equal(altTunes(hymn)[0].source_url, "https://hymnary.org/hymn/TH1961/101");
+  assert.equal(
+    attributionParts(hymn).music,
+    "WINCHESTER NEW (1990 Trinity Hymnal) \u00b7 also sung to MARYTON (1961 Trinity Hymnal)",
+  );
+  // A hymn with one tune reads as before, even if it names a book.
+  assert.equal(attributionParts({ tune: "LYONS", composer: "Haydn", tune_book: "1990 Trinity Hymnal" }).music, "LYONS \u00b7 Haydn");
+  assert.equal(attributionParts({ tune: "A", alt_tunes: [{ tune: "B" }, { tune: " " }, null] }).music, "A \u00b7 also sung to B");
+  assert.deepEqual(altTunes({}), []);
+  assert.deepEqual(altTunes(null), []);
+  for (const other of hymns) {
+    if (other.number !== 99) assert.deepEqual(altTunes(other), [], String(other.number));
+  }
 });

@@ -153,6 +153,23 @@
       "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/All_Praise_To_Thee_My_God_This_Night/All_Praise_To_Thee_My_God_This_Night-Tallis_Canon.abc",
       "harmony_credit": "A Hymnal (Episcopal), 1916",
       "unsure": false
+    },
+    "99": {
+      "tune": "WINCHESTER NEW",
+      "file": "WINCHESTER_NEW.abc",
+      "meter": "4/4",
+      "key": "C",
+      "harmony": "SATB",
+      "source": "Musikalisches Handbuch, Hamburg, 1690. Four-part setting by Charles Lewis Hutchins from The Church Hymnal, 1896, hymn 197, via the Open Hymnal Project.",
+      "source_url": "https://github.com/mzealey/openhymnal/blob/master/Complete/O_Lord_My_Soul_Convicted/O_Lord_My_Soul_Convicted-Winchester_New.abc",
+      "harmony_credit": "The Church Hymnal, 1896",
+      "unsure": false,
+      "also": [
+        {
+          "tune": "MARYTON",
+          "reason": "No score is shown for MARYTON. It is by H. Percy Smith, 1874, but no engraved score with a recorded pre-1931 source was found."
+        }
+      ]
     }
   },
   "omitted": {
@@ -261,10 +278,6 @@
       "reason": "No score yet. This hymn is listed from a bulletin."
     },
     "95": {
-      "tune": null,
-      "reason": "No score yet. This hymn is listed from a bulletin."
-    },
-    "99": {
       "tune": null,
       "reason": "No score yet. This hymn is listed from a bulletin."
     },

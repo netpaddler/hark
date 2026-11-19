@@ -4,7 +4,7 @@
 // listening to a video that has no captions. Anything else stops on a short estimate so a
 // worship video cannot run on into the rest of the service by itself.
 
-import { faithRecordings, hymnsInTheme } from "./hymn-model.js";
+import { faithRecordings, hymnsInTheme, recordingCaption } from "./hymn-model.js";
 
 export const STANZA_SECONDS = 40;
 export const ESTIMATE_LEAD = 12;
@@ -41,7 +41,7 @@ function trackFrom(hymn, item, stop) {
     start: stop.start,
     end: stop.at,
     trustworthy: stop.trustworthy,
-    label: item.label || "",
+    label: recordingCaption(item),
   };
 }
 

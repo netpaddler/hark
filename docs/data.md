@@ -27,6 +27,8 @@ The first three entries are a seed from the git history of `data/hymns.json`. Th
 ## Fields
 These are the requested fields plus one extra, `stanza_numbers`. It gives the hymnal's stanza number for each entry in `stanzas`. It matters for no. 196, where only stanzas 1 and 4 are given. Stanza numbers and "[Refrain]" markers have been removed from the lines. `refrain` is printed once. `refrain_after_each_stanza` is true wherever the source marks the refrain as repeated.
 
+A hymn sung to more than one tune has `alt_tunes`, a list of `{ tune, composer, meter, book, number, source_url }`, and `tune_book`, the book that sets it to its main `tune`. The page then names every tune with its book, as in "WINCHESTER NEW (1990 Trinity Hymnal) · also sung to MARYTON (1961 Trinity Hymnal)". Only no. 99 has these now.
+
 ## Sources
 1. **hymnary.org Trinity Hymnal (1990) instance pages**, `https://hymnary.org/hymn/TH1990/N`. These supplied the full text, stanza order, author, translator, tune, composer and copyright lines.
    - Live hymnary.org blocked automated fetches (bot challenge and 403s).
@@ -110,6 +112,7 @@ Scores are ABC files in `data/music/`, listed in `data/music.json`. Each one is 
 - 221 ES IST EIN' ROS' ENTSPRUNGEN (SATB). German melody, Koln, 1599. Michael Praetorius, 1609. Four-part setting from The English Hymnal, 1906, hymn 19, via the Open Hymnal Project.
 - 226 DIX (SATB). Conrad Kocher, 1838, abridged by William Henry Monk, 1861. Four-part setting from The English Hymnal, 1906, hymn 39, via the Open Hymnal Project.
 - 401 TALLIS' CANON (SATB). Thomas Tallis, about 1567. Four-part setting from A Hymnal (Episcopal), 1916, hymn 25, via the Open Hymnal Project.
+- 99 WINCHESTER NEW (SATB). Musikalisches Handbuch, Hamburg, 1690. Four-part setting by Charles Lewis Hutchins from The Church Hymnal, 1896, hymn 197, via the Open Hymnal Project. This is the tune before the 1990 alteration. Hymn 99 is also sung to MARYTON (H. Percy Smith, 1874). The Open Hymnal Project has no MARYTON score, and no other engraved score with a recorded pre-1931 source was found, so the score entry lists MARYTON under `also` with that reason and the page shows it under the music credit.
 
 ### Left out
 

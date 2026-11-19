@@ -394,61 +394,67 @@
   "99": [
     {
       "label": "Sunday Evening Worship, Nov 15, 2026, congregation",
+      "tune": "MARYTON",
       "video_title": "Sunday Evening Worship - November 15, 2026",
       "video_date": "2026-11-15",
       "url": "https://www.youtube.com/watch?v=yoZkY7OoPXU&t=1949s",
       "start_seconds": 1949,
       "confidence": "medium",
-      "notes": "Bulletin second hymn, after the Covenant High School sharing. Faith sang MARYTON that evening, from the 1961 (blue) Trinity Hymnal, not WINCHESTER NEW as in the 1990 hymnal. The minister says so before the hymn: the tune that we'll sing is a bit different, I believe, than what's in the bulletin. This video has no auto captions, so the times come from the audio: a local transcript and the sound level. Starts at the spoken announcement: Let's take time to continue to reflect more broadly on how God has been good to us as his people, as we sing from Psalm 89, My Song Forever Shall Record. No hymn number is spoken. The organ begins at 1970. The singing pauses at 2208 while the minister says: I think we have one more verse. The organ resumes at 2212 for the last stanza. The last chord dies at 2249, just before the minister says: Please be seated.",
+      "notes": "Bulletin second hymn, after the Covenant High School sharing. Faith sang MARYTON that evening, from the 1961 (blue) Trinity Hymnal, not WINCHESTER NEW as in the 1990 hymnal. The minister says so before the hymn: the tune that we'll sing is a bit different, I believe, than what's in the bulletin. This video has no auto captions, so the times come from the audio: a local transcript and the sound level. Starts at the spoken announcement: Let's take time to continue to reflect more broadly on how God has been good to us as his people, as we sing from Psalm 89, My Song Forever Shall Record. No hymn number is spoken. The organ begins at 1970. The singing pauses at 2208 while the minister says: I think we have one more verse. The organ resumes at 2212 for the last stanza. The last chord dies at 2249, just before the minister says: Please be seated. Tune check, Nov 18, 2026: the hymn audio was matched by computer against the melodies of eight long meter tunes. MARYTON was the closest (cost 0.109, next closest TALLIS' CANON 0.148, WINCHESTER NEW 0.188; lower is closer), sung in E flat. This agrees with the music director.",
       "end_seconds": 2249,
       "end_source": "audio"
     },
     {
       "label": "Sunday Morning Worship, Aug 16, 2026, congregation",
+      "tune": "WINCHESTER NEW",
       "video_title": "Sunday Morning Worship - August 16, 2026",
       "video_date": "2026-08-16",
       "url": "https://www.youtube.com/watch?v=pgm5642TYns&t=641s",
       "start_seconds": 641,
       "confidence": "medium",
-      "notes": "Bulletin opening hymn of praise. Announcement: Please stand. Let's sing praise to our great God. Sung captions: Your faithfulness / I sing of mercies.",
+      "notes": "Bulletin opening hymn of praise. Announcement: Please stand. Let's sing praise to our great God. Sung captions: Your faithfulness / I sing of mercies. Tune check, Nov 18, 2026: the hymn audio was matched by computer against the melodies of eight long meter tunes. WINCHESTER NEW was the closest (cost 0.110, next closest TALLIS' CANON 0.164, MARYTON 0.184; lower is closer), sung in B flat. The same check names MARYTON for the Nov 15, 2026 recording, where the tune is confirmed. Not checked by a person's ear.",
       "end_seconds": 879,
       "end_source": "captions"
     },
     {
       "label": "Sunday Evening Worship, Mar 15, 2026, congregation",
+      "tune": "WINCHESTER NEW",
       "video_title": "Sunday Evening Worship - March 15, 2026",
       "video_date": "2026-03-15",
       "url": "https://www.youtube.com/watch?v=j4pDmuPPZuA&t=3279s",
       "start_seconds": 3279,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Lord. Let us tremble at the prospect of ever turning away from this good and glorious God. And let us worship him Well, we're going to close with uh hymn number 99, which reflec..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: Lord. Let us tremble at the prospect of ever turning away from this good and glorious God. And let us worship him Well, we're going to close with uh hymn number 99, which reflec... Tune check, Nov 18, 2026: the hymn audio was matched by computer against the melodies of eight long meter tunes. WINCHESTER NEW was the closest (cost 0.097, next closest MARYTON 0.178; lower is closer), sung in B flat. The same check names MARYTON for the Nov 15, 2026 recording, where the tune is confirmed. Not checked by a person's ear."
     },
     {
       "label": "Sunday Evening Worship, Oct 26, 2025, congregation",
+      "tune": "WINCHESTER NEW",
       "video_title": "Sunday Evening Worship - October 26, 2025",
       "video_date": "2025-10-26",
       "url": "https://www.youtube.com/watch?v=0jG1lIDm6FA&t=3529s",
       "start_seconds": 3529,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: heavenly table. Amen. heavenly table. Amen. [clears throat] Well, we're going to stand and sing in response. My song Forever Shall Record, thinking about the rule of our Lord fo..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: heavenly table. Amen. heavenly table. Amen. [clears throat] Well, we're going to stand and sing in response. My song Forever Shall Record, thinking about the rule of our Lord fo... Tune check, Nov 18, 2026: the hymn audio was matched by computer against the melodies of eight long meter tunes. WINCHESTER NEW was the closest (cost 0.106, next closest DUKE STREET 0.194, MARYTON 0.207; lower is closer), sung in B flat. The same check names MARYTON for the Nov 15, 2026 recording, where the tune is confirmed. Not checked by a person's ear."
     },
     {
       "label": "Sunday Evening Worship, Jun 11, 2023, congregation",
+      "tune": "WINCHESTER NEW",
       "video_title": "Sunday Evening Worship - June 11, 2023",
       "video_date": "2023-06-11",
       "url": "https://www.youtube.com/watch?v=PHfeXrPXipU&t=899s",
       "start_seconds": 899,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: glory to the father and to the son and to the Holy Spirit let's continue our worship now with him 99 my song Forever shall record 99 my song Forever shall record thank you thank..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: glory to the father and to the son and to the Holy Spirit let's continue our worship now with him 99 my song Forever shall record 99 my song Forever shall record thank you thank... Tune check, Nov 18, 2026: the hymn audio was matched by computer against the melodies of eight long meter tunes. WINCHESTER NEW was the closest (cost 0.165, next closest DUKE STREET 0.212, MARYTON 0.238; lower is closer), sung in B flat. The same check names MARYTON for the Nov 15, 2026 recording, where the tune is confirmed. Not checked by a person's ear."
     },
     {
       "label": "Sunday Evening Worship, Jan 30, 2022, congregation",
+      "tune": "WINCHESTER NEW",
       "video_title": "Sunday Evening Worship - January 30, 2022",
       "video_date": "2022-01-30",
       "url": "https://www.youtube.com/watch?v=7BVXseokNhM&t=491s",
       "start_seconds": 491,
       "confidence": "medium",
-      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: one god forever and ever amen amen let's continue our worship now singing together psalm 89 our hymn number 99 my song for my song forever shall record song for my song forever ..."
+      "notes": "Starts at the spoken announcement of the hymn in the auto captions; the organ introduction and singing follow. Caption evidence: one god forever and ever amen amen let's continue our worship now singing together psalm 89 our hymn number 99 my song for my song forever shall record song for my song forever ... Tune check, Nov 18, 2026: the hymn audio was matched by computer against the melodies of eight long meter tunes. WINCHESTER NEW was the closest (cost 0.137, next closest TALLIS' CANON 0.174, MARYTON 0.203; lower is closer), sung in B flat. The same check names MARYTON for the Nov 15, 2026 recording, where the tune is confirmed. Not checked by a person's ear."
     }
   ],
   "108": [
