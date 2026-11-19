@@ -4,7 +4,7 @@
 // listening to a video that has no captions. Anything else stops on a short estimate so a
 // worship video cannot run on into the rest of the service by itself.
 
-import { faithRecordings, hymnsInTheme, recordingCaption } from "./hymn-model.js";
+import { faithRecordings, hymnsInTheme, melodyOf, playOrder, recordingCaption } from "./hymn-model.js";
 
 export const STANZA_SECONDS = 40;
 export const ESTIMATE_LEAD = 12;
@@ -33,8 +33,10 @@ export function playbackStop(item, hymn) {
   return { start, at: estimatedEnd(start, stanzas), trustworthy: false };
 }
 
-function trackFrom(hymn, item, stop) {
-  return {
+// `items` is every recording of the hymn, so the track can say which melody
+// it is on a hymn sung to more than one.
+export function trackFrom(hymn, item, stop, items) {
+  const track = {
     number: hymn.number,
     title: hymn.title,
     videoId: item.id,
@@ -43,11 +45,19 @@ function trackFrom(hymn, item, stop) {
     trustworthy: stop.trustworthy,
     label: recordingCaption(item),
   };
+  const melody = melodyOf(hymn, items, item);
+  if (melody) {
+    track.melody = melody.tune;
+    track.melodyIndex = melody.index;
+  }
+  return track;
 }
 
+// The hymnal's own melody is preferred when a hymn is sung to more than one.
 function timedTrack(hymn, recordings) {
   if (!hymn) return null;
-  const chosen = faithRecordings(recordings, hymn.number).find(
+  const items = faithRecordings(recordings, hymn.number);
+  const chosen = playOrder(hymn, items).find(
     (item) =>
       item.kind === "youtube" &&
       item.embeddable !== false &&
@@ -55,7 +65,7 @@ function timedTrack(hymn, recordings) {
       captionEnd(item) != null,
   );
   if (!chosen) return null;
-  return trackFrom(hymn, chosen, playbackStop(chosen, hymn));
+  return trackFrom(hymn, chosen, playbackStop(chosen, hymn), items);
 }
 
 // Songs in the order given, keeping the first copy of a number.

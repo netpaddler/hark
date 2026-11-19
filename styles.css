@@ -1158,6 +1158,110 @@ main.has-jump {
   margin: 0 0 0.75rem;
 }
 
+/* A hymn sung to more than one melody. Each melody has a number and a color,
+   and both show on its group of recordings and on the player. */
+:root {
+  --melody-0: var(--muted);
+  --melody-1: #6f2c2c;
+  --melody-2: #1d5c7a;
+  --melody-3: #3f6a2b;
+}
+
+:root[data-theme="dark"] {
+  --melody-1: #e6b15a;
+  --melody-2: #86c8e6;
+  --melody-3: #a9d38f;
+}
+
+[data-melody="0"] { --melody: var(--melody-0); }
+[data-melody="1"] { --melody: var(--melody-1); }
+[data-melody="2"] { --melody: var(--melody-2); }
+[data-melody="3"] { --melody: var(--melody-3); }
+
+.melody-tag {
+  display: inline-block;
+  padding: 0.08rem 0.5rem;
+  border-radius: 999px;
+  background: var(--melody, var(--muted));
+  color: var(--paper, #fffaf3);
+  font-family: var(--sans, inherit);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  vertical-align: 0.08em;
+}
+
+.melody-group {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.8rem 0.35rem 0.85rem;
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--melody, var(--muted));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--melody, var(--muted)) 6%, transparent);
+}
+
+.melody-heading {
+  margin: 0 0 0.35rem;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.melody-about {
+  margin: 0 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.melody-play-row {
+  margin: 0 0 0.3rem;
+}
+
+.melody-group .melody-play {
+  min-height: 2.5rem;
+  padding: 0.4rem 1rem;
+  background: var(--melody, var(--accent));
+  color: var(--paper, #fffaf3);
+  font-weight: 600;
+}
+
+.play-top {
+  margin: 0.2rem 0 0.9rem;
+}
+
+.play-top .play-all {
+  margin: 0 0 0.45rem;
+}
+
+.play-caption {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.music-which {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.song-bar-melody {
+  width: fit-content;
+  margin: 0.25rem 0 0;
+  white-space: normal;
+}
+
+.song-bar-melody[hidden] {
+  display: none;
+}
+
+html[data-melody="1"] .song-bar-video { box-shadow: 0 0 0 3px var(--melody-1), 0 10px 28px rgba(33, 28, 22, 0.28); }
+html[data-melody="2"] .song-bar-video { box-shadow: 0 0 0 3px var(--melody-2), 0 10px 28px rgba(33, 28, 22, 0.28); }
+html[data-melody="3"] .song-bar-video { box-shadow: 0 0 0 3px var(--melody-3), 0 10px 28px rgba(33, 28, 22, 0.28); }
+
 .recordings figcaption {
   margin-bottom: 0.3rem;
   font-size: 0.92rem;

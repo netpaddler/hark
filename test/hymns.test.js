@@ -34,6 +34,12 @@ import {
   titleLetter,
   titleSortKey,
   tuneCaution,
+  melodyGroups,
+  melodyLabel,
+  melodyOf,
+  playOrder,
+  playSongCaption,
+  scoreMelodyNote,
   recordingCaption,
   altTunes,
   attributionParts,
@@ -419,9 +425,9 @@ test("Faith Presbyterian recordings stay out of the hymn file and sort newest fi
   assert.match(tuneCaution(223), /no\. 222/);
   assert.equal(tuneCaution(203), "");
   assert.match(tuneCaution(99), /WINCHESTER NEW/);
-  assert.match(tuneCaution(99), /^Faith sings these words to two tunes\./);
-  assert.match(tuneCaution(99), /MARYTON, which Faith sang on Nov 15, 2026\./);
-  assert.match(tuneCaution(99), /Each recording names its tune\.$/);
+  assert.match(tuneCaution(99), /^Faith sings these words to two melodies \(tunes\)/);
+  assert.match(tuneCaution(99), /MARYTON, from the 1961 \(blue\) Trinity Hymnal\./);
+  assert.match(tuneCaution(99), /grouped by melody\.$/);
   assert.match(tuneCaution("99"), /1961 \(blue\) Trinity Hymnal/);
   assert.doesNotMatch(tuneCaution(99), /[\u2013\u2014]/);
   assert.equal(byNumber.get(99).tune, "WINCHESTER NEW");
@@ -2002,7 +2008,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v57";/);
+  assert.match(sw, /const CACHE = "hark-v58";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2719,7 +2725,9 @@ test("a recording that names its tune shows it after the label", () => {
   // The caption is what the card, the YouTube link and the player show.
   assert.match(appSource, /class: "faith-label" \}, recordingCaption\(item\)/);
   assert.match(appSource, /`Play on YouTube, \$\{recordingCaption\(item\)\}`/);
-  assert.match(appSource, /label: recordingCaption\(item\)/);
+  const playlistSource = readFileSync(new URL("../playlist.js", import.meta.url), "utf8");
+  assert.match(playlistSource, /label: recordingCaption\(item\)/);
+  assert.match(appSource, /beginSongs\(\[trackFrom\(hymn, item, playbackStop\(item, hymn\), heard\)\], "one"\)/);
   const track = tracksForHymns({
     hymns: [{ number: 1, title: "X", stanzas: [] }],
     recordings: { 1: [{ ...base, tune: "MARYTON", end_seconds: 60, end_source: "audio" }] },
@@ -2753,5 +2761,109 @@ test("a hymn sung to two tunes names both, each with its book", () => {
   assert.deepEqual(altTunes(null), []);
   for (const other of hymns) {
     if (other.number !== 99) assert.deepEqual(altTunes(other), [], String(other.number));
+  }
+});
+
+test("a hymn sung to two melodies groups its recordings and says which one plays", () => {
+  const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
+  const hymn = byNumber.get(99);
+  const items = faithRecordings(recordings, 99);
+  const groups = melodyGroups(hymn, items);
+  // The hymnal's own melody comes first, though the newest recording is MARYTON.
+  assert.equal(items[0].tune, "MARYTON");
+  assert.deepEqual(
+    groups.map((group) => group.heading),
+    [
+      "Melody 1: WINCHESTER NEW (the melody in today's Trinity Hymnal)",
+      "Melody 2: MARYTON (from the 1961 blue Trinity Hymnal)",
+    ],
+  );
+  assert.deepEqual(groups.map((group) => [group.index, group.hymnal, group.items.length]), [[1, true, 5], [2, false, 1]]);
+  assert.equal(groups[0].description, "This is the tune printed with these words in today's Trinity Hymnal. 5 recordings.");
+  assert.equal(groups[1].description, "A different tune for the same words. Faith sang it on Nov 15, 2026. 1 recording.");
+  // Each group is newest first, and together they hold every recording once.
+  assert.equal(groups[0].items[0].date, "Aug 16, 2026");
+  assert.equal(groups.reduce((sum, group) => sum + group.items.length, 0), items.length);
+
+  // Play song starts the hymnal melody and says so.
+  const first = playOrder(hymn, items)[0];
+  assert.equal(first.tune, "WINCHESTER NEW");
+  assert.equal(first.date, "Aug 16, 2026");
+  assert.equal(playSongCaption(hymn, items, first), "Plays the hymnal melody, WINCHESTER NEW. MARYTON is below.");
+  assert.equal(playSongCaption(hymn, items, items[0]), "Plays the melody MARYTON. WINCHESTER NEW is below.");
+  assert.equal(
+    scoreMelodyNote(hymn, items, music.scores["99"].tune),
+    "The music shown here is WINCHESTER NEW, the hymnal melody (Melody 1). It is not the music for MARYTON (Melody 2).",
+  );
+
+  // The player names the melody, with the number that picks its color.
+  assert.deepEqual(melodyOf(hymn, items, items[0]), { tune: "MARYTON", index: 2 });
+  assert.deepEqual(melodyOf(hymn, items, first), { tune: "WINCHESTER NEW", index: 1 });
+  assert.equal(melodyLabel("MARYTON"), "Melody: MARYTON");
+  assert.equal(melodyLabel(""), "");
+  // Play all uses the hymnal melody too.
+  const [track] = tracksForHymns({ hymns: [hymn], recordings });
+  assert.equal(track.videoId, "pgm5642TYns");
+  assert.equal(track.melody, "WINCHESTER NEW");
+  assert.equal(track.melodyIndex, 1);
+
+  // No dashes in anything a reader sees.
+  const shown = [
+    ...groups.flatMap((group) => [group.heading, group.description]),
+    playSongCaption(hymn, items, first),
+    scoreMelodyNote(hymn, items, "WINCHESTER NEW"),
+  ];
+  for (const text of shown) assert.doesNotMatch(text, /[–—]/);
+});
+
+test("a hymn whose recordings name one melody, or none, shows no melody notes", () => {
+  const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
+  // Every other hymn in the data: no groups, no caption, no score note, same order.
+  for (const hymn of hymns) {
+    if (hymn.number === 99) continue;
+    const items = faithRecordings(recordings, hymn.number);
+    assert.deepEqual(melodyGroups(hymn, items), [], String(hymn.number));
+    assert.equal(playSongCaption(hymn, items, items[0]), "", String(hymn.number));
+    assert.equal(scoreMelodyNote(hymn, items, hymn.tune), "", String(hymn.number));
+    assert.equal(playOrder(hymn, items), items);
+  }
+  const plain = byNumber.get(203);
+  const [track] = tracksForHymns({ hymns: [plain], recordings });
+  assert.equal("melody" in track, false);
+  // One named tune is not two melodies, even beside recordings that name none.
+  const base = { label: "Service", url: "https://www.youtube.com/watch?v=abcdefghijk&t=5s" };
+  const one = faithRecordings({ 1: [{ ...base, tune: "LYONS", video_date: "2026-01-02" }, { ...base, video_date: "2026-01-01" }] }, 1);
+  assert.deepEqual(melodyGroups({ number: 1, tune: "LYONS" }, one), []);
+  assert.deepEqual(melodyOf({ number: 1, tune: "LYONS" }, one, one[0]), { tune: "LYONS", index: 0 });
+  assert.equal(melodyOf({ number: 1, tune: "LYONS" }, one, one[1]), null);
+  // Two tunes with no book named still read plainly, and a recording with no
+  // tune gets a group of its own.
+  const mixed = faithRecordings(
+    { 1: [
+      { ...base, tune: "B", video_date: "2026-01-03" },
+      { ...base, tune: "A", video_date: "2026-01-02" },
+      { ...base, video_date: "2026-01-01" },
+    ] },
+    1,
+  );
+  assert.deepEqual(
+    melodyGroups({ number: 1, tune: "A" }, mixed).map((group) => group.heading),
+    ["Melody 1: A (the hymnal melody)", "Melody 2: B (a different melody)", "Melody not noted"],
+  );
+});
+
+test("the hymn page and the player show the melody", () => {
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  assert.match(appSource, /playControl\(hymn, playable, "Play this melody"\)/);
+  assert.match(appSource, /const heard = playOrder\(hymn, faithRecordings\(recordingCatalog, hymn\.number\)\);/);
+  assert.match(appSource, /class: "play-caption"/);
+  assert.match(appSource, /scoreMelodyNote\(hymn, faithRecordings\(recordingCatalog, hymn\.number\), score\.tune\)/);
+  assert.match(appSource, /songMelody\.textContent = text;/);
+  assert.match(page, /<p class="song-bar-melody melody-tag" id="song-bar-melody" hidden><\/p>/);
+  for (const index of [1, 2]) {
+    assert.ok(css.includes(`[data-melody="${index}"] { --melody: var(--melody-${index}); }`));
+    assert.ok(css.includes(`html[data-melody="${index}"] .song-bar-video`));
   }
 });

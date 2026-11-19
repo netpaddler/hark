@@ -27,13 +27,18 @@ import {
   numberLabel,
   numberedTitle,
   tuneCaution,
+  melodyGroups,
+  melodyLabel,
+  playOrder,
+  playSongCaption,
+  scoreMelodyNote,
   listSermons,
   formatRecordingDate,
   youtubeBlock,
   bulletinBlock,
   sourceWording,
 } from "./hymn-model.js";
-import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
+import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, trackFrom, tracksForHymns } from "./playlist.js";
 import { sendListen } from "./listen.js";
 import { gaEvent, gaPage, gaUserProps, hymnParams, likedBucket, progressMarks, startAnalytics } from "./ga.js";
 import { stageCorner, stageMostlyOff, stagePlacement, stagePointerMove } from "./stage.js";
@@ -556,18 +561,36 @@ function listPlayControls(hymnList) {
 
 // The recording the button at the top of a hymn page starts: the newest one
 // from a Faith Presbyterian service, or else the first choir recording that
-// can play inside Hark.
+// can play inside Hark. On a hymn sung to more than one melody it is the
+// newest recording of the hymnal's own melody.
 function topRecording(hymn) {
   const playable = (item) => item && item.kind === "youtube" && item.id && item.embeddable !== false;
-  const heard = faithRecordings(recordingCatalog, hymn.number);
+  const heard = playOrder(hymn, faithRecordings(recordingCatalog, hymn.number));
   if (heard.length) return playable(heard[0]) ? heard[0] : null;
   return listRecordings(hymn).find(playable) || null;
+}
+
+// A small colored tag that names a melody. The same tag is on each group of
+// recordings and on the player, so the two can be matched at a glance.
+function melodyTag(index, text) {
+  return el("span", { class: "melody-tag", "data-melody": String(index || 0) }, text);
 }
 
 function hymnPlayControls(hymn) {
   const item = topRecording(hymn);
   const lead = item ? playControl(hymn, item, "Play song") : null;
-  return playRow(songsFromNumber(endingSongs(), hymn.number), lead);
+  const row = playRow(songsFromNumber(endingSongs(), hymn.number), lead);
+  const heard = faithRecordings(recordingCatalog, hymn.number);
+  const caption = item ? playSongCaption(hymn, heard, item) : "";
+  if (!caption) return row;
+  const group = melodyGroups(hymn, heard).find((entry) => entry.tune === item.tune);
+  const wrap = el("div", { class: "play-top" });
+  row.classList.add("play-all-captioned");
+  wrap.append(
+    row,
+    el("p", { class: "play-caption" }, [melodyTag(group.index, `Melody ${group.index}`), " ", caption]),
+  );
+  return wrap;
 }
 
 function hymnsOnScreen(index, result) {
@@ -1110,21 +1133,8 @@ function youtubeLink(item) {
 function playControl(hymn, item, label = "Play this song") {
   const button = el("button", { type: "button", class: "play-song" }, label);
   button.addEventListener("click", () => {
-    const stop = playbackStop(item, hymn);
-    beginSongs(
-      [
-        {
-          number: hymn.number,
-          title: hymn.title,
-          videoId: item.id,
-          start: stop.start,
-          end: stop.at,
-          trustworthy: stop.trustworthy,
-          label: recordingCaption(item),
-        },
-      ],
-      "one",
-    );
+    const heard = faithRecordings(recordingCatalog, hymn.number);
+    beginSongs([trackFrom(hymn, item, playbackStop(item, hymn), heard)], "one");
   });
   return button;
 }
@@ -1155,6 +1165,38 @@ function faithCard(hymn, item, openPlayer) {
   return figure;
 }
 
+// One melody of a hymn sung to more than one: a heading that names it, a line
+// in plain words, a button that plays its newest recording, then the
+// recordings themselves, newest first.
+function melodyGroup(hymn, group) {
+  const box = el("section", {
+    class: "melody-group",
+    "data-melody": String(group.index),
+    "aria-label": group.heading,
+  });
+  const colon = group.heading.indexOf(": ");
+  const heading = el("h3", { class: "melody-heading" });
+  if (colon > 0) {
+    heading.append(melodyTag(group.index, group.heading.slice(0, colon)), " ", group.heading.slice(colon + 2));
+  } else {
+    heading.append(group.heading);
+  }
+  box.append(heading, el("p", { class: "melody-about" }, group.description));
+  const playable = group.items.find((item) => item.kind === "youtube" && item.id && item.embeddable !== false);
+  if (playable) {
+    const play = playControl(hymn, playable, "Play this melody");
+    play.classList.add("melody-play");
+    if (group.tune) play.setAttribute("aria-label", `Play this melody, ${group.tune}`);
+    box.append(el("p", { class: "melody-play-row" }, play));
+  }
+  const total = group.items.length;
+  const list = el("details", { class: "earlier" });
+  list.append(el("summary", {}, total === 1 ? "Show the recording" : `Show all ${total} recordings`));
+  for (const item of group.items) list.append(faithCard(hymn, item, false));
+  box.append(list);
+  return box;
+}
+
 function faithSection(hymn) {
   const items = faithRecordings(recordingCatalog, hymn.number);
   if (items.length === 0) return null;
@@ -1165,6 +1207,11 @@ function faithSection(hymn) {
   sectionEl.append(el("h2", { class: "faith-heading" }, "Hear it at Faith Presbyterian"));
   const caution = tuneCaution(hymn.number);
   if (caution) sectionEl.append(el("p", { class: "faith-note" }, caution));
+  const groups = melodyGroups(hymn, items);
+  if (groups.length) {
+    for (const group of groups) sectionEl.append(melodyGroup(hymn, group));
+    return sectionEl;
+  }
   sectionEl.append(faithCard(hymn, items[0], true));
   if (items.length > 1) {
     const details = el("details", { class: "earlier" });
@@ -1298,6 +1345,8 @@ function musicBlock(hymn) {
         [`Tune: ${score.tune}.`, `Harmony: ${score.harmony_credit}.`, wording.setting].filter(Boolean).join(" "),
       ),
     );
+    const which = scoreMelodyNote(hymn, faithRecordings(recordingCatalog, hymn.number), score.tune);
+    if (which) details.append(el("p", { class: "music-credit music-which" }, which));
     // A hymn sung to a second tune says why that tune has no score here.
     for (const other of Array.isArray(score.also) ? score.also : []) {
       if (other && other.reason) details.append(el("p", { class: "music-credit" }, other.reason));
@@ -2788,6 +2837,7 @@ const songFloatHit = document.getElementById("song-float-hit");
 const songFloatClose = document.getElementById("song-float-close");
 const songTitle = document.getElementById("song-bar-title");
 const songToggle = document.getElementById("song-toggle");
+const songMelody = document.getElementById("song-bar-melody");
 const songKeep = document.getElementById("song-keep");
 let ytPlayer = null;
 let songQueue = [];
@@ -2851,7 +2901,7 @@ function publishNowPlaying(track) {
   try {
     session.metadata = new MediaMetadata({
       title: numberedTitle(track),
-      artist: NOW_PLAYING_ARTIST,
+      artist: track.melody ? `${NOW_PLAYING_ARTIST} · ${melodyLabel(track.melody)}` : NOW_PLAYING_ARTIST,
       album: "Hark",
     });
   } catch {
@@ -2901,12 +2951,27 @@ function clearNowPlaying() {
   }
 }
 
+// The player says which melody is playing, in the color of its group on the
+// hymn page. The floating video carries the same color on its edge.
+function paintMelody(track) {
+  const text = track ? melodyLabel(track.melody) : "";
+  const index = text && track.melodyIndex ? String(track.melodyIndex) : "";
+  if (songMelody) {
+    songMelody.hidden = !text;
+    songMelody.textContent = text;
+    songMelody.dataset.melody = index || "0";
+  }
+  if (index) document.documentElement.dataset.melody = index;
+  else delete document.documentElement.dataset.melody;
+}
+
 function paintSong() {
   const track = currentSong();
   if (!songBar || !track) return;
   songBar.hidden = false;
   document.documentElement.dataset.player = "on";
   songTitle.textContent = numberedTitle(track);
+  paintMelody(track);
   setToggleLabel(true);
   publishNowPlaying(track);
 }
@@ -3037,6 +3102,7 @@ function stopSongs() {
   document.documentElement.dataset.player = "off";
   document.documentElement.dataset.stage = "";
   document.documentElement.dataset.corner = "";
+  paintMelody(null);
   delete document.documentElement.dataset.dragging;
   songOnPage = false;
   clearStagePosition();

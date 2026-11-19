@@ -76,6 +76,8 @@ On the hymn page, Hark shows "Hear it at Faith Presbyterian" after the words. Re
 
 Nos. 204 and 205 share one text with two tunes, and so do nos. 222 and 223. On those hymns Hark adds a note that the tune sung may differ.
 
+A recording can name the tune it was sung to with `tune`. When the recordings of one hymn name more than one tune, as on no. 99, Hark groups them by melody. Each group has a heading such as "Melody 1: WINCHESTER NEW (the melody in today's Trinity Hymnal)", a line in plain words, a color, and a Play this melody button. The hymnal's own tune is Melody 1. Play song and Play all start that melody, a line under the buttons says so, the Music block says which melody the score is, and the player shows "Melody: WINCHESTER NEW" in the color of its group. The rules are in `melodyGroups` in `hymn-model.js`.
+
 To add or change a recording, edit only `data/recordings.json`:
 
 ```json
