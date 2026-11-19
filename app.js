@@ -30,7 +30,7 @@ import {
   listSermons,
   formatRecordingDate,
   youtubeBlock,
-  faithBulletin,
+  bulletinBlock,
   sourceWording,
 } from "./hymn-model.js";
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "./playlist.js";
@@ -86,6 +86,7 @@ const scrollMemory = { number: 0, title: 0, author: 0, liked: 0, themes: 0, sins
 const opensOnWelcome = document.documentElement.dataset.entry === "welcome";
 let hymns = [];
 let changelog = [];
+let bulletinImages = {};
 let recordingCatalog = {};
 let themeCatalog = { seasons: [], topics: [], hymns: {} };
 let sinsCatalog = null;
@@ -1500,23 +1501,31 @@ function renderHymn(number) {
 }
 
 function bulletinNote(hymn) {
-  const bulletin = faithBulletin(hymn);
+  const bulletin = bulletinBlock(hymn, bulletinImages);
   if (!bulletin) return null;
   const figure = el("figure", { class: "bulletin-note" });
-  const link = el(
-    "a",
-    { href: bulletin.url, target: "_blank", rel: "noopener noreferrer" },
-    bulletin.label,
-  );
-  link.addEventListener("click", () => gaEvent("bulletin_click", hymnParams(hymn)));
+  const open = { href: bulletin.url, target: "_blank", rel: "noopener noreferrer" };
+  const count = () => gaEvent("bulletin_click", hymnParams(hymn));
+  const link = el("a", open, bulletin.label);
+  link.addEventListener("click", count);
   figure.append(el("p", {}, link));
-  const frame = el("iframe", {
-    class: "bulletin-preview",
-    src: `${bulletin.url}#page=1&toolbar=0&navpanes=0`,
-    title: bulletin.label,
-    loading: "lazy",
-  });
-  figure.append(frame);
+  if (bulletin.image) {
+    // A picture, not the PDF in a frame: a phone browser shows a frame with a
+    // PDF in it as an empty box.
+    const picture = el("img", {
+      src: new URL(bulletin.image.src, import.meta.url).href,
+      alt: bulletin.image.alt,
+      width: bulletin.image.width,
+      height: bulletin.image.height,
+      loading: "lazy",
+      decoding: "async",
+    });
+    const preview = el("a", { ...open, class: "bulletin-preview" }, picture);
+    preview.addEventListener("click", count);
+    // The file did not come: leave the text link alone, with no broken picture.
+    picture.addEventListener("error", () => preview.remove());
+    figure.append(preview);
+  }
   return figure;
 }
 
@@ -2355,7 +2364,7 @@ function showError() {
 
 async function load() {
   try {
-    const [hymnResponse, recordingResponse, themeResponse, sinsResponse, sermonResponse, musicResponse, changelogResponse] = await Promise.all([
+    const [hymnResponse, recordingResponse, themeResponse, sinsResponse, sermonResponse, musicResponse, changelogResponse, bulletinResponse] = await Promise.all([
       fetch(new URL("data/hymns.json", import.meta.url)),
       fetch(new URL("data/recordings.json", import.meta.url)),
       fetch(new URL("data/themes.json", import.meta.url)),
@@ -2363,6 +2372,8 @@ async function load() {
       fetch(new URL("data/sermons.json", import.meta.url)),
       fetch(new URL("data/music.json", import.meta.url)),
       fetch(new URL("data/changelog.json", import.meta.url)),
+      // The pictures are an extra. The book opens without them.
+      fetch(new URL("data/bulletins.json", import.meta.url)).catch(() => null),
     ]);
     if (!hymnResponse.ok) throw new Error(String(hymnResponse.status));
     const data = await hymnResponse.json();
@@ -2397,6 +2408,11 @@ async function load() {
     if (changelogResponse.ok) {
       const catalog = await changelogResponse.json();
       if (Array.isArray(catalog)) changelog = catalog;
+    }
+    bulletinImages = {};
+    if (bulletinResponse && bulletinResponse.ok) {
+      const catalog = await bulletinResponse.json().catch(() => null);
+      if (catalog && typeof catalog === "object" && !Array.isArray(catalog)) bulletinImages = catalog;
     }
     ready = true;
     buildChips();

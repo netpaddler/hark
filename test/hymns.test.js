@@ -41,6 +41,7 @@ import {
   youtubeBlock,
   listSermons,
   faithBulletin,
+  bulletinBlock,
   sourceWording,
   HYMNAL_LAST,
   inHymnal,
@@ -1300,6 +1301,63 @@ test("bulletin hymns keep the printed words and drop fully copyrighted numbers",
   assert.match(appSource, /class: "bulletin-preview"/);
 });
 
+test("bulletinNote renders an img of the bulletin page and no iframe", () => {
+  const images = JSON.parse(readFileSync(new URL("../data/bulletins.json", import.meta.url), "utf8"));
+  const hymns = JSON.parse(readFileSync(new URL("../data/hymns.json", import.meta.url), "utf8"));
+  const byNumber = new Map(hymns.map((hymn) => [hymn.number, hymn]));
+
+  // The page code: a picture inside a link to the PDF, never a frame. Android
+  // Chrome shows a PDF in a frame as an empty box.
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const note = appSource.slice(appSource.indexOf("function bulletinNote"), appSource.indexOf("function requestField"));
+  assert.equal(note.includes("iframe"), false);
+  assert.match(note, /el\("img", \{/);
+  assert.match(note, /alt: bulletin\.image\.alt/);
+  assert.match(note, /width: bulletin\.image\.width/);
+  assert.match(note, /height: bulletin\.image\.height/);
+  assert.match(note, /loading: "lazy"/);
+  assert.match(note, /el\("a", \{ \.\.\.open, class: "bulletin-preview" \}, picture\)/);
+  // The text link and the picture link both count a bulletin_click.
+  assert.match(note, /const count = \(\) => gaEvent\("bulletin_click", hymnParams\(hymn\)\)/);
+  assert.match(note, /link\.addEventListener\("click", count\)/);
+  assert.match(note, /preview\.addEventListener\("click", count\)/);
+  assert.match(note, /if \(bulletin\.image\) \{/);
+
+  const ninetyNine = bulletinBlock(byNumber.get(99), images);
+  assert.equal(ninetyNine.url, byNumber.get(99).source_url);
+  assert.equal(ninetyNine.label, "Faith Presbyterian bulletin, August 16, 2026, morning");
+  assert.deepEqual(ninetyNine.image, {
+    src: "bulletins/99.webp",
+    width: 900,
+    height: 1350,
+    alt: "Faith Presbyterian bulletin, August 16, 2026, morning",
+  });
+  assert.equal(images[99].page, 4);
+
+  // No picture, or a picture of some other PDF: the text link alone.
+  assert.equal(bulletinBlock(byNumber.get(99), {}).image, null);
+  assert.equal(bulletinBlock(byNumber.get(99), null).image, null);
+  assert.equal(bulletinBlock(byNumber.get(99), { 99: { ...images[99], pdf: "https://example.com/a.pdf" } }).image, null);
+  assert.equal(bulletinBlock(byNumber.get(99), { 99: { ...images[99], src: "https://example.com/a.webp" } }).image, null);
+  assert.equal(bulletinBlock(byNumber.get(108), images), null);
+
+  // Every bulletin hymn has its picture on disk, and no picture is left over.
+  const linked = hymns.filter((hymn) => faithBulletin(hymn));
+  assert.deepEqual(Object.keys(images).map(Number).sort((a, b) => a - b), linked.map((hymn) => hymn.number).sort((a, b) => a - b));
+  for (const hymn of linked) {
+    const block = bulletinBlock(hymn, images);
+    assert.ok(block.image, `no bulletin picture for ${hymn.number}`);
+    assert.equal(/\u2013|\u2014/.test(block.image.alt), false);
+    const bytes = readFileSync(new URL(`../${block.image.src}`, import.meta.url));
+    assert.equal(bytes.subarray(0, 4).toString("latin1"), "RIFF", block.image.src);
+    assert.equal(bytes.subarray(8, 12).toString("latin1"), "WEBP", block.image.src);
+    assert.ok(bytes.length < 200 * 1024, `${block.image.src} is too big`);
+  }
+
+  const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  assert.match(sw, /"\.\/data\/bulletins\.json"/);
+});
+
 test("the Hark title links home on the list and on a hymn", () => {
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
@@ -1944,7 +2002,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v56";/);
+  assert.match(sw, /const CACHE = "hark-v57";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
