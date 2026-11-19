@@ -353,6 +353,10 @@ export function neighbors(hymns, number) {
 }
 
 const OTHER_TUNE = { 204: 205, 205: 204, 222: 223, 223: 222 };
+// Hymns Faith has sung to a tune other than the one in the 1990 Trinity Hymnal.
+const TUNE_NOTE = {
+  99: "The tune sung differs from the hymnal. The 1990 Trinity Hymnal sets these words to WINCHESTER NEW. On Nov 15, 2026 Faith sang them to MARYTON, from the 1961 (blue) Trinity Hymnal.",
+};
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function youtubeId(value) {
@@ -400,6 +404,8 @@ export function formatRecordingDate(value) {
 }
 
 export function tuneCaution(number) {
+  const note = TUNE_NOTE[Number(number)];
+  if (note) return note;
   const other = OTHER_TUNE[Number(number)];
   if (!other) return "";
   return `The tune sung may differ. The hymnal also sets these words to another tune (no. ${other}).`;
