@@ -1,0 +1,394 @@
+{
+ "2": {
+  "src": "bulletins/2.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-am-6x9-1.pdf",
+  "page": 3,
+  "width": 900,
+  "height": 1350
+ },
+ "15": {
+  "src": "bulletins/15.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "31": {
+  "src": "bulletins/31.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-pm-6x9-1.pdf",
+  "page": 11,
+  "width": 900,
+  "height": 1350
+ },
+ "34": {
+  "src": "bulletins/34.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "38": {
+  "src": "bulletins/38.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "56": {
+  "src": "bulletins/56.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-pm-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "57": {
+  "src": "bulletins/57.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.6.26Bulletin-am-6x9-1.pdf",
+  "page": 3,
+  "width": 900,
+  "height": 1350
+ },
+ "76": {
+  "src": "bulletins/76.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "80": {
+  "src": "bulletins/80.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.08.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "86": {
+  "src": "bulletins/86.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "92": {
+  "src": "bulletins/92.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "94": {
+  "src": "bulletins/94.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-am-6x9-1.pdf",
+  "page": 12,
+  "width": 900,
+  "height": 1350
+ },
+ "95": {
+  "src": "bulletins/95.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "99": {
+  "src": "bulletins/99.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "115": {
+  "src": "bulletins/115.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "172": {
+  "src": "bulletins/172.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-am-6x9-1.pdf",
+  "page": 13,
+  "width": 900,
+  "height": 1350
+ },
+ "253": {
+  "src": "bulletins/253.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.08.26Bulletin-am-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "271": {
+  "src": "bulletins/271.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "322": {
+  "src": "bulletins/322.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "338": {
+  "src": "bulletins/338.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf",
+  "page": 8,
+  "width": 900,
+  "height": 1350
+ },
+ "343": {
+  "src": "bulletins/343.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "347": {
+  "src": "bulletins/347.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.08.26Bulletin-pm-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "353": {
+  "src": "bulletins/353.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.08.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "368": {
+  "src": "bulletins/368.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "388": {
+  "src": "bulletins/388.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-pm-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "398": {
+  "src": "bulletins/398.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-am-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "404": {
+  "src": "bulletins/404.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-pm-6x9-1.pdf",
+  "page": 11,
+  "width": 900,
+  "height": 1350
+ },
+ "429": {
+  "src": "bulletins/429.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-am-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "434": {
+  "src": "bulletins/434.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf",
+  "page": 13,
+  "width": 900,
+  "height": 1350
+ },
+ "457": {
+  "src": "bulletins/457.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.6.26Bulletin-am-6x9-1.pdf",
+  "page": 5,
+  "width": 900,
+  "height": 1350
+ },
+ "460": {
+  "src": "bulletins/460.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-am-6x9-1.pdf",
+  "page": 7,
+  "width": 900,
+  "height": 1350
+ },
+ "461": {
+  "src": "bulletins/461.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-am-6x9-1.pdf",
+  "page": 12,
+  "width": 900,
+  "height": 1350
+ },
+ "472": {
+  "src": "bulletins/472.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-am-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "485": {
+  "src": "bulletins/485.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.4.26Bulletin-pm-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "500": {
+  "src": "bulletins/500.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "501": {
+  "src": "bulletins/501.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-am-6x9-1.pdf",
+  "page": 12,
+  "width": 900,
+  "height": 1350
+ },
+ "510": {
+  "src": "bulletins/510.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-am-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "528": {
+  "src": "bulletins/528.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "534": {
+  "src": "bulletins/534.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-pm-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "535": {
+  "src": "bulletins/535.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-am-6x9-1.pdf",
+  "page": 5,
+  "width": 900,
+  "height": 1350
+ },
+ "539": {
+  "src": "bulletins/539.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.25.26Bulletin-pm-6x9-1.pdf",
+  "page": 8,
+  "width": 900,
+  "height": 1350
+ },
+ "585": {
+  "src": "bulletins/585.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.13.26Bulletin-pm-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "591": {
+  "src": "bulletins/591.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-pm-6x9-1.pdf",
+  "page": 8,
+  "width": 900,
+  "height": 1350
+ },
+ "602": {
+  "src": "bulletins/602.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.18.26Bulletin-pm-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "604": {
+  "src": "bulletins/604.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.9.26Bulletin-pm-6x9-1.pdf",
+  "page": 6,
+  "width": 900,
+  "height": 1350
+ },
+ "607": {
+  "src": "bulletins/607.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/10/10.11.26Bulletin-pm-6x9-1.pdf",
+  "page": 10,
+  "width": 900,
+  "height": 1350
+ },
+ "615": {
+  "src": "bulletins/615.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.20.26Bulletin-pm-6x9-1.pdf",
+  "page": 8,
+  "width": 900,
+  "height": 1350
+ },
+ "624": {
+  "src": "bulletins/624.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.6.26Bulletin-pm-6x9-1.pdf",
+  "page": 7,
+  "width": 900,
+  "height": 1350
+ },
+ "642": {
+  "src": "bulletins/642.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-pm-6x9-1.pdf",
+  "page": 7,
+  "width": 900,
+  "height": 1350
+ },
+ "644": {
+  "src": "bulletins/644.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "647": {
+  "src": "bulletins/647.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf",
+  "page": 7,
+  "width": 900,
+  "height": 1350
+ },
+ "652": {
+  "src": "bulletins/652.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.23.26Bulletin-pm-6x9-1.pdf",
+  "page": 9,
+  "width": 900,
+  "height": 1350
+ },
+ "656": {
+  "src": "bulletins/656.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/08/8.16.26Bulletin-pm-6x9-1.pdf",
+  "page": 9,
+  "width": 900,
+  "height": 1350
+ },
+ "691": {
+  "src": "bulletins/691.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.15.26Bulletin-am-6x9-1.pdf",
+  "page": 14,
+  "width": 900,
+  "height": 1350
+ },
+ "700": {
+  "src": "bulletins/700.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.27.26Bulletin-pm-6x9-1.pdf",
+  "page": 4,
+  "width": 900,
+  "height": 1350
+ },
+ "801": {
+  "src": "bulletins/801.webp",
+  "pdf": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/09/9.13.26Bulletin-pm-6x9-1.pdf",
+  "page": 8,
+  "width": 900,
+  "height": 1350
+ }
+}

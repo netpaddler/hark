@@ -671,6 +671,33 @@ export function faithBulletin(hymn) {
   };
 }
 
+// What the hymn page shows for a bulletin: the text link, and a picture of
+// the bulletin page when one was made. `images` is data/bulletins.json, which
+// scripts/build-bulletin-images.py writes. A phone browser cannot show a PDF
+// inside a page, so the picture stands in for it and links to the PDF. With
+// no picture, or one made from another PDF, image is null and only the text
+// link shows.
+export function bulletinBlock(hymn, images) {
+  const bulletin = faithBulletin(hymn);
+  if (!bulletin) return null;
+  const entry = images && typeof images === "object" ? images[String(hymn.number)] : null;
+  let image = null;
+  if (
+    entry &&
+    typeof entry === "object" &&
+    entry.pdf === bulletin.url &&
+    typeof entry.src === "string" &&
+    /^bulletins\/\d+\.(?:webp|jpg)$/.test(entry.src) &&
+    Number.isInteger(entry.width) &&
+    Number.isInteger(entry.height) &&
+    entry.width > 0 &&
+    entry.height > 0
+  ) {
+    image = { src: entry.src, width: entry.width, height: entry.height, alt: bulletin.label };
+  }
+  return { url: bulletin.url, label: bulletin.label, image };
+}
+
 // The lines on a hymn page that name where the song comes from. Only a hymn
 // that is in the Trinity Hymnal may name the hymnal. Any other song names the
 // bulletin it was taken from, or says nothing when there is none. An empty

@@ -46,6 +46,23 @@ A hymn whose whole text is under copyright is not included. Nos. 5, 36, 46, 53, 
 ## Bulletin texts
 Some hymns take their words from a Faith Presbyterian Tacoma bulletin. `source_url` is that bulletin PDF. The printed wording is the text, including punctuation and hyphenation such as treasure-store. Syllable hyphens in a music underlay are joined into words. A credit line that shows a copyright, or a 1961 or 1990 alteration of the text, is not given words. An alteration dated on the tune only is not a text alteration.
 
+### Bulletin pictures
+The hymn page shows a picture of the bulletin page, and the picture links to the PDF. It is a picture because a phone browser, Android Chrome above all, shows a PDF inside a page as an empty box.
+
+`scripts/build-bulletin-images.py` makes the pictures. For each hymn whose `source_url` is a Faith bulletin (the rule in `faithBulletin`), it downloads the PDF, picks the page with the hymn, renders it 900 pixels wide, and saves `bulletins/<number>.webp`. It also writes `data/bulletins.json`, which tells the page which hymns have a picture, the PDF and page it came from, and its size. A hymn with no entry there shows the text link only.
+
+The page is picked by its text: the caption `No. <number>`, lines of the hymn, and the title each count. When nothing matches, page 1 is used; the script says so, and that picture should be looked at.
+
+Run it after adding a bulletin hymn. It needs PyMuPDF and Pillow, which are not part of the repo:
+
+```
+python3 -m venv ~/.venvs/hark-bulletins
+~/.venvs/hark-bulletins/bin/pip install pymupdf pillow
+~/.venvs/hark-bulletins/bin/python scripts/build-bulletin-images.py
+```
+
+Hymns that already have a picture from the same PDF are skipped. Give hymn numbers to do only those, and `--force` to make them again. Commit the new files in `bulletins/` and `data/bulletins.json`. A test fails when a bulletin hymn has no picture.
+
 **Partial:**
 - 196 Come, Thou Long-Expected Jesus. Stanzas 1 and 4 are Charles Wesley, 1744, and are shown. Stanzas 2 and 3 are by Mark E. Hunt, text copyright 1978 InterVarsity Christian Fellowship, and each is replaced by a copyright note. The entry is marked `public_domain: true`.
 

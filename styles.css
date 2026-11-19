@@ -1279,11 +1279,17 @@ main.has-jump {
 
 .bulletin-preview {
   display: block;
-  width: min(100%, 11rem);
-  height: 15rem;
+  width: min(100%, 22rem);
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--paper-raised);
+  overflow: hidden;
+  background: #fff;
+}
+
+.bulletin-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .stanza {
