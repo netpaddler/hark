@@ -2109,6 +2109,16 @@ html[data-installed="true"] .btn-install {
   text-wrap: balance;
 }
 
+.welcome-privacy {
+  max-width: 34rem;
+  margin: 1.25rem auto 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+  opacity: 0.7;
+}
+
 .welcome .colophon {
   margin-top: 0.8rem;
   text-align: center;
