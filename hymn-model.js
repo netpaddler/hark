@@ -369,7 +369,7 @@ const OTHER_TUNE = { 204: 205, 205: 204, 222: 223, 223: 222 };
 // Hymns Faith has sung to a tune other than the one in the 1990 Trinity Hymnal.
 // The recordings name their own tune (`tune` in recordings.json).
 const TUNE_NOTE = {
-  99: "Faith sings these words to two melodies (tunes): WINCHESTER NEW, from today's Trinity Hymnal, and MARYTON, from the 1961 (blue) Trinity Hymnal. The recordings below are grouped by melody.",
+  99: "Faith sings these words to two melodies (tunes): WINCHESTER NEW, from today's Trinity Hymnal, and MARYTON, from the 1961 (blue) Trinity Hymnal. The recordings are at the top of this page, grouped by melody.",
 };
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -534,16 +534,15 @@ export function playOrder(hymn, items) {
 }
 
 // The line under Play song on a hymn sung to more than one melody. It says
-// which melody the button plays and that the others are further down.
+// which melody the button plays. The melodies themselves are right under it.
 export function playSongCaption(hymn, items, playing) {
   const groups = melodyGroups(hymn, items);
   const tune = tuneOf(playing);
   const mine = groups.find((group) => group.tune && group.tune === tune);
   if (!mine) return "";
-  const rest = groups.filter((group) => group !== mine && group.tune).map((group) => group.tune);
-  const first = mine.hymnal ? `Plays the hymnal melody, ${mine.tune}.` : `Plays the melody ${mine.tune}.`;
-  if (!rest.length) return first;
-  return `${first} ${rest.join(" and ")} ${rest.length === 1 ? "is" : "are"} below.`;
+  return mine.hymnal
+    ? `Play song plays the hymnal melody, ${mine.tune}.`
+    : `Play song plays the melody ${mine.tune}.`;
 }
 
 // The line in the Music block that says which melody the score is, when the

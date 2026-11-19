@@ -1232,6 +1232,75 @@ main.has-jump {
   margin: 0.2rem 0 0.9rem;
 }
 
+/* The melodies near the top of a hymn sung to more than one. Kept tight so the
+   words start soon on a phone. */
+.melody-top {
+  margin: 0 0 1.1rem;
+}
+
+.melody-top:focus {
+  outline: none;
+}
+
+.melody-top .melody-group {
+  margin-bottom: 0.6rem;
+  padding: 0.55rem 0.7rem 0.2rem 0.75rem;
+}
+
+/* The button and the Show line share a row until the list is opened. */
+.melody-top .melody-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.7rem;
+}
+
+.melody-top .melody-group .melody-play {
+  padding: 0.4rem 0.8rem;
+}
+
+.melody-top .melody-group > details:not([open]) {
+  margin-top: 0;
+  margin-bottom: 0.3rem;
+  font-size: 0.92rem;
+}
+
+.melody-top .melody-group > * {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.melody-top .melody-group > .melody-play-row,
+.melody-top .melody-group > details:not([open]) {
+  flex: 0 0 auto;
+}
+
+.melody-top .melody-heading {
+  margin-bottom: 0.2rem;
+  font-size: 1rem;
+}
+
+.melody-top .melody-about {
+  margin-bottom: 0.45rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.melody-up-row {
+  margin: 0.4rem 0 0;
+}
+
+.melody-up {
+  min-height: 2.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
 .play-top .play-all {
   margin: 0 0 0.45rem;
 }
