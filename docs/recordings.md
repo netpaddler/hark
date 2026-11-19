@@ -91,7 +91,24 @@ Filed under 801, since it is not in the Trinity Hymnal. Video qsIlxwIVZqY. The v
 Video yoZkY7OoPXU has no auto captions. The audio was downloaded to a temporary folder, transcribed locally, measured for sound level, and deleted after.
 
 - 644, May the Mind of Christ My Savior: start 346 (spoken announcement), end 492.
-- 99, My Song Forever Shall Record: start 1949 (spoken announcement, no hymn number spoken), end 2249. The minister says the tune differs from the bulletin. Faith's music director confirmed it was played from the 1961 (blue) Trinity Hymnal, which sets these words to MARYTON at no. 101 (https://hymnary.org/hymn/TH1961/101). The 1990 hymnal sets them to WINCHESTER NEW. The tune name was not checked by ear. The singing pauses at 2208 for a spoken aside and resumes at 2212 for the last stanza.
+- 99, My Song Forever Shall Record: start 1949 (spoken announcement, no hymn number spoken), end 2249. The minister says the tune differs from the bulletin. Faith's music director confirmed it was played from the 1961 (blue) Trinity Hymnal, which sets these words to MARYTON at no. 101 (https://hymnary.org/hymn/TH1961/101). The 1990 hymnal sets them to WINCHESTER NEW. The tune was later checked against the audio; see the next section. The singing pauses at 2208 for a spoken aside and resumes at 2212 for the last stanza.
+
+## Tune named on each recording of hymn 99
+
+A recording may carry a `tune` field. The page shows it after the label, as in "Sunday Evening Worship, Nov 15, 2026, congregation, tune MARYTON". Leave it out, or set it to null, when the tune is not known, and the label shows alone. A `tune` must be the hymn's `tune` or one of its `alt_tunes` in `data/hymns.json`.
+
+Hymn 99 is sung to WINCHESTER NEW (1990 Trinity Hymnal) and to MARYTON (1961 Trinity Hymnal, no. 101). On Nov 18, 2026 the hymn segment of each of its six recordings was downloaded to a temporary folder, analysed, and deleted after. The melody of each of eight long meter tunes was lined up against the sound in the melody range (dynamic time warping, every key, a range of tempos). Lower cost is closer. The tunes were WINCHESTER NEW, MARYTON and six others as a check: OLD HUNDREDTH, DUKE STREET, HAMBURG, ROCKINGHAM, FEDERAL STREET and TALLIS' CANON. The WINCHESTER NEW and check melodies came from Open Hymnal Project scores, and the MARYTON melody from the Christian Classics Ethereal Hymnary MIDI file (https://www.ccel.org/cceh/0002/x000242.htm). That file was used for the comparison only and is not published.
+
+| Recording | Closest tune | Cost | Next closest | WINCHESTER NEW | MARYTON | Key |
+| --- | --- | --- | --- | --- | --- | --- |
+| Nov 15, 2026 pm | MARYTON | 0.109 | TALLIS' CANON 0.148 | 0.188 | 0.109 | E flat |
+| Aug 16, 2026 am | WINCHESTER NEW | 0.110 | TALLIS' CANON 0.164 | 0.110 | 0.184 | B flat |
+| Mar 15, 2026 pm | WINCHESTER NEW | 0.097 | MARYTON 0.178 | 0.097 | 0.178 | B flat |
+| Oct 26, 2025 pm | WINCHESTER NEW | 0.106 | DUKE STREET 0.194 | 0.106 | 0.207 | B flat |
+| Jun 11, 2023 pm | WINCHESTER NEW | 0.165 | DUKE STREET 0.212 | 0.165 | 0.238 | B flat |
+| Jan 30, 2022 pm | WINCHESTER NEW | 0.137 | TALLIS' CANON 0.174 | 0.137 | 0.203 | B flat |
+
+The Nov 15 recording is the control: its tune is confirmed by the music director, and the check names MARYTON for it by a clear margin. The other five come out as WINCHESTER NEW by a margin at least as wide. A second comparison, recording against recording, agrees: the five match each other closely and none matches Nov 15 well. A first attempt that compared full four-part harmony did not tell the tunes apart and was not used. No person has checked the five by ear. Jun 11, 2023 is the weakest match of the five.
 
 ## Caveats
 - Dates come from the stream start time in Pacific time. Untitled 2020 and 2021 streams were labeled morning or evening, or Christmas Eve, from that time.

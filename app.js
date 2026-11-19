@@ -9,6 +9,7 @@ import {
 import { changelogDateLabel, groupChangelog } from "./changelog.js";
 import {
   attributionParts,
+  recordingCaption,
   browse,
   faithRecordings,
   filterHymns,
@@ -1118,7 +1119,7 @@ function playControl(hymn, item, label = "Play this song") {
           start: stop.start,
           end: stop.at,
           trustworthy: stop.trustworthy,
-          label: item.label || "",
+          label: recordingCaption(item),
         },
       ],
       "one",
@@ -1130,7 +1131,7 @@ function playControl(hymn, item, label = "Play this song") {
 function faithCard(hymn, item, openPlayer) {
   const figure = el("figure", { class: "faith-item" });
   if (item.date) figure.append(el("p", { class: "faith-date" }, item.date));
-  figure.append(el("p", { class: "faith-label" }, item.label));
+  figure.append(el("p", { class: "faith-label" }, recordingCaption(item)));
   if (item.kind === "youtube" && item.embeddable === false) {
     const player = mountYoutube(item);
     if (player) figure.append(player);
@@ -1147,7 +1148,7 @@ function faithCard(hymn, item, openPlayer) {
   }
   if (item.kind === "youtube" && item.url && item.embeddable !== false) {
     const link = youtubeLink(item);
-    link.setAttribute("aria-label", `Play on YouTube, ${item.label}`);
+    link.setAttribute("aria-label", `Play on YouTube, ${recordingCaption(item)}`);
     figure.append(link);
   }
   return figure;
@@ -1296,6 +1297,10 @@ function musicBlock(hymn) {
         [`Tune: ${score.tune}.`, `Harmony: ${score.harmony_credit}.`, wording.setting].filter(Boolean).join(" "),
       ),
     );
+    // A hymn sung to a second tune says why that tune has no score here.
+    for (const other of Array.isArray(score.also) ? score.also : []) {
+      if (other && other.reason) details.append(el("p", { class: "music-credit" }, other.reason));
+    }
     const scoreEl = el("div", { class: "music-score", "aria-label": `Music for ${score.tune}` });
     const play = el("button", { type: "button" }, "Play");
     const stop = el("button", { type: "button" }, "Stop");

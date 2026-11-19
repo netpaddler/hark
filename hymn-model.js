@@ -328,13 +328,26 @@ export function stanzaPlan(hymn) {
   return blocks;
 }
 
+// Other tunes Faith sings these words to, from `alt_tunes` in the hymn data.
+export function altTunes(hymn) {
+  const list = hymn && Array.isArray(hymn.alt_tunes) ? hymn.alt_tunes : [];
+  return list.filter((item) => item && typeof item.tune === "string" && item.tune.trim());
+}
+
 export function attributionParts(hymn) {
   const people = [];
   if (hymn.author) people.push(hymn.author);
   if (hymn.translator) people.push(`tr. ${hymn.translator}`);
   const music = [];
-  if (hymn.tune) music.push(hymn.tune);
+  const others = altTunes(hymn);
+  // With a second tune on the page, each tune names the book that sets it.
+  if (hymn.tune) {
+    music.push(others.length && hymn.tune_book ? `${hymn.tune} (${hymn.tune_book})` : hymn.tune);
+  }
   if (hymn.composer) music.push(hymn.composer);
+  for (const other of others) {
+    music.push(other.book ? `also sung to ${other.tune} (${other.book})` : `also sung to ${other.tune}`);
+  }
   return {
     people: people.join(" · "),
     music: music.join(" · "),
@@ -354,8 +367,9 @@ export function neighbors(hymns, number) {
 
 const OTHER_TUNE = { 204: 205, 205: 204, 222: 223, 223: 222 };
 // Hymns Faith has sung to a tune other than the one in the 1990 Trinity Hymnal.
+// The recordings name their own tune (`tune` in recordings.json).
 const TUNE_NOTE = {
-  99: "The tune sung differs from the hymnal. The 1990 Trinity Hymnal sets these words to WINCHESTER NEW. On Nov 15, 2026 Faith sang them to MARYTON, from the 1961 (blue) Trinity Hymnal.",
+  99: "Faith sings these words to two tunes. The 1990 Trinity Hymnal sets them to WINCHESTER NEW. The 1961 (blue) Trinity Hymnal sets them to MARYTON, which Faith sang on Nov 15, 2026. Each recording names its tune.",
 };
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -411,6 +425,15 @@ export function tuneCaution(number) {
   return `The tune sung may differ. The hymnal also sets these words to another tune (no. ${other}).`;
 }
 
+// The line shown on a recording: its label, then the tune when the recording
+// names one. A recording with no known tune shows the label alone.
+export function recordingCaption(item) {
+  if (!item) return "";
+  const label = item.label || "";
+  if (typeof item.tune !== "string" || !item.tune.trim()) return label;
+  return label ? `${label}, tune ${item.tune.trim()}` : `Tune ${item.tune.trim()}`;
+}
+
 function presentRecording(recording, fallbackLabel) {
   if (!recording || typeof recording !== "object") return null;
   const media = classifyRecording(recording.url);
@@ -430,6 +453,7 @@ function presentRecording(recording, fallbackLabel) {
     ...media,
     embed: media.kind === "youtube" ? youtubeEmbedSrc(media.id, start) : null,
   };
+  if (typeof recording.tune === "string" && recording.tune.trim()) item.tune = recording.tune.trim();
   if (typeof recording.end_seconds === "number" && Number.isFinite(recording.end_seconds)) {
     item.end = Math.floor(recording.end_seconds);
   }
