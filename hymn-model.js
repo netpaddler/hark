@@ -369,7 +369,7 @@ const OTHER_TUNE = { 204: 205, 205: 204, 222: 223, 223: 222 };
 // Hymns Faith has sung to a tune other than the one in the 1990 Trinity Hymnal.
 // The recordings name their own tune (`tune` in recordings.json).
 const TUNE_NOTE = {
-  99: "Faith sings these words to two tunes. The 1990 Trinity Hymnal sets them to WINCHESTER NEW. The 1961 (blue) Trinity Hymnal sets them to MARYTON, which Faith sang on Nov 15, 2026. Each recording names its tune.",
+  99: "Faith sings these words to two melodies (tunes): WINCHESTER NEW, from today's Trinity Hymnal, and MARYTON, from the 1961 (blue) Trinity Hymnal. The recordings below are grouped by melody.",
 };
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -432,6 +432,134 @@ export function recordingCaption(item) {
   const label = item.label || "";
   if (typeof item.tune !== "string" || !item.tune.trim()) return label;
   return label ? `${label}, tune ${item.tune.trim()}` : `Tune ${item.tune.trim()}`;
+}
+
+function tuneOf(item) {
+  return item && typeof item.tune === "string" ? item.tune.trim() : "";
+}
+
+// "1990 Trinity Hymnal" is the book in the pew, so it reads as today's.
+// The 1961 book is known by its blue cover.
+function bookInWords(book) {
+  const name = typeof book === "string" ? book.trim() : "";
+  if (name === "1990 Trinity Hymnal") return "today's Trinity Hymnal";
+  if (name === "1961 Trinity Hymnal") return "the 1961 blue Trinity Hymnal";
+  return name ? `the ${name.replace(/^the\s+/i, "")}` : "";
+}
+
+function countRecordings(count) {
+  return count === 1 ? "1 recording" : `${count} recordings`;
+}
+
+// One group per melody when the recordings of a hymn name more than one tune.
+// `items` is the list from faithRecordings, newest first. The hymnal's own
+// tune comes first, then the others in the order of `alt_tunes`. A hymn whose
+// recordings name one tune, or none, has no groups: the list is plain.
+// Each group carries its number (1, 2, ...), which picks its color.
+export function melodyGroups(hymn, items) {
+  const list = Array.isArray(items) ? items : [];
+  const sung = [];
+  for (const item of list) {
+    const tune = tuneOf(item);
+    if (tune && !sung.includes(tune)) sung.push(tune);
+  }
+  if (!hymn || sung.length < 2) return [];
+  const own = typeof hymn.tune === "string" ? hymn.tune.trim() : "";
+  const others = altTunes(hymn);
+  const order = [own, ...others.map((item) => item.tune.trim())].filter((tune) => sung.includes(tune));
+  for (const tune of sung) if (!order.includes(tune)) order.push(tune);
+  const groups = order.map((tune, at) => {
+    const mine = list.filter((item) => tuneOf(item) === tune);
+    const hymnal = tune === own;
+    const other = others.find((item) => item.tune.trim() === tune);
+    const book = bookInWords(hymnal ? hymn.tune_book : other && other.book);
+    const where = hymnal
+      ? book ? `the melody in ${book}` : "the hymnal melody"
+      : book ? `from ${book}` : "a different melody";
+    const total = countRecordings(mine.length);
+    const newest = mine[0] && mine[0].date;
+    let description;
+    if (hymnal) {
+      description = `This is the tune printed with these words in ${book || "the hymnal"}. ${total}.`;
+    } else {
+      const when = mine.length === 1 && newest ? `Faith sang it on ${newest}` : `Faith has sung it ${mine.length} times`;
+      description = `A different tune for the same words. ${when}. ${total}.`;
+    }
+    return {
+      index: at + 1,
+      tune,
+      hymnal,
+      heading: `Melody ${at + 1}: ${tune} (${where})`,
+      description,
+      items: mine,
+    };
+  });
+  const unnamed = list.filter((item) => !tuneOf(item));
+  if (unnamed.length) {
+    groups.push({
+      index: groups.length + 1,
+      tune: "",
+      hymnal: false,
+      heading: "Melody not noted",
+      description: `Hark has not noted which melody these use. ${countRecordings(unnamed.length)}.`,
+      items: unnamed,
+    });
+  }
+  return groups;
+}
+
+// The melody of one recording: its tune, and its group number when the hymn
+// is sung to more than one. Null when the recording names no tune.
+export function melodyOf(hymn, items, item) {
+  const tune = tuneOf(item);
+  if (!tune) return null;
+  const group = melodyGroups(hymn, items).find((entry) => entry.tune === tune);
+  return { tune, index: group ? group.index : 0 };
+}
+
+// What the player shows while a recording plays.
+export function melodyLabel(tune) {
+  const name = typeof tune === "string" ? tune.trim() : "";
+  return name ? `Melody: ${name}` : "";
+}
+
+// The recordings in the order the play buttons should try them. With more
+// than one melody the hymnal's own comes first, newest first within it.
+// Otherwise the order is unchanged: newest first.
+export function playOrder(hymn, items) {
+  const list = Array.isArray(items) ? items : [];
+  const groups = melodyGroups(hymn, list);
+  if (!groups.length || !groups[0].hymnal) return list;
+  return groups.flatMap((group) => group.items);
+}
+
+// The line under Play song on a hymn sung to more than one melody. It says
+// which melody the button plays and that the others are further down.
+export function playSongCaption(hymn, items, playing) {
+  const groups = melodyGroups(hymn, items);
+  const tune = tuneOf(playing);
+  const mine = groups.find((group) => group.tune && group.tune === tune);
+  if (!mine) return "";
+  const rest = groups.filter((group) => group !== mine && group.tune).map((group) => group.tune);
+  const first = mine.hymnal ? `Plays the hymnal melody, ${mine.tune}.` : `Plays the melody ${mine.tune}.`;
+  if (!rest.length) return first;
+  return `${first} ${rest.join(" and ")} ${rest.length === 1 ? "is" : "are"} below.`;
+}
+
+// The line in the Music block that says which melody the score is, when the
+// recordings use more than one. Empty when there is nothing to tell apart.
+export function scoreMelodyNote(hymn, items, scoreTune) {
+  const groups = melodyGroups(hymn, items);
+  const tune = typeof scoreTune === "string" ? scoreTune.trim() : "";
+  const shown = groups.find((group) => group.tune && group.tune === tune);
+  if (!shown) return "";
+  const rest = groups.filter((group) => group !== shown && group.tune);
+  const first = shown.hymnal
+    ? `The music shown here is ${shown.tune}, the hymnal melody (Melody ${shown.index}).`
+    : `The music shown here is ${shown.tune} (Melody ${shown.index}).`;
+  if (!rest.length) return first;
+  const names = rest.map((group) => `${group.tune} (Melody ${group.index})`).join(" or ");
+  return `${first} It is not the music for ${names}.`;
 }
 
 function presentRecording(recording, fallbackLabel) {
