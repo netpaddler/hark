@@ -515,8 +515,9 @@ function autoPlayButton() {
   return auto;
 }
 
-function playRow(tracks) {
+function playRow(tracks, lead) {
   const row = el("p", { class: "play-all" });
+  if (lead) row.append(lead);
   if (tracks.length) {
     const all = el("button", { type: "button", class: "play-song" }, "Play all");
     const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
@@ -551,8 +552,20 @@ function listPlayControls(hymnList) {
   return playRow(tracksForHymns({ hymns: hymnList, recordings: recordingCatalog }));
 }
 
+// The recording the button at the top of a hymn page starts: the newest one
+// from a Faith Presbyterian service, or else the first choir recording that
+// can play inside Hark.
+function topRecording(hymn) {
+  const playable = (item) => item && item.kind === "youtube" && item.id && item.embeddable !== false;
+  const heard = faithRecordings(recordingCatalog, hymn.number);
+  if (heard.length) return playable(heard[0]) ? heard[0] : null;
+  return listRecordings(hymn).find(playable) || null;
+}
+
 function hymnPlayControls(hymn) {
-  return playRow(songsFromNumber(endingSongs(), hymn.number));
+  const item = topRecording(hymn);
+  const lead = item ? playControl(hymn, item, "Play song") : null;
+  return playRow(songsFromNumber(endingSongs(), hymn.number), lead);
 }
 
 function hymnsOnScreen(index, result) {
@@ -1092,8 +1105,8 @@ function youtubeLink(item) {
   );
 }
 
-function playControl(hymn, item) {
-  const button = el("button", { type: "button", class: "play-song" }, "Play this song");
+function playControl(hymn, item, label = "Play this song") {
+  const button = el("button", { type: "button", class: "play-song" }, label);
   button.addEventListener("click", () => {
     const stop = playbackStop(item, hymn);
     beginSongs(
@@ -2137,7 +2150,9 @@ function holdPlayer() {
   songBar.hidden = false;
   // The player node stays where it was built. Only its position changes.
   placeStage();
-  if (songIsOpen()) revealDock();
+  // A phone keeps the title and the play buttons in view when the player
+  // already shows below them.
+  if (songIsOpen() && (wideScreen() || !dockInView())) revealDock();
 }
 
 function songIsOpen() {
@@ -2185,6 +2200,15 @@ function syncInlineStage() {
   songStage.style.bottom = "auto";
 }
 
+// True when the whole placeholder shows between the top bar and the player bar.
+function dockInView() {
+  const dock = document.getElementById("song-dock");
+  if (!dock || typeof dock.getBoundingClientRect !== "function") return false;
+  const rect = dock.getBoundingClientRect();
+  const bar = songBar ? songBar.offsetHeight || 0 : 0;
+  return rect.top >= stickyOffset() && rect.bottom <= (window.innerHeight || 0) - bar;
+}
+
 function revealDock() {
   const dock = document.getElementById("song-dock");
   if (!dock || typeof dock.getBoundingClientRect !== "function") return;
@@ -2193,7 +2217,8 @@ function revealDock() {
   syncInlineStage();
 }
 
-// A computer browser, by the same width the wide page layouts use.
+// A computer browser, by the same width the wide page layouts use. A phone
+// always pins the player above the words; only a computer can float it there.
 const WIDE_SCREEN = "(min-width: 60rem)";
 const PLACE_KEY = "hark-player-place";
 
@@ -2969,6 +2994,8 @@ function beginSongs(tracks, playMode) {
   songBar.hidden = false;
   document.documentElement.dataset.player = "on";
   placeStage();
+  // Started from a button further down the page: bring the player into view.
+  if (songIsOpen() && !dockInView()) revealDock();
   const start = () => loadSong();
   if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
     start();
