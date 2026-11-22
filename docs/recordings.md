@@ -114,3 +114,6 @@ The Nov 15 recording is the control: its tune is confirmed by the music director
 - Dates come from the stream start time in Pacific time. Untitled 2020 and 2021 streams were labeled morning or evening, or Christmas Eve, from that time.
 - Some 2024 titles say "2023" by mistake. The stream timestamp was used instead.
 - Auto captions of singing are poor. The announcement start is the most reliable anchor.
+
+## Bulletin backfill of 2026-11-21: no recordings added
+The 144 hymns added from the 2015 to 2026 bulletins have no recordings yet. The 105 matching 2021 to 2026 videos on the channel were found by service date (titles "Sunday Morning Worship - <date>" and "Sunday Evening Worship - <date>"), but YouTube refused the caption download that day ("The page needs to be reloaded", with yt-dlp 2025.10.14, the newest build for Python 3.9), so nothing could be timed. No video ID was guessed. The bulletin dates and the video list are enough to try again later with a newer yt-dlp. Bulletins from 2015 to 2018 and from Jan to Mar 2021 have no matching videos, since the channel starts in late 2020.
