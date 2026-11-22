@@ -358,11 +358,7 @@ test("navigation leaves the same player playing", async () => {
   video.setAttribute("id", "song-stage");
   const host = document.createElement("div");
   host.setAttribute("id", "song-player-host");
-  const hit = document.createElement("button");
-  hit.setAttribute("id", "song-float-hit");
-  const floatClose = document.createElement("button");
-  floatClose.setAttribute("id", "song-float-close");
-  video.append(host, hit, floatClose);
+  video.append(host);
   for (const id of ["song-bar-title", "song-toggle", "song-keep", "song-prev", "song-next", "song-stop"]) {
     const control = document.createElement("button");
     control.setAttribute("id", id);
@@ -521,252 +517,14 @@ test("navigation leaves the same player playing", async () => {
   assert.deepEqual(player.calls.filter((call) => call === "pause" || call === "stop"), []);
   assert.ok(player.calls.includes("load"));
 
-  assert.equal(document.documentElement.dataset.stage, "float");
   const playingNumber = Number(String(session.metadata.title).split(".")[0]);
-  const hashBeforeGesture = location.hash;
-
-  hit.dispatchEvent({
-    type: "pointerdown",
-    pointerId: 3,
-    pointerType: "mouse",
-    buttons: 0,
-    button: 0,
-    clientX: 10,
-    clientY: 10,
-    target: hit,
-  });
-  assert.equal(hit.captured, undefined);
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 4,
-    pointerType: "mouse",
-    buttons: 0,
-    clientX: 180,
-    clientY: 160,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-  assert.equal(video.style.top, "");
-  assert.equal(document.documentElement.dataset.dragging, undefined);
-  assert.equal(location.hash, hashBeforeGesture);
-  assert.equal(hit.captured, undefined);
-
-  hit.dispatchEvent({
-    type: "pointerdown",
-    pointerId: 6,
-    pointerType: "mouse",
-    buttons: 1,
-    button: 0,
-    clientX: 40,
-    clientY: 40,
-    target: hit,
-  });
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 6,
-    pointerType: "mouse",
-    buttons: 1,
-    clientX: 80,
-    clientY: 60,
-    target: hit,
-  });
-  assert.equal(document.documentElement.dataset.dragging, "1");
-  assert.notEqual(video.style.left, "");
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 6,
-    pointerType: "mouse",
-    buttons: 0,
-    clientX: 220,
-    clientY: 180,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-  assert.equal(document.documentElement.dataset.dragging, undefined);
-  assert.equal(location.hash, hashBeforeGesture);
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 6,
-    pointerType: "mouse",
-    buttons: 0,
-    clientX: 260,
-    clientY: 200,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-
-  hit.dispatchEvent({
-    type: "pointerdown",
-    pointerId: 7,
-    pointerType: "mouse",
-    buttons: 1,
-    button: 0,
-    clientX: 40,
-    clientY: 40,
-    target: hit,
-  });
-  assert.equal(hit.captured, 7);
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 7,
-    pointerType: "mouse",
-    buttons: 1,
-    clientX: 44,
-    clientY: 42,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-  assert.equal(location.hash, hashBeforeGesture);
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 7,
-    pointerType: "mouse",
-    buttons: 1,
-    clientX: 90,
-    clientY: 70,
-    target: hit,
-  });
-  assert.equal(document.documentElement.dataset.dragging, "1");
-  assert.notEqual(video.style.left, "");
-  const draggedLeft = video.style.left;
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 7,
-    pointerType: "mouse",
-    buttons: 1,
-    clientX: 110,
-    clientY: 80,
-    target: hit,
-  });
-  assert.notEqual(video.style.left, draggedLeft);
-  hit.dispatchEvent({
-    type: "pointerup",
-    pointerId: 7,
-    pointerType: "mouse",
-    buttons: 0,
-    clientX: 110,
-    clientY: 80,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-  assert.equal(document.documentElement.dataset.dragging, undefined);
-  assert.equal(location.hash, hashBeforeGesture);
-  assert.equal(hit.captured, null);
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 7,
-    pointerType: "mouse",
-    buttons: 0,
-    clientX: 200,
-    clientY: 200,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-
-  hit.dispatchEvent({
-    type: "pointerdown",
-    pointerId: 8,
-    pointerType: "touch",
-    buttons: 0,
-    button: 0,
-    clientX: 30,
-    clientY: 30,
-    target: hit,
-  });
-  assert.equal(hit.captured, 8);
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 8,
-    pointerType: "touch",
-    buttons: 0,
-    clientX: 70,
-    clientY: 50,
-    target: hit,
-  });
-  assert.equal(document.documentElement.dataset.dragging, "1");
-  assert.notEqual(video.style.left, "");
-  hit.dispatchEvent({
-    type: "pointerup",
-    pointerId: 8,
-    pointerType: "touch",
-    buttons: 0,
-    clientX: 70,
-    clientY: 50,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-  assert.equal(location.hash, hashBeforeGesture);
-
-  hit.dispatchEvent({
-    type: "pointerdown",
-    pointerId: 9,
-    pointerType: "mouse",
-    buttons: 1,
-    button: 0,
-    clientX: 15,
-    clientY: 15,
-    target: hit,
-  });
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 9,
-    pointerType: "mouse",
-    buttons: 1,
-    clientX: 60,
-    clientY: 40,
-    target: hit,
-  });
-  assert.equal(document.documentElement.dataset.dragging, "1");
-  for (const fn of windowListeners.blur || []) fn();
-  assert.equal(video.style.left, "");
-  assert.equal(document.documentElement.dataset.dragging, undefined);
-  hit.dispatchEvent({
-    type: "pointermove",
-    pointerId: 9,
-    pointerType: "mouse",
-    buttons: 1,
-    clientX: 120,
-    clientY: 90,
-    target: hit,
-  });
-  assert.equal(video.style.left, "");
-
-  hit.dispatchEvent({
-    type: "pointerdown",
-    pointerId: 1,
-    pointerType: "mouse",
-    buttons: 1,
-    button: 0,
-    clientX: 20,
-    clientY: 20,
-    target: hit,
-  });
-  hit.dispatchEvent({
-    type: "pointerup",
-    pointerId: 1,
-    pointerType: "mouse",
-    buttons: 0,
-    clientX: 20,
-    clientY: 22,
-    target: hit,
-  });
-  assert.equal(location.hash, `#/hymn/${playingNumber}`);
-  assert.ok(hit.captureLog.some((entry) => entry[0] === "set" && entry[1] === 1));
+  // Opening the playing song's page leaves the same player node in place.
+  location.hash = `#/hymn/${playingNumber}`;
   for (const fn of windowListeners.hashchange || []) fn();
   await new Promise((resolve) => setTimeout(resolve, 0));
-  const dock = document.getElementById("song-dock");
-  const words = document.querySelector(".text");
-  assert.ok(dock);
-  assert.ok(words);
+  assert.ok(document.querySelector(".text"));
   assert.ok(document.querySelector(".stanza-num"));
-  const order = [];
-  const walk = (node) => {
-    order.push(node);
-    for (const child of node.childNodes || []) walk(child);
-  };
-  walk(document.body);
-  assert.ok(order.indexOf(dock) < order.indexOf(words));
-  assert.equal(document.documentElement.dataset.stage, "inline");
+  assert.equal(document.getElementById("song-dock"), null);
   assert.equal(host.parentNode, video);
   const beforeFollow = location.hash;
   session.handlers.nexttrack();
@@ -775,15 +533,15 @@ test("navigation leaves the same player playing", async () => {
   assert.match(location.hash, /^#\/hymn\/\d+$/);
   for (const fn of windowListeners.hashchange || []) fn();
   await new Promise((resolve) => setTimeout(resolve, 0));
-  assert.ok(document.getElementById("song-dock"));
   assert.ok(document.querySelector(".stanza-num"));
   assert.equal(document.getElementById("song-player-host"), host);
   assert.equal(host.parentNode, video);
   assert.equal(FakePlayer.instances.length, 1);
   assert.deepEqual(player.calls.filter((call) => call === "pause" || call === "stop"), []);
 
-  floatClose.click();
+  document.getElementById("song-stop").click();
   assert.equal(document.getElementById("song-bar").hidden, true);
+  assert.equal(document.documentElement.dataset.player, "off");
   assert.ok(player.calls.includes("stop"));
   assert.equal(host.parentNode, video);
 

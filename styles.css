@@ -37,6 +37,7 @@
   --serif: "Newsreader", "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
   --sans: "Segoe UI", system-ui, sans-serif;
   --sticky-h: 12rem;
+  --pin-h: 0px;
 }
 
 html[data-installed="true"] .install-link {
@@ -136,7 +137,7 @@ a {
 .top,
 .hymn-bar {
   position: sticky;
-  top: 0;
+  top: var(--pin-h);
   z-index: 5;
   background: var(--paper);
 }
@@ -542,7 +543,7 @@ a {
 
 .theme-group {
   border-bottom: 1px solid var(--line);
-  scroll-margin-top: calc(var(--sticky-h) + 0.35rem);
+  scroll-margin-top: calc(var(--pin-h) + var(--sticky-h) + 0.35rem);
 }
 
 .theme-group > summary {
@@ -700,7 +701,7 @@ a {
   margin-top: 1.2rem;
   padding-top: 0.4rem;
   border-top: 1px solid var(--line);
-  scroll-margin-top: calc(var(--sticky-h) + 0.35rem);
+  scroll-margin-top: calc(var(--pin-h) + var(--sticky-h) + 0.35rem);
 }
 
 .sermon {
@@ -935,7 +936,7 @@ main.has-jump {
   font-size: 1.45rem;
   font-weight: 600;
   color: var(--accent);
-  scroll-margin-top: calc(var(--sticky-h) + 0.4rem);
+  scroll-margin-top: calc(var(--pin-h) + var(--sticky-h) + 0.4rem);
 }
 
 .index > .letter:first-child {
@@ -975,7 +976,7 @@ main.has-jump {
 .jump {
   position: fixed;
   z-index: 4;
-  top: calc(var(--sticky-h) + 0.3rem);
+  top: calc(var(--pin-h) + var(--sticky-h) + 0.3rem);
   bottom: calc(0.4rem + env(safe-area-inset-bottom));
   right: max(0.15rem, calc((100vw - 40rem) / 2));
   width: 1.45rem;
@@ -2499,99 +2500,34 @@ html[data-installed="true"] .btn-install {
   display: none;
 }
 
-.song-dock {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  margin: 0.35rem 0 0.85rem;
-  scroll-margin-top: calc(var(--sticky-h, 3.2rem) + 0.4rem);
+/* While a recording is loaded the video stays pinned at the top of the screen,
+   full width of the page column, and the page below gets matching space. */
+html[data-player="on"] {
+  --pin-h: calc(min(100vw, 40rem) * 9 / 16 + env(safe-area-inset-top));
+}
+
+html[data-player="on"]::before {
+  content: "";
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background: #1c1917;
 }
 
 .song-bar-video {
   position: fixed;
   z-index: 40;
-  width: min(45vw, 17.5rem);
+  top: env(safe-area-inset-top);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: min(100vw, 40rem);
   aspect-ratio: 16 / 9;
   background: #1c1917;
-  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 10px 28px rgba(33, 28, 22, 0.28);
-  right: max(0.55rem, env(safe-area-inset-right));
-  bottom: calc(var(--song-bar-h, 6.5rem) + 0.45rem);
-  left: auto;
-  top: auto;
-}
-
-html[data-corner="sw"] .song-bar-video {
-  left: max(0.55rem, env(safe-area-inset-left));
-  right: auto;
-  bottom: calc(var(--song-bar-h, 6.5rem) + 0.45rem);
-  top: auto;
-}
-
-html[data-corner="ne"] .song-bar-video {
-  right: max(0.55rem, env(safe-area-inset-right));
-  left: auto;
-  top: max(0.55rem, env(safe-area-inset-top));
-  bottom: auto;
-}
-
-html[data-corner="nw"] .song-bar-video {
-  left: max(0.55rem, env(safe-area-inset-left));
-  right: auto;
-  top: max(0.55rem, env(safe-area-inset-top));
-  bottom: auto;
-}
-
-html[data-stage="inline"] .song-bar-video {
-  z-index: 25;
-  border-radius: 8px;
-  box-shadow: none;
-}
-
-.song-float-hit,
-.song-float-close {
-  display: none;
-}
-
-html[data-stage="float"] .song-bar-video iframe,
-html[data-stage="float"] #song-player-host {
-  pointer-events: none;
-}
-
-html[data-stage="float"] .song-float-hit {
-  display: block;
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-  touch-action: none;
-  pointer-events: auto;
-}
-
-html[data-stage="float"] .song-float-close {
-  display: inline-flex;
-  position: absolute;
-  z-index: 2;
-  top: 0.3rem;
-  right: 0.3rem;
-  width: 1.7rem;
-  height: 1.7rem;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 999px;
-  padding: 0;
-  background: rgba(28, 25, 23, 0.82);
-  color: #f6f1e7;
-  cursor: pointer;
-}
-
-.song-float-close .icon {
-  width: 0.9rem;
-  height: 0.9rem;
 }
 
 .song-bar-video iframe,
@@ -2640,17 +2576,6 @@ html[data-stage="float"] .song-float-close {
   flex: 1 1 8.5rem;
 }
 
-/* Only a computer browser can choose where the player sits. */
-.song-place {
-  display: none;
-}
-
-@media (min-width: 60rem) {
-  .song-place:not([hidden]) {
-    display: inline-block;
-  }
-}
-
 .play-auto {
   background: var(--paper-raised);
   color: var(--ink);
@@ -2683,7 +2608,12 @@ html[data-stage="float"] .song-float-close {
   margin-top: 0.4rem;
 }
 
+html[data-player="on"] .top {
+  padding-top: 0.75rem;
+}
+
 html[data-player="on"] .app {
+  padding-top: var(--pin-h);
   padding-bottom: 8.5rem;
 }
 

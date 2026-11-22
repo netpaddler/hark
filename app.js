@@ -42,7 +42,6 @@ import {
 import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, trackFrom, tracksForHymns } from "./playlist.js";
 import { sendListen } from "./listen.js";
 import { gaEvent, gaPage, gaUserProps, hymnParams, likedBucket, progressMarks, startAnalytics } from "./ga.js";
-import { stageCorner, stageMostlyOff, stagePlacement, stagePointerMove } from "./stage.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
 import { pushBlockReason, pushConfig, pushOpen, urlBase64ToBytes } from "./config/push.js";
 import {
@@ -1511,7 +1510,6 @@ function renderHymn(number) {
     const chipsForHymn = themeChips(hymn);
     if (chipsForHymn) article.append(chipsForHymn);
     article.append(hymnPlayControls(hymn));
-    if (songOnThisHymn(hymn)) article.append(el("div", { id: "song-dock", class: "song-dock" }));
     const melodies = melodyTop(hymn);
     if (melodies) article.append(melodies);
 
@@ -2272,11 +2270,8 @@ function armHeartbeat() {
 function holdPlayer() {
   if (!songBar || document.documentElement.dataset.player !== "on") return;
   songBar.hidden = false;
-  // The player node stays where it was built. Only its position changes.
+  // The player node stays where it was built. CSS keeps it pinned at the top.
   placeStage();
-  // A phone keeps the title and the play buttons in view when the player
-  // already shows below them.
-  if (songIsOpen() && (wideScreen() || !dockInView())) revealDock();
 }
 
 function songIsOpen() {
@@ -2291,150 +2286,15 @@ function songOnThisHymn(hymn) {
   return Boolean(track && hymn && track.number === hymn.number && document.documentElement.dataset.player === "on");
 }
 
-function clearStagePosition() {
-  if (!songStage) return;
-  songStage.style.left = "";
-  songStage.style.top = "";
-  songStage.style.right = "";
-  songStage.style.bottom = "";
-  songStage.style.width = "";
-  songStage.style.height = "";
-}
-
-function stickyOffset() {
-  if (typeof getComputedStyle !== "function") return 0;
-  try {
-    const value = getComputedStyle(document.documentElement).getPropertyValue("--sticky-h");
-    const parsed = parseFloat(value);
-    return Number.isFinite(parsed) ? parsed : 0;
-  } catch {
-    return 0;
-  }
-}
-
-function syncInlineStage() {
-  const dock = document.getElementById("song-dock");
-  if (!dock || !songStage || typeof dock.getBoundingClientRect !== "function") return;
-  const rect = dock.getBoundingClientRect();
-  songStage.style.left = `${rect.left}px`;
-  songStage.style.top = `${rect.top}px`;
-  songStage.style.width = `${rect.width}px`;
-  songStage.style.height = `${rect.height}px`;
-  songStage.style.right = "auto";
-  songStage.style.bottom = "auto";
-}
-
-// True when the whole placeholder shows between the top bar and the player bar.
-function dockInView() {
-  const dock = document.getElementById("song-dock");
-  if (!dock || typeof dock.getBoundingClientRect !== "function") return false;
-  const rect = dock.getBoundingClientRect();
-  const bar = songBar ? songBar.offsetHeight || 0 : 0;
-  return rect.top >= stickyOffset() && rect.bottom <= (window.innerHeight || 0) - bar;
-}
-
-// True when less than half of the pinned placeholder shows between the top bar
-// and the player bar, so the player would otherwise scroll out of sight.
-function dockScrolledAway() {
-  const dock = document.getElementById("song-dock");
-  if (!dock || typeof dock.getBoundingClientRect !== "function") return false;
-  const bar = songBar ? songBar.offsetHeight || 0 : 0;
-  return stageMostlyOff(dock.getBoundingClientRect(), {
-    left: 0,
-    top: stickyOffset(),
-    right: window.innerWidth || 0,
-    bottom: (window.innerHeight || 0) - bar,
-  });
-}
-
-function revealDock() {
-  const dock = document.getElementById("song-dock");
-  if (!dock || typeof dock.getBoundingClientRect !== "function") return;
-  const top = window.scrollY + dock.getBoundingClientRect().top - stickyOffset() - 8;
-  window.scrollTo(0, Math.max(0, top));
-  syncInlineStage();
-}
-
-// A computer browser, by the same width the wide page layouts use. A phone
-// always pins the player above the words; only a computer can float it there.
-const WIDE_SCREEN = "(min-width: 60rem)";
-const PLACE_KEY = "hark-player-place";
-
-function wideScreen() {
-  try {
-    return typeof window.matchMedia === "function" && window.matchMedia(WIDE_SCREEN).matches;
-  } catch {
-    return false;
-  }
-}
-
-function placeChoice() {
-  try {
-    return localStorage.getItem(PLACE_KEY) === "float" ? "float" : "words";
-  } catch {
-    return "words";
-  }
-}
-
-function setPlaceChoice(choice) {
-  try {
-    localStorage.setItem(PLACE_KEY, choice);
-  } catch {
-    /* storage can be blocked */
-  }
-}
-
-// Puts the placeholder right above the words. Only the empty placeholder moves.
-// The player itself is never moved in the page, so the video keeps playing.
-function dockAboveWords() {
-  const article = main && typeof main.querySelector === "function" ? main.querySelector("article.hymn") : null;
-  if (!article) return;
-  const dock = document.getElementById("song-dock") || el("div", { id: "song-dock", class: "song-dock" });
-  const words = article.querySelector(".text");
-  if (words) {
-    if (dock.nextElementSibling !== words) words.before(dock);
-    return;
-  }
-  if (dock.parentNode) return;
-  const controls = article.querySelector(".play-all");
-  if (controls) controls.after(dock);
-  else article.append(dock);
-}
-
-function removeDock() {
-  const dock = document.getElementById("song-dock");
-  if (dock) dock.remove();
-}
-
-function syncPlaceButton(onSongPage) {
-  if (!songPlace) return;
-  songPlace.hidden = !onSongPage;
-  const floating = placeChoice() === "float";
-  songPlace.textContent = floating ? "Pin above words" : "Float player";
-}
-
+// The player is pinned at the top of the screen by CSS while a recording is
+// loaded. The node never moves, so the video keeps playing. The page gets
+// matching top space from html[data-player="on"], so no words hide behind it.
 function placeStage() {
-  if (!songStage || !songBar || document.documentElement.dataset.player !== "on") return;
+  if (!songBar || document.documentElement.dataset.player !== "on") return;
   songBar.hidden = false;
-  const onSongPage = songIsOpen();
-  songOnPage = onSongPage;
-  syncPlaceButton(onSongPage);
+  songOnPage = songIsOpen();
   document.documentElement.style.setProperty("--song-bar-h", `${songBar.offsetHeight || 0}px`);
-  let place = stagePlacement({ wide: wideScreen(), onSongPage, choice: placeChoice() });
-  if (place === "words") dockAboveWords();
-  // Scrolled well past the pinned player: keep it playing as the small
-  // floating window, and pin it again when the placeholder comes back.
-  if (place === "words" && dockScrolledAway()) place = "float-away";
-  if (place === "words") {
-    document.documentElement.dataset.stage = "inline";
-    clearStagePosition();
-    syncInlineStage();
-    return;
-  }
-  if (onSongPage && place === "float") removeDock();
-  document.documentElement.dataset.stage = "float";
-  if (!document.documentElement.dataset.corner) document.documentElement.dataset.corner = "se";
-  if (document.documentElement.dataset.dragging !== "1") clearStagePosition();
+  syncSticky();
 }
 
 function syncStageToSong() {
@@ -2450,26 +2310,6 @@ function syncStageToSong() {
     return;
   }
   placeStage();
-}
-
-function stageScreen() {
-  return {
-    left: 0,
-    top: 0,
-    right: window.innerWidth || 0,
-    bottom: window.innerHeight || 0,
-  };
-}
-
-function stageSnapBounds() {
-  const screen = stageScreen();
-  const bar = songBar ? songBar.offsetHeight || 0 : 0;
-  return {
-    left: screen.left,
-    top: screen.top,
-    right: screen.right,
-    bottom: Math.max(screen.top, screen.bottom - bar - 8),
-  };
 }
 
 function showError() {
@@ -2908,11 +2748,7 @@ async function toggleNotify() {
 }
 
 const songBar = document.getElementById("song-bar");
-const songStage = document.getElementById("song-stage");
-const songPlace = document.getElementById("song-place");
 let songOnPage = false;
-const songFloatHit = document.getElementById("song-float-hit");
-const songFloatClose = document.getElementById("song-float-close");
 const songTitle = document.getElementById("song-bar-title");
 const songToggle = document.getElementById("song-toggle");
 const songMelody = document.getElementById("song-bar-melody");
@@ -3161,8 +2997,6 @@ function beginSongs(tracks, playMode) {
   songBar.hidden = false;
   document.documentElement.dataset.player = "on";
   placeStage();
-  // Started from a button further down the page: bring the player into view.
-  if (songIsOpen() && !dockInView()) revealDock();
   const start = () => loadSong();
   if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
     start();
@@ -3181,13 +3015,8 @@ function stopSongs() {
   if (songKeep) songKeep.hidden = true;
   if (songBar) songBar.hidden = true;
   document.documentElement.dataset.player = "off";
-  document.documentElement.dataset.stage = "";
-  document.documentElement.dataset.corner = "";
   paintMelody(null);
-  delete document.documentElement.dataset.dragging;
   songOnPage = false;
-  clearStagePosition();
-  removeDock();
   clearNowPlaying();
   try {
     if (ytPlayer) ytPlayer.stopVideo();
@@ -3309,124 +3138,6 @@ setToggleLabel(true);
 if (songToggle) songToggle.addEventListener("click", toggleSong);
 if (songStop) songStop.addEventListener("click", stopSongs);
 if (songKeep) songKeep.addEventListener("click", keepWatchingService);
-if (songPlace) {
-  songPlace.addEventListener("click", () => {
-    const next = placeChoice() === "float" ? "words" : "float";
-    setPlaceChoice(next);
-    gaEvent(next === "float" ? "player_float" : "player_pin");
-    placeStage();
-    if (next === "words" && songIsOpen()) revealDock();
-  });
-}
-if (songFloatClose) {
-  songFloatClose.replaceChildren(icon("close"));
-  songFloatClose.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    stopSongs();
-  });
-}
-let stageDrag = null;
-function releaseStageCapture(pointerId) {
-  if (!songFloatHit || pointerId == null || typeof songFloatHit.releasePointerCapture !== "function") return;
-  try {
-    if (typeof songFloatHit.hasPointerCapture === "function" && !songFloatHit.hasPointerCapture(pointerId)) return;
-    songFloatHit.releasePointerCapture(pointerId);
-  } catch {
-    /* the pointer was already released */
-  }
-}
-function finishStageDrag(event, { tap = true } = {}) {
-  if (!stageDrag || !songStage) return;
-  if (event && event.pointerId != null && stageDrag.id !== event.pointerId) return;
-  const info = stageDrag;
-  const pointerId = info.id;
-  stageDrag = null;
-  delete document.documentElement.dataset.dragging;
-  releaseStageCapture(pointerId);
-  if (tap && !info.moved) {
-    const track = currentSong();
-    if (songIsOpen()) revealDock();
-    else if (track) location.hash = `#/hymn/${track.number}`;
-    return;
-  }
-  if (!info.moved) return;
-  const rect = songStage.getBoundingClientRect();
-  if (stageMostlyOff(rect, stageScreen())) {
-    stopSongs();
-    return;
-  }
-  document.documentElement.dataset.corner = stageCorner(rect, stageSnapBounds());
-  clearStagePosition();
-}
-if (songFloatHit && songStage) {
-  songFloatHit.addEventListener("pointerdown", (event) => {
-    if (document.documentElement.dataset.stage !== "float") return;
-    if (event.button != null && event.button !== 0) return;
-    if (event.pointerType === "mouse" && (Number(event.buttons) & 1) === 0) return;
-    const rect = typeof songStage.getBoundingClientRect === "function" ? songStage.getBoundingClientRect() : { left: 0, top: 0 };
-    stageDrag = {
-      id: event.pointerId,
-      pointerType: event.pointerType || "",
-      x: event.clientX,
-      y: event.clientY,
-      left: rect.left,
-      top: rect.top,
-      moved: false,
-    };
-    if (typeof songFloatHit.setPointerCapture === "function") {
-      try {
-        songFloatHit.setPointerCapture(event.pointerId);
-      } catch {
-        /* the pointer is already gone */
-      }
-    }
-  });
-  songFloatHit.addEventListener("pointermove", (event) => {
-    const pointerType = event.pointerType || (stageDrag && stageDrag.pointerType) || "";
-    if (!stageDrag || stageDrag.id !== event.pointerId) return;
-    if (pointerType === "mouse" && (Number(event.buttons) & 1) === 0) {
-      finishStageDrag(event, { tap: false });
-      return;
-    }
-    const dx = event.clientX - stageDrag.x;
-    const dy = event.clientY - stageDrag.y;
-    const action = stagePointerMove({
-      pointerType,
-      buttons: event.buttons,
-      distance: Math.hypot(dx, dy),
-    });
-    if (action === "up") {
-      finishStageDrag(event, { tap: false });
-      return;
-    }
-    if (action !== "drag") return;
-    stageDrag.moved = true;
-    document.documentElement.dataset.dragging = "1";
-    songStage.style.left = `${stageDrag.left + dx}px`;
-    songStage.style.top = `${stageDrag.top + dy}px`;
-    songStage.style.right = "auto";
-    songStage.style.bottom = "auto";
-  });
-  songFloatHit.addEventListener("pointerup", finishStageDrag);
-  songFloatHit.addEventListener("pointercancel", finishStageDrag);
-  songFloatHit.addEventListener("lostpointercapture", finishStageDrag);
-}
-window.addEventListener("pointerup", finishStageDrag);
-window.addEventListener("pointercancel", finishStageDrag);
-window.addEventListener("blur", () => {
-  if (!stageDrag) return;
-  finishStageDrag({ pointerId: stageDrag.id });
-});
-window.addEventListener("scroll", () => {
-  const root = document.documentElement;
-  if (root.dataset.player === "on" && root.dataset.dragging !== "1" && songIsOpen()) {
-    const away = dockScrolledAway();
-    if (root.dataset.stage === "inline" && away) placeStage();
-    else if (root.dataset.stage === "float" && !away && document.getElementById("song-dock")) placeStage();
-  }
-  if (root.dataset.stage === "inline") syncInlineStage();
-});
 window.addEventListener("resize", () => {
   if (document.documentElement.dataset.player === "on") placeStage();
 });
