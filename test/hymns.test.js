@@ -385,8 +385,8 @@ test("every recording belongs to a hymn that is in the book", () => {
 });
 
 test("Faith Presbyterian recordings stay out of the hymn file and sort newest first", () => {
-  assert.equal(Object.keys(recordings).length, 91);
-  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 305);
+  assert.equal(Object.keys(recordings).length, 173);
+  assert.equal(Object.values(recordings).reduce((sum, items) => sum + items.length, 0), 418);
   assert.equal(faithRecordings(recordings, 108)[0].dateSort, "2025-12-14");
   assert.equal(faithRecordings(recordings, 401).length, 1);
   assert.equal(faithRecordings(recordings, 559)[0].dateSort, "2026-07-19");
@@ -639,8 +639,12 @@ test("videos marked embeddable false never render an iframe", () => {
     "QqLbMP9hiCU",
     "SExoOIkPndE",
     "WAcu9DsU2Oo",
+    "XP5y-d51OSs",
     "Xn2S7fum_lI",
+    "_7dVZlGkxc8",
     "gyux6d9UtBM",
+    "i4UYRMLU9KE",
+    "j2oVjidMGdk",
     "qTBSS6y3nTw",
     "r-Ueu-KXYf8",
     "ytvEg1w_xRU",
@@ -675,7 +679,7 @@ test("videos marked embeddable false never render an iframe", () => {
     assert.match(block.href, /[?&]t=\d+/);
     marked += 1;
   }
-  assert.equal(marked, 15);
+  assert.equal(marked, 21);
   const confession = listSermons(sermons, "page")[0];
   assert.equal(confession.title, "Confession of Sin");
   assert.equal(youtubeBlock(confession).type, "card");
@@ -2027,7 +2031,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v66";/);
+  assert.match(sw, /const CACHE = "hark-v67";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2218,7 +2222,7 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.equal(counts.christmas, 20);
   assert.equal(counts.advent, 5);
   assert.equal(counts.epiphany, 4);
-  assert.equal(counts["all-year"], 51);
+  assert.equal(counts["all-year"], 106);
   const christmas = themeTracks({ hymns, themes, recordings, themeId: "christmas" });
   assert.ok(christmas.every((track) => track.trustworthy && track.end > track.start));
   assert.equal(new Set(christmas.map((track) => track.number)).size, christmas.length);
