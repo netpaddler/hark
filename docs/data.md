@@ -56,7 +56,7 @@ The church site keeps only the current bulletin (https://www.faithtacoma.org/inf
 - Earliest bulletin found: May 10, 2015. Latest: November 15, 2026.
 - 193 PDFs were found for 144 Sundays: 2015 (27), 2016 (42), 2017 (3), 2018 (3), 2021 (50), 2023 (14), 2024 (19), 2026 (35). Nothing was found for the rest of 2018, for 2019, 2020, 2022, 2025, or for 2026 before July 19, under any name tried. Those bulletins may not be online.
 - The PDFs are kept outside the repo, in `~/hark-work/bulletin-cache`.
-- The 2015 to 2018 bulletins print only the hymn title and number, with no music or credit line. Those hymns are listed with a title and number and "Words not added yet" (34 hymns). Nos. 339 and 686 have music in the bulletin but no credit line, so they are listed the same way, without an author or tune.
+- The 2015 to 2018 bulletins print only the hymn title and number, with no music or credit line. The 32 hymns that were listed from them with only a title and number were removed again, since an entry with no words and no bulletin picture has nothing to show. That leaves 112 hymns from the backfill: 68 public domain and 42 under copyright (shown as the bulletin page). Nos. 339 and 686 have music in the bulletin but no credit line, so they are listed with a title and number and "Words not added yet", without an author or tune.
 - Songs with no number in the bulletin (for example "In Christ Alone", "By Faith", "Behold the Lamb") are not in the Trinity Hymnal. They were not added.
 - Each new hymn links the latest bulletin that has it. Dates when an existing hymn was sung again are not recorded; the data has no field for that.
 - A hymn whose music runs over a page break has its picture made from both pages stacked, with `--page 53=4,5`.
