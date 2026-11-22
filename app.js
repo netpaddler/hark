@@ -35,7 +35,6 @@ import {
   listSermons,
   formatRecordingDate,
   youtubeBlock,
-  youtubeWatchUrl,
   bulletinBlock,
   sourceWording,
 } from "./hymn-model.js";
@@ -3054,25 +3053,6 @@ function watchSong(track) {
     if (!songHolding) noteProgress(track, now);
     if (!songHolding && now + 0.25 >= track.end) finishSong();
   }, 400);
-}
-
-const songYoutube = document.getElementById("song-youtube");
-
-// Points the "Open in YouTube" link at the playing video and the current second.
-function paintYoutubeLink() {
-  const track = currentSong();
-  if (!songYoutube || !track || !track.videoId) return;
-  let now = track.start || 0;
-  try {
-    if (ytPlayer && typeof ytPlayer.getCurrentTime === "function") now = ytPlayer.getCurrentTime();
-  } catch {
-    /* keep the song start */
-  }
-  songYoutube.href = youtubeWatchUrl(track.videoId, now);
-}
-
-if (songYoutube) {
-  for (const type of ["pointerdown", "focus", "click"]) songYoutube.addEventListener(type, paintYoutubeLink);
 }
 
 function loadSong() {

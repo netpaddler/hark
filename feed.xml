@@ -8,6 +8,13 @@
     <language>en</language>
     <lastBuildDate>Sat, 21 Nov 2026 12:00:00 GMT</lastBuildDate>
     <item>
+      <title>The extra Open in YouTube link in the player is gone, since every recording already has its own Play on YouTube link.</title>
+      <link>https://hark.theweightofglory.com/#/whats-new</link>
+      <guid isPermaLink="false">https://hark.theweightofglory.com/#/whats-new/2026-11-21/undefined</guid>
+      <pubDate>Sat, 21 Nov 2026 12:00:00 GMT</pubDate>
+      <description><![CDATA[<p>The extra Open in YouTube link in the player is gone, since every recording already has its own Play on YouTube link.</p>]]></description>
+    </item>
+    <item>
       <title>The player now has an Open in YouTube link that opens the playing video at the current second. On Android it opens the YouTube app, where floating video follows your YouTube settings. Hark also no longer asks Chrome to handle floating the video itself.</title>
       <link>https://hark.theweightofglory.com/#/whats-new</link>
       <guid isPermaLink="false">https://hark.theweightofglory.com/#/whats-new/2026-11-21/undefined</guid>
