@@ -1373,7 +1373,6 @@ async function playScore(visualObj, qpm) {
 function musicBlock(hymn) {
   const key = String(hymn.number);
   const score = musicCatalog.scores && musicCatalog.scores[key];
-  const omitted = musicCatalog.omitted && musicCatalog.omitted[key];
   const wording = sourceWording(hymn);
   if (score) {
     const details = el("details", { class: "music-block" });
@@ -1443,13 +1442,6 @@ function musicBlock(hymn) {
       stopScore();
     });
     return details;
-  }
-  if (omitted) {
-    const box = el("div", { class: "notice" });
-    box.append(el("h2", {}, "Music not shown"));
-    box.append(el("p", {}, omitted.reason));
-    if (wording.music) box.append(el("p", {}, wording.music));
-    return box;
   }
   return null;
 }
