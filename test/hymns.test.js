@@ -2008,7 +2008,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v60";/);
+  assert.match(sw, /const CACHE = "hark-v61";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2917,4 +2917,26 @@ test("scrolling past the pinned player floats it, and Hark never pauses on leavi
   const screen = { left: 0, top: 50, right: 390, bottom: 750 };
   assert.equal(stageMostlyOff({ left: 18, top: 338, width: 355, height: 200 }, screen), false);
   assert.equal(stageMostlyOff({ left: 18, top: -1162, width: 355, height: 200 }, screen), true);
+});
+
+test("the player frame can enter picture in picture and keeps a plain, visible stage", () => {
+  const app = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  const allow = app.match(/const PLAYER_ALLOW =\s*"([^"]+)"/)[1];
+  for (const word of ["autoplay", "encrypted-media", "picture-in-picture", "fullscreen"]) {
+    assert.ok(allow.split("; ").includes(word), word);
+  }
+  assert.match(app, /allowfullscreen: true/);
+  assert.match(app, /frame\.setAttribute\("allow", PLAYER_ALLOW\)/);
+  assert.match(app, /onReady: \(\) => \{\s*allowPictureInPicture\(ytPlayer\)/);
+  // The handler is registered inside the try/catch loop, so an old browser is fine.
+  assert.match(app, /enterpictureinpicture: \(\) =>/);
+  assert.match(app, /session\.setActionHandler\(name, handler\)/);
+  assert.match(app, /"nexttrack", "enterpictureinpicture"\]/);
+  // The stage and its frame are never hidden, faded, or transformed.
+  const rules = [...css.matchAll(/([^{}]*(?:song-bar-video|song-player-host)[^{}]*)\{([^}]*)\}/g)];
+  for (const [, , body] of rules) {
+    assert.doesNotMatch(body, /transform\s*:|display\s*:\s*none|opacity\s*:\s*0\s*;|visibility\s*:\s*hidden/);
+  }
+  assert.doesNotMatch(css, /\.song-bar\s*\{[^}]*transform/);
 });
