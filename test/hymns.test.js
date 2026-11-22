@@ -44,7 +44,6 @@ import {
   altTunes,
   attributionParts,
   youtubeEmbedSrc,
-  youtubeWatchUrl,
   youtubeBlock,
   listSermons,
   faithBulletin,
@@ -2009,7 +2008,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v62";/);
+  assert.match(sw, /const CACHE = "hark-v63";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2939,15 +2938,4 @@ test("the player frame can enter picture in picture and keeps a plain, visible s
     assert.doesNotMatch(body, /transform\s*:|display\s*:\s*none|opacity\s*:\s*0\s*;|visibility\s*:\s*hidden/);
   }
   assert.doesNotMatch(css, /\.song-bar\s*\{[^}]*transform/);
-});
-
-test("Open in YouTube link uses the playing video and the current second", () => {
-  const app = readFileSync(new URL("../app.js", import.meta.url), "utf8");
-  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
-  assert.equal(youtubeWatchUrl("aAhA7KfbJgg", 83.9), "https://www.youtube.com/watch?v=aAhA7KfbJgg&t=83s");
-  assert.equal(youtubeWatchUrl("aAhA7KfbJgg", 0), "https://www.youtube.com/watch?v=aAhA7KfbJgg");
-  assert.equal(youtubeWatchUrl("aAhA7KfbJgg", -5), "https://www.youtube.com/watch?v=aAhA7KfbJgg");
-  assert.equal(youtubeWatchUrl("not an id!", 5), "");
-  assert.match(html, /id="song-youtube"[^>]*>Open in YouTube</);
-  assert.match(app, /songYoutube\.href = youtubeWatchUrl\(track\.videoId, now\)/);
 });

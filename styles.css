@@ -2695,11 +2695,3 @@ html[data-player="on"] .app {
     transition: none !important;
   }
 }
-
-.song-youtube {
-  display: inline-block;
-  margin-top: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--ink-soft, var(--ink));
-  text-decoration: underline;
-}
