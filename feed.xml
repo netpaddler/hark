@@ -8,6 +8,13 @@
     <language>en</language>
     <lastBuildDate>Sat, 21 Nov 2026 12:00:00 GMT</lastBuildDate>
     <item>
+      <title>The player now has an Open in YouTube link that opens the playing video at the current second. On Android it opens the YouTube app, where floating video follows your YouTube settings. Hark also no longer asks Chrome to handle floating the video itself.</title>
+      <link>https://hark.theweightofglory.com/#/whats-new</link>
+      <guid isPermaLink="false">https://hark.theweightofglory.com/#/whats-new/2026-11-21/undefined</guid>
+      <pubDate>Sat, 21 Nov 2026 12:00:00 GMT</pubDate>
+      <description><![CDATA[<p>The player now has an Open in YouTube link that opens the playing video at the current second. On Android it opens the YouTube app, where floating video follows your YouTube settings. Hark also no longer asks Chrome to handle floating the video itself.</p>]]></description>
+    </item>
+    <item>
       <title>The video frame now asks for picture in picture and full screen permission again, and Hark offers full screen to Chrome when it asks to float the video. On Android, play a song full screen and press Home to keep it in a floating window.</title>
       <link>https://hark.theweightofglory.com/#/whats-new</link>
       <guid isPermaLink="false">https://hark.theweightofglory.com/#/whats-new/2026-11-21/undefined</guid>

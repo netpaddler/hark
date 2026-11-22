@@ -44,6 +44,7 @@ import {
   altTunes,
   attributionParts,
   youtubeEmbedSrc,
+  youtubeWatchUrl,
   youtubeBlock,
   listSermons,
   faithBulletin,
@@ -2008,7 +2009,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v61";/);
+  assert.match(sw, /const CACHE = "hark-v62";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2929,14 +2930,24 @@ test("the player frame can enter picture in picture and keeps a plain, visible s
   assert.match(app, /allowfullscreen: true/);
   assert.match(app, /frame\.setAttribute\("allow", PLAYER_ALLOW\)/);
   assert.match(app, /onReady: \(\) => \{\s*allowPictureInPicture\(ytPlayer\)/);
-  // The handler is registered inside the try/catch loop, so an old browser is fine.
-  assert.match(app, /enterpictureinpicture: \(\) =>/);
+  // No enterpictureinpicture handler: a registered one stops Chrome from floating the video itself.
+  assert.doesNotMatch(app, /enterpictureinpicture/);
   assert.match(app, /session\.setActionHandler\(name, handler\)/);
-  assert.match(app, /"nexttrack", "enterpictureinpicture"\]/);
   // The stage and its frame are never hidden, faded, or transformed.
   const rules = [...css.matchAll(/([^{}]*(?:song-bar-video|song-player-host)[^{}]*)\{([^}]*)\}/g)];
   for (const [, , body] of rules) {
     assert.doesNotMatch(body, /transform\s*:|display\s*:\s*none|opacity\s*:\s*0\s*;|visibility\s*:\s*hidden/);
   }
   assert.doesNotMatch(css, /\.song-bar\s*\{[^}]*transform/);
+});
+
+test("Open in YouTube link uses the playing video and the current second", () => {
+  const app = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.equal(youtubeWatchUrl("aAhA7KfbJgg", 83.9), "https://www.youtube.com/watch?v=aAhA7KfbJgg&t=83s");
+  assert.equal(youtubeWatchUrl("aAhA7KfbJgg", 0), "https://www.youtube.com/watch?v=aAhA7KfbJgg");
+  assert.equal(youtubeWatchUrl("aAhA7KfbJgg", -5), "https://www.youtube.com/watch?v=aAhA7KfbJgg");
+  assert.equal(youtubeWatchUrl("not an id!", 5), "");
+  assert.match(html, /id="song-youtube"[^>]*>Open in YouTube</);
+  assert.match(app, /songYoutube\.href = youtubeWatchUrl\(track\.videoId, now\)/);
 });
