@@ -2,17 +2,7 @@
   {
     "date": "2026-11-21",
     "hymns": [],
-    "note": "The extra Open in YouTube link in the player is gone, since every recording already has its own Play on YouTube link."
-  },
-  {
-    "date": "2026-11-21",
-    "hymns": [],
-    "note": "The player now has an Open in YouTube link that opens the playing video at the current second. On Android it opens the YouTube app, where floating video follows your YouTube settings. Hark also no longer asks Chrome to handle floating the video itself."
-  },
-  {
-    "date": "2026-11-21",
-    "hymns": [],
-    "note": "The video frame now asks for picture in picture and full screen permission again, and Hark offers full screen to Chrome when it asks to float the video. On Android, play a song full screen and press Home to keep it in a floating window."
+    "note": "The video frame now asks for picture in picture and full screen permission up front. Whether a phone floats the video when you press Home is up to Chrome and YouTube, so for a floating window you can tap Play on YouTube to open the recording in the YouTube app."
   },
   {
     "date": "2026-11-21",
