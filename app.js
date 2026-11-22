@@ -1053,6 +1053,22 @@ function linesEl(lines, className) {
   return paragraph;
 }
 
+// Permissions the YouTube frame needs: picture-in-picture and fullscreen are
+// what let Android Chrome move a playing video to a floating window on Home.
+const PLAYER_ALLOW =
+  "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share";
+
+function allowPictureInPicture(player) {
+  try {
+    const frame = player && typeof player.getIframe === "function" ? player.getIframe() : null;
+    if (!frame) return;
+    frame.setAttribute("allow", PLAYER_ALLOW);
+    frame.setAttribute("allowfullscreen", "");
+  } catch {
+    /* the frame is not ready; YouTube's own allow list stays */
+  }
+}
+
 function playerFrame(item) {
   const frame = el("div", { class: "video-frame" });
   frame.append(
@@ -1061,7 +1077,7 @@ function playerFrame(item) {
       title: item.label,
       loading: "lazy",
       allow:
-        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+        PLAYER_ALLOW,
       allowfullscreen: true,
       referrerpolicy: "strict-origin-when-cross-origin",
     }),
@@ -2924,7 +2940,10 @@ function ensureSongPlayer() {
             origin: location.origin,
           },
           events: {
-            onReady: () => resolve(ytPlayer),
+            onReady: () => {
+              allowPictureInPicture(ytPlayer);
+              resolve(ytPlayer);
+            },
             onStateChange: onSongState,
           },
         });
@@ -2962,6 +2981,15 @@ function publishNowPlaying(track) {
       setToggleLabel(false);
     },
     nexttrack: () => stepSong(1),
+    // Chrome may ask the page to enter picture-in-picture when the user leaves.
+    // The video lives in YouTube's frame, so the page can only offer fullscreen,
+    // which Chrome on Android turns into a floating window on Home.
+    enterpictureinpicture: () => {
+      const frame = ytPlayer && typeof ytPlayer.getIframe === "function" ? ytPlayer.getIframe() : null;
+      if (frame && typeof frame.requestFullscreen === "function") {
+        Promise.resolve(frame.requestFullscreen()).catch(() => {});
+      }
+    },
   };
   for (const [name, handler] of Object.entries(handlers)) {
     try {
@@ -2985,7 +3013,7 @@ function clearNowPlaying() {
   } catch {
     /* ignore */
   }
-  for (const name of ["play", "pause", "nexttrack"]) {
+  for (const name of ["play", "pause", "nexttrack", "enterpictureinpicture"]) {
     try {
       session.setActionHandler(name, null);
     } catch {
