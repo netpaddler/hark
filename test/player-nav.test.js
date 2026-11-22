@@ -533,7 +533,9 @@ test("navigation leaves the same player playing", async () => {
   assert.match(location.hash, /^#\/hymn\/\d+$/);
   for (const fn of windowListeners.hashchange || []) fn();
   await new Promise((resolve) => setTimeout(resolve, 0));
-  assert.ok(document.querySelector(".stanza-num"));
+  // The next song can be one with no stored stanzas (copyrighted, or words
+  // still to come), which shows a notice in place of numbered stanzas.
+  assert.ok(document.querySelector(".stanza-num") || document.querySelector(".notice"), location.hash);
   assert.equal(document.getElementById("song-player-host"), host);
   assert.equal(host.parentNode, video);
   assert.equal(FakePlayer.instances.length, 1);
