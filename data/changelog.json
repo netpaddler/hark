@@ -1,6 +1,11 @@
 [
   {
     "date": "2026-11-21",
+    "hymns": [],
+    "note": "While a recording plays, the video now stays pinned at the top and the words scroll underneath it, instead of shrinking into a small floating window."
+  },
+  {
+    "date": "2026-11-21",
     "hymns": [
       1,
       4,

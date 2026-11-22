@@ -10,7 +10,6 @@ import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
 import { captionEnd, estimatedEnd, nextEndingSong, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "../playlist.js";
-import { stageCorner, stageMostlyOff, stagePlacement, stagePointerMove } from "../stage.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -2028,7 +2027,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v65";/);
+  assert.match(sw, /const CACHE = "hark-v66";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2356,64 +2355,36 @@ test("a song started outside a theme continues through the book", () => {
   assert.ok(fromHere.length < catalog.length);
 });
 
-test("a computer browser puts the player above the words unless the reader floats it", () => {
-  assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: "words" }), "words");
-  assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: undefined }), "words");
-  assert.equal(stagePlacement({ wide: true, onSongPage: true, choice: "float" }), "float");
-  assert.equal(stagePlacement({ wide: true, onSongPage: false, choice: "words" }), "float");
-  assert.equal(stagePlacement({ wide: false, onSongPage: false, choice: "words" }), "float");
+test("the player stays pinned at the top while the words scroll under it", () => {
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
-  const dock = appSource.slice(appSource.indexOf("function dockAboveWords("), appSource.indexOf("function removeDock("));
-  assert.equal(/songStage|song-player-host/.test(dock), false);
-  assert.match(appSource, /\(min-width: 60rem\)/);
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
-  assert.match(page, /id="song-place"/);
-});
-
-test("a phone pins the player above the words and floats it on every other page", () => {
-  // On the song's own page a phone always pins, whatever was chosen on a computer.
-  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "words" }), "words");
-  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: "float" }), "words");
-  assert.equal(stagePlacement({ wide: false, onSongPage: true, choice: undefined }), "words");
-  // Leaving the page floats it as a small player. It is never hidden.
-  assert.equal(stagePlacement({ wide: false, onSongPage: false, choice: "words" }), "float");
-  assert.equal(stagePlacement({ wide: false, onSongPage: false, choice: "float" }), "float");
-  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   // The hymn's own play button leads the row with Play all, Shuffle and Auto play all.
   const controls = appSource.slice(appSource.indexOf("function hymnPlayControls("), appSource.indexOf("function hymnsOnScreen("));
   assert.match(controls, /playControl\(hymn, item, "Play song"\)/);
   assert.match(controls, /item \? playControl/);
   const row = appSource.slice(appSource.indexOf("function playRow("), appSource.indexOf("function playAllControls("));
   assert.ok(row.indexOf("row.append(lead)") > -1 && row.indexOf("row.append(lead)") < row.indexOf('"Play all"'));
-  // The toggle that floats a pinned player stays a computer-only choice.
-  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
-  assert.match(css, /\.song-place \{\s*display: none;\s*\}\s*@media \(min-width: 60rem\)/);
-});
-
-test("a floating player snaps to a corner and a swipe off dismisses it", () => {
-  const bounds = { left: 0, top: 0, right: 390, bottom: 700 };
-  const screen = { left: 0, top: 0, right: 390, bottom: 844 };
-  assert.equal(stageCorner({ left: 220, top: 560, width: 160, height: 90 }, bounds), "se");
-  assert.equal(stageCorner({ left: 12, top: 560, width: 160, height: 90 }, bounds), "sw");
-  assert.equal(stageCorner({ left: 220, top: 24, width: 160, height: 90 }, bounds), "ne");
-  assert.equal(stageCorner({ left: 12, top: 24, width: 160, height: 90 }, bounds), "nw");
-  assert.equal(stageMostlyOff({ left: 330, top: 40, width: 160, height: 90 }, screen), true);
-  assert.equal(stageMostlyOff({ left: 200, top: 600, width: 160, height: 90 }, screen), false);
-  assert.equal(stagePointerMove({ pointerType: "mouse", buttons: 1, distance: 3 }), "wait");
-  assert.equal(stagePointerMove({ pointerType: "mouse", buttons: 1, distance: 12 }), "drag");
-  assert.equal(stagePointerMove({ pointerType: "mouse", buttons: 0, distance: 20 }), "up");
-  assert.equal(stagePointerMove({ pointerType: "touch", buttons: 0, distance: 4 }), "wait");
-  assert.equal(stagePointerMove({ pointerType: "touch", buttons: 0, distance: 12 }), "drag");
-  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
-  assert.match(css, /width: min\(45vw, 17\.5rem\)/);
-  assert.match(css, /env\(safe-area-inset-right\)/);
-  assert.match(css, /env\(safe-area-inset-bottom\)/);
-  assert.match(css, /html\[data-stage="float"\]/);
-  assert.match(css, /html\[data-stage="inline"\]/);
-  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  // The video is fixed at the top at page width, 16:9, below the safe area, with matching page space.
+  const stage = css.slice(css.indexOf(".song-bar-video {"), css.indexOf(".song-bar-video iframe"));
+  assert.match(stage, /position: fixed;/);
+  assert.match(stage, /top: env\(safe-area-inset-top\);/);
+  assert.match(stage, /width: min\(100vw, 40rem\);/);
+  assert.match(stage, /aspect-ratio: 16 \/ 9;/);
+  assert.match(css, /html\[data-player="on"\] \.app \{\s*padding-top: var\(--pin-h\);/);
+  assert.match(css, /top: var\(--pin-h\);/);
+  // The old floating mini player is gone.
+  for (const gone of [/data-stage/, /data-corner/, /song-float/, /song-dock/, /song-place/]) {
+    assert.equal(gone.test(css), false, String(gone));
+    assert.equal(gone.test(page), false, String(gone));
+  }
+  assert.equal(/dockScrolledAway|float-away|stageMostlyOff|revealDock|song-dock|IntersectionObserver/.test(appSource), false);
+  assert.equal(existsSync(new URL("../stage.js", import.meta.url)), false);
+  // Pinning only moves CSS, so the player node is never rebuilt or moved.
   const hold = appSource.slice(appSource.indexOf("function holdPlayer("), appSource.indexOf("function songIsOpen("));
   assert.equal(/\.append\(/.test(hold), false);
-  assert.match(appSource, /id: "song-dock"/);
+  const place = appSource.slice(appSource.indexOf("function placeStage("), appSource.indexOf("function syncStageToSong("));
+  assert.equal(/songStage|remove\(|replaceWith|new window\.YT|loadVideoById|stopSongs/.test(place), false);
 });
 
 test("listening counts stay anonymous and the stats page is locked", async () => {
@@ -2711,7 +2682,6 @@ test("analytics helpers: progress marks fire once, GPC turns tracking off, DNT d
     "play_start", "pause", "resume", "complete", "keep_watching", "listen_progress", "play_all", "shuffle",
     "next_song", "score_play", "like", "unlike", "search", "theme_open", "select_hymn", "bulletin_click",
     "install_prompt", "app_installed", "notify_subscribe", "notify_unsubscribe", "request_submit",
-    "player_float", "player_pin",
   ]) {
     assert.match(appSource, new RegExp(`"${name}"`), name);
   }
@@ -2880,12 +2850,11 @@ test("the melodies of a hymn sung to more than one are near the top, once", () =
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
   const page = appSource.slice(appSource.indexOf("function renderHymn("));
-  // Under the play buttons and the docked video, above the words.
+  // Under the play buttons, above the words.
   const buttons = page.indexOf("article.append(hymnPlayControls(hymn));");
-  const dock = page.indexOf('id: "song-dock"');
   const top = page.indexOf("const melodies = melodyTop(hymn);");
   const words = page.indexOf("stanzaPlan(hymn)");
-  assert.ok(buttons > 0 && dock > buttons && top > dock && words > top);
+  assert.ok(buttons > 0 && top > buttons && words > top);
   assert.match(page, /if \(melodies\) article\.append\(melodies\);/);
   // A hymn with one melody gets no block at all.
   const melodyTop = appSource.slice(appSource.indexOf("function melodyTop("), appSource.indexOf("function faithSection("));
@@ -2918,25 +2887,16 @@ test("the hymn page and the player show the melody", () => {
   }
 });
 
-test("scrolling past the pinned player floats it, and Hark never pauses on leaving the screen", () => {
+test("Hark never pauses the song on leaving the screen", () => {
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   // No code of ours listens for the page being hidden, so none can pause the song.
   const pauses = (appSource.match(/addEventListener\("(?:visibilitychange|pagehide|freeze|blur)"[\s\S]*?\n\s*\}\);/g) || []).join("\n");
-  assert.equal(/pauseVideo|stopSongs|pause\(/.test(pauses.replace(/finishStageDrag[^\n]*\n/g, "")), false);
+  assert.equal(/pauseVideo|stopSongs|pause\(/.test(pauses), false);
   const visibility = appSource.slice(appSource.indexOf('"visibilitychange"') - 80, appSource.indexOf('"visibilitychange"') + 200);
   assert.match(visibility, /checkForUpdate/);
   assert.equal(/pagehide|"freeze"/.test(appSource), false);
-  // Scrolling the placeholder out of view floats the same player node, never rebuilds it.
-  assert.match(appSource, /function dockScrolledAway\(/);
-  assert.match(appSource, /dockScrolledAway\(\)\) place = "float-away"/);
-  const away = appSource.slice(appSource.indexOf("function placeStage("), appSource.indexOf("function syncStageToSong("));
-  assert.equal(/songStage\.(remove|replaceWith)|new window\.YT|loadVideoById|stopSongs/.test(away), false);
   // The player is still allowed to go picture in picture.
   assert.match(appSource, /picture-in-picture/);
-  // Half or more of the placeholder off screen counts as scrolled away.
-  const screen = { left: 0, top: 50, right: 390, bottom: 750 };
-  assert.equal(stageMostlyOff({ left: 18, top: 338, width: 355, height: 200 }, screen), false);
-  assert.equal(stageMostlyOff({ left: 18, top: -1162, width: 355, height: 200 }, screen), true);
 });
 
 test("the player frame can enter picture in picture and keeps a plain, visible stage", () => {
