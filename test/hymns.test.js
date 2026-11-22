@@ -2008,7 +2008,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v59";/);
+  assert.match(sw, /const CACHE = "hark-v60";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2896,4 +2896,25 @@ test("the hymn page and the player show the melody", () => {
     assert.ok(css.includes(`[data-melody="${index}"] { --melody: var(--melody-${index}); }`));
     assert.ok(css.includes(`html[data-melody="${index}"] .song-bar-video`));
   }
+});
+
+test("scrolling past the pinned player floats it, and Hark never pauses on leaving the screen", () => {
+  const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  // No code of ours listens for the page being hidden, so none can pause the song.
+  const pauses = (appSource.match(/addEventListener\("(?:visibilitychange|pagehide|freeze|blur)"[\s\S]*?\n\s*\}\);/g) || []).join("\n");
+  assert.equal(/pauseVideo|stopSongs|pause\(/.test(pauses.replace(/finishStageDrag[^\n]*\n/g, "")), false);
+  const visibility = appSource.slice(appSource.indexOf('"visibilitychange"') - 80, appSource.indexOf('"visibilitychange"') + 200);
+  assert.match(visibility, /checkForUpdate/);
+  assert.equal(/pagehide|"freeze"/.test(appSource), false);
+  // Scrolling the placeholder out of view floats the same player node, never rebuilds it.
+  assert.match(appSource, /function dockScrolledAway\(/);
+  assert.match(appSource, /dockScrolledAway\(\)\) place = "float-away"/);
+  const away = appSource.slice(appSource.indexOf("function placeStage("), appSource.indexOf("function syncStageToSong("));
+  assert.equal(/songStage\.(remove|replaceWith)|new window\.YT|loadVideoById|stopSongs/.test(away), false);
+  // The player is still allowed to go picture in picture.
+  assert.match(appSource, /picture-in-picture/);
+  // Half or more of the placeholder off screen counts as scrolled away.
+  const screen = { left: 0, top: 50, right: 390, bottom: 750 };
+  assert.equal(stageMostlyOff({ left: 18, top: 338, width: 355, height: 200 }, screen), false);
+  assert.equal(stageMostlyOff({ left: 18, top: -1162, width: 355, height: 200 }, screen), true);
 });

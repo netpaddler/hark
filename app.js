@@ -2298,6 +2298,20 @@ function dockInView() {
   return rect.top >= stickyOffset() && rect.bottom <= (window.innerHeight || 0) - bar;
 }
 
+// True when less than half of the pinned placeholder shows between the top bar
+// and the player bar, so the player would otherwise scroll out of sight.
+function dockScrolledAway() {
+  const dock = document.getElementById("song-dock");
+  if (!dock || typeof dock.getBoundingClientRect !== "function") return false;
+  const bar = songBar ? songBar.offsetHeight || 0 : 0;
+  return stageMostlyOff(dock.getBoundingClientRect(), {
+    left: 0,
+    top: stickyOffset(),
+    right: window.innerWidth || 0,
+    bottom: (window.innerHeight || 0) - bar,
+  });
+}
+
 function revealDock() {
   const dock = document.getElementById("song-dock");
   if (!dock || typeof dock.getBoundingClientRect !== "function") return;
@@ -2371,15 +2385,18 @@ function placeStage() {
   songOnPage = onSongPage;
   syncPlaceButton(onSongPage);
   document.documentElement.style.setProperty("--song-bar-h", `${songBar.offsetHeight || 0}px`);
-  const place = stagePlacement({ wide: wideScreen(), onSongPage, choice: placeChoice() });
+  let place = stagePlacement({ wide: wideScreen(), onSongPage, choice: placeChoice() });
   if (place === "words") dockAboveWords();
-  if (place !== "float") {
+  // Scrolled well past the pinned player: keep it playing as the small
+  // floating window, and pin it again when the placeholder comes back.
+  if (place === "words" && dockScrolledAway()) place = "float-away";
+  if (place === "words") {
     document.documentElement.dataset.stage = "inline";
     clearStagePosition();
     syncInlineStage();
     return;
   }
-  if (onSongPage) removeDock();
+  if (onSongPage && place === "float") removeDock();
   document.documentElement.dataset.stage = "float";
   if (!document.documentElement.dataset.corner) document.documentElement.dataset.corner = "se";
   if (document.documentElement.dataset.dragging !== "1") clearStagePosition();
@@ -3291,7 +3308,8 @@ function finishStageDrag(event, { tap = true } = {}) {
   releaseStageCapture(pointerId);
   if (tap && !info.moved) {
     const track = currentSong();
-    if (track) location.hash = `#/hymn/${track.number}`;
+    if (songIsOpen()) revealDock();
+    else if (track) location.hash = `#/hymn/${track.number}`;
     return;
   }
   if (!info.moved) return;
@@ -3363,7 +3381,13 @@ window.addEventListener("blur", () => {
   finishStageDrag({ pointerId: stageDrag.id });
 });
 window.addEventListener("scroll", () => {
-  if (document.documentElement.dataset.stage === "inline") syncInlineStage();
+  const root = document.documentElement;
+  if (root.dataset.player === "on" && root.dataset.dragging !== "1" && songIsOpen()) {
+    const away = dockScrolledAway();
+    if (root.dataset.stage === "inline" && away) placeStage();
+    else if (root.dataset.stage === "float" && !away && document.getElementById("song-dock")) placeStage();
+  }
+  if (root.dataset.stage === "inline") syncInlineStage();
 });
 window.addEventListener("resize", () => {
   if (document.documentElement.dataset.player === "on") placeStage();
