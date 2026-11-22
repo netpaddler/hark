@@ -66,7 +66,7 @@ Previous and next follow hymnal number. Back returns to the list you came from.
 
 Where a public domain score is on file, the hymn page has a Music section with the tune, a credit for the harmony, and Play and Stop. The piano sound may need a connection the first time you press Play. If the setting is still under copyright, or no pre-1931 score was found, the page says the music is not shown. Sources are listed in `docs/data.md`.
 
-A hymn whose whole text is under copyright is not in Hark. If a public-domain hymn has a `copyright_note` or a gap in `stanza_numbers`, Hark shows the public domain stanzas and puts a short copyright note in place of each copyrighted stanza.
+A hymn whose whole text is under copyright is in Hark with its details only: no words are stored, and the page shows the Faith Presbyterian bulletin page as printed. If a public-domain hymn has a `copyright_note` or a gap in `stanza_numbers`, Hark shows the public domain stanzas and puts a short copyright note in place of each copyrighted stanza.
 
 ## Hear it at Faith Presbyterian
 

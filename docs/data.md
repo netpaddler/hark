@@ -1,6 +1,6 @@
 # Hark: hymn data notes
 
-File: `data/hymns.json`. It holds 45 entries: Trinity Hymnal (1990) nos. 193-233, plus nos. 108, 162, 401, and 559.
+File: `data/hymns.json`. It holds the Trinity Hymnal (1990) hymns that Faith Presbyterian has sung, nos. 193-233 plus the hymns taken from the bulletins, and the song 801. See the bulletin sections below for how each kind is added.
 
 ## Songs that are not in the Trinity Hymnal
 
@@ -41,7 +41,25 @@ A hymn sung to more than one tune has `alt_tunes`, a list of `{ tune, composer, 
 The text is Trinity Hymnal wording as hymnary.org shows it. It is not a scan of the printed book. Check against the printed hymnal before printing for congregational use.
 
 ## Copyright
-A hymn whose whole text is under copyright is not included. Nos. 5, 36, 46, 53, 103, 125, 168, 239, 257, 305, 363, 415, 469, 660, 689, 703, and 719 are omitted on that rule.
+Pete decided on 2026-11-21 that a hymn in a Faith Presbyterian bulletin is good enough, even when its words are under copyright. So a hymn whose whole text is under copyright is added, but Hark never stores or types its words.
+
+- The entry has the number, title, author, translator, tune, composer, and the copyright line as the bulletin prints it (`copyright_note`). `public_domain` is `false`, `stanzas` and `stanza_numbers` are empty, and `refrain` is null. `source_url` is the bulletin PDF.
+- The hymn page shows the bulletin page picture (`scripts/build-bulletin-images.py`) where the words would be, under the note "The words are under copyright, so they are shown as printed in the Faith Presbyterian bulletin." The code is the `isWithheld` branch in `app.js`.
+- A test requires each such hymn to have a bulletin picture and no stored stanza text.
+- A text counts as under copyright when its credit line shows a copyright notice, or a text alteration dated 1961 or 1990 (for example "alt. 1990"), or a revision from a modern book. A date printed with the tune only is not a text alteration (nos. 28 and 281). A bare "Mod." with no date is not a copyright. When the call was close it went to the copyright side: no. 421 ("Rev. in Lutheran Book of Worship, 1978") and no. 703 ("Rev. by Edmund P. Clowney, 1986").
+- Hymns added this way on 2026-11-21: 5, 6, 9, 26, 30, 32, 36, 46, 53, 75, 103, 125, 149, 164, 168, 182, 239, 242, 251, 257, 279, 283, 304, 305, 363, 367, 371, 407, 415, 416, 421, 433, 453, 455, 469, 493, 597, 660, 689, 692, 703, 719. This includes every number that was omitted before (5, 36, 46, 53, 103, 125, 168, 239, 257, 305, 363, 415, 469, 660, 689, 703, 719).
+- The welcome figures leave these hymns out, as before. Search finds them by number, title, author, and tune, but never by a lyric line, since none is stored.
+
+## Bulletin archive (backfill of 2026-11-21)
+The church site keeps only the current bulletin (https://www.faithtacoma.org/information/bulletin). Older ones were found by probing the file host by Sunday date, since the site's media list is behind a bot check. A PDF is at `https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/YYYY/MM/<M>.<D>.<YY>Bulletin-am-6x9-1.pdf` (and `-pm-`). Older names also exist: `<M>.<D>.<YY>Bulletin-am.pdf` and `-pm.pdf` (2021), `<M>.<D>.<YY>bulletin-am.pdf` (early 2021), and `<M>.<D>.<YY>bulletin.pdf` with no service (2015 to 2018). The month folder is sometimes the month before the date.
+
+- Earliest bulletin found: May 10, 2015. Latest: November 15, 2026.
+- 193 PDFs were found for 144 Sundays: 2015 (27), 2016 (42), 2017 (3), 2018 (3), 2021 (50), 2023 (14), 2024 (19), 2026 (35). Nothing was found for the rest of 2018, for 2019, 2020, 2022, 2025, or for 2026 before July 19, under any name tried. Those bulletins may not be online.
+- The PDFs are kept outside the repo, in `~/hark-work/bulletin-cache`.
+- The 2015 to 2018 bulletins print only the hymn title and number, with no music or credit line. Those hymns are listed with a title and number and "Words not added yet" (34 hymns). Nos. 339 and 686 have music in the bulletin but no credit line, so they are listed the same way, without an author or tune.
+- Songs with no number in the bulletin (for example "In Christ Alone", "By Faith", "Behold the Lamb") are not in the Trinity Hymnal. They were not added.
+- Each new hymn links the latest bulletin that has it. Dates when an existing hymn was sung again are not recorded; the data has no field for that.
+- A hymn whose music runs over a page break has its picture made from both pages stacked, with `--page 53=4,5`.
 
 ## Bulletin texts
 Some hymns take their words from a Faith Presbyterian Tacoma bulletin. `source_url` is that bulletin PDF. The printed wording is the text, including punctuation and hyphenation such as treasure-store. Syllable hyphens in a music underlay are joined into words. A credit line that shows a copyright, or a 1961 or 1990 alteration of the text, is not given words. An alteration dated on the tune only is not a text alteration.

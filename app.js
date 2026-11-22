@@ -14,6 +14,7 @@ import {
   faithRecordings,
   filterHymns,
   wordsPending,
+  isWithheld,
   listRecordings,
   listSections,
   neighbors,
@@ -1517,7 +1518,25 @@ function renderHymn(number) {
     const heard = faithSection(hymn);
     const choir = recordingSection(hymn);
 
-    if (wordsPending(hymn)) {
+    let wordsShownAsPicture = false;
+    if (isWithheld(hymn)) {
+      // The words are under copyright, so none are stored. The bulletin page
+      // picture stands in for them, right where the words would be.
+      const picture = bulletinNote(hymn);
+      const notice = el("div", { class: "notice copyright-notice" });
+      notice.append(el("h2", {}, "Words as printed in the bulletin"));
+      notice.append(
+        el(
+          "p",
+          {},
+          "The words are under copyright, so they are shown as printed in the Faith Presbyterian bulletin.",
+        ),
+      );
+      if (hymn.copyright_note) notice.append(el("p", { class: "copyright-line" }, hymn.copyright_note));
+      article.append(notice);
+      if (picture) article.append(picture);
+      wordsShownAsPicture = true;
+    } else if (wordsPending(hymn)) {
       // Listed from a bulletin so it can be found by number or title. Say that
       // plainly rather than showing an empty page.
       const notice = el("div", { class: "notice" });
@@ -1563,7 +1582,7 @@ function renderHymn(number) {
       article.append(text);
     }
 
-    const bulletin = bulletinNote(hymn);
+    const bulletin = wordsShownAsPicture ? null : bulletinNote(hymn);
     if (bulletin) article.append(bulletin);
 
     const music = musicBlock(hymn);

@@ -23,7 +23,8 @@ Needs PyMuPDF and Pillow:
     ~/.venvs/hark-bulletins/bin/python scripts/build-bulletin-images.py
 
 Hymns that already have a picture for the same PDF are skipped. Pass --force
-to make every picture again, or hymn numbers to do only those.
+to make every picture again, hymn numbers to do only those, or --page 53=4,5 to
+use pages 4 and 5 of the PDF (stacked) for hymn 53.
 """
 
 import argparse
@@ -37,7 +38,7 @@ import urllib.request
 from pathlib import Path
 
 import fitz  # PyMuPDF
-from PIL import Image
+from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parent.parent
 HYMNS = ROOT / "data" / "hymns.json"
@@ -49,7 +50,7 @@ QUALITY = 60
 # Keep in step with BULLETIN_URL in hymn-model.js.
 BULLETIN_URL = re.compile(
     r"^https://faithtacoma\.sfo2\.cdn\.digitaloceanspaces\.com/\d{4}/\d{2}/"
-    r"(\d{1,2})\.(\d{1,2})\.(\d{2})Bulletin-(am|pm)-6x9-1\.pdf$"
+    r"(\d{1,2})\.(\d{1,2})\.(\d{2})[Bb]ulletin(?:-(am|pm))?(?:-6x9-1)?\.pdf$"
 )
 
 
@@ -112,10 +113,31 @@ def pick_page(doc, hymn):
 
 
 def render(doc, index, out):
-    page = doc[index]
-    zoom = WIDTH / page.rect.width
-    pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
-    image = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
+    """Render one page, or several pages stacked top to bottom when index is a
+    list (a hymn whose music or credit line runs onto the next page)."""
+    indexes = index if isinstance(index, list) else [index]
+    images = []
+    for number in indexes:
+        page = doc[number]
+        zoom = WIDTH / page.rect.width
+        pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
+        images.append(Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB"))
+    image = images[0]
+    if len(images) > 1:
+        # Each page keeps its own white margins, which leave a wide gap where
+        # two pages meet. Trim every page to its ink, with a little room.
+        trimmed = []
+        for item in images:
+            box = ImageChops.difference(item, Image.new("RGB", item.size, "white")).getbbox()
+            top = max((box[1] if box else 0) - 30, 0)
+            bottom = min((box[3] if box else item.height) + 30, item.height)
+            trimmed.append(item.crop((0, top, item.width, bottom)))
+        images = trimmed
+        image = Image.new("RGB", (WIDTH, sum(item.height for item in images)), "white")
+        top = 0
+        for item in images:
+            image.paste(item, (0, top))
+            top += item.height
     image.save(out, "WEBP", quality=QUALITY, method=6)
     return image.width, image.height
 
@@ -125,12 +147,23 @@ def main():
     parser.add_argument("numbers", nargs="*", type=int, help="only these hymn numbers")
     parser.add_argument("--force", action="store_true", help="make every picture again")
     parser.add_argument(
+        "--page",
+        action="append",
+        default=[],
+        metavar="NUMBER=PAGE",
+        help="use this 1-based PDF page, or pages joined by commas, for a hymn instead of the guess (also remakes that picture)",
+    )
+    parser.add_argument(
         "--cache",
         default=os.path.join(os.path.expanduser("~"), ".cache", "hark-bulletins"),
         help="folder for downloaded PDFs",
     )
     args = parser.parse_args()
 
+    pages = {}
+    for item in args.page:
+        number, _, page = item.partition("=")
+        pages[int(number)] = [int(part) - 1 for part in page.split(",")]
     data = json.loads(HYMNS.read_text())
     hymns = data if isinstance(data, list) else data.get("hymns", [])
     linked = [hymn for hymn in hymns if is_bulletin(hymn.get("source_url"))]
@@ -146,8 +179,8 @@ def main():
         url = hymn["source_url"]
         out = OUT_DIR / f"{number}.webp"
         kept = old.get(key)
-        wanted = not args.numbers or number in args.numbers
-        if kept and out.exists() and kept.get("pdf") == url and not (args.force and wanted):
+        wanted = not args.numbers or number in args.numbers or number in pages
+        if kept and out.exists() and kept.get("pdf") == url and not (args.force and wanted) and number not in pages:
             manifest[key] = kept
             continue
         if not wanted:
@@ -155,6 +188,10 @@ def main():
         try:
             doc = fitz.open(fetch_pdf(url, Path(args.cache)))
             index, score = pick_page(doc, hymn)
+            if number in pages:
+                index, score = pages[number], 99
+                if len(index) == 1:
+                    index = index[0]
             width, height = render(doc, index, out)
         except Exception as error:  # one bad PDF must not stop the rest
             failed.append(number)
@@ -163,13 +200,13 @@ def main():
         manifest[key] = {
             "src": f"bulletins/{number}.webp",
             "pdf": url,
-            "page": index + 1,
+            "page": (index[0] if isinstance(index, list) else index) + 1,
             "width": width,
             "height": height,
         }
         made += 1
         how = f"score {score}" if score else "no match, fell back to page 1"
-        print(f"{number}: page {index + 1} of {doc.page_count} ({how}), {out.stat().st_size // 1024} KB")
+        print(f"{number}: page {(index[0] if isinstance(index, list) else index) + 1} of {doc.page_count} ({how}), {out.stat().st_size // 1024} KB")
 
     # A picture whose hymn no longer links a bulletin is of no use.
     for path in OUT_DIR.glob("*.webp"):

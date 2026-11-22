@@ -781,7 +781,7 @@ const BULLETIN_MONTHS = [
 // A Faith Presbyterian bulletin PDF on the church file host. Other sources,
 // including hymnary.org, are not a church bulletin.
 const BULLETIN_URL =
-  /^https:\/\/faithtacoma\.sfo2\.cdn\.digitaloceanspaces\.com\/\d{4}\/\d{2}\/(\d{1,2})\.(\d{1,2})\.(\d{2})Bulletin-(am|pm)-6x9-1\.pdf$/;
+  /^https:\/\/faithtacoma\.sfo2\.cdn\.digitaloceanspaces\.com\/\d{4}\/\d{2}\/(\d{1,2})\.(\d{1,2})\.(\d{2})[Bb]ulletin(?:-(am|pm))?(?:-6x9-1)?\.pdf$/;
 
 export function faithBulletin(hymn) {
   const url = hymn && typeof hymn.source_url === "string" ? hymn.source_url : "";
@@ -791,10 +791,11 @@ export function faithBulletin(hymn) {
   const day = Number(match[2]);
   const year = 2000 + Number(match[3]);
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
-  const service = match[4] === "am" ? "morning" : "evening";
+  // The oldest bulletins (2018) have no morning or evening file.
+  const service = match[4] === "am" ? ", morning" : match[4] === "pm" ? ", evening" : "";
   return {
     url,
-    label: `Faith Presbyterian bulletin, ${BULLETIN_MONTHS[month - 1]} ${day}, ${year}, ${service}`,
+    label: `Faith Presbyterian bulletin, ${BULLETIN_MONTHS[month - 1]} ${day}, ${year}${service}`,
   };
 }
 
