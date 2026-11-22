@@ -409,6 +409,14 @@ export function youtubeEmbedSrc(id, start) {
   return `${base}?start=${start}`;
 }
 
+// A plain YouTube watch link at a second. On Android it opens in the YouTube app.
+export function youtubeWatchUrl(id, seconds) {
+  const clean = youtubeId(id);
+  if (!clean) return "";
+  const t = Math.max(0, Math.floor(Number(seconds) || 0));
+  return `https://www.youtube.com/watch?v=${clean}${t > 0 ? `&t=${t}s` : ""}`;
+}
+
 export function formatRecordingDate(value) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || "").trim());
   if (!match) return "";

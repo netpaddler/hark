@@ -35,6 +35,7 @@ import {
   listSermons,
   formatRecordingDate,
   youtubeBlock,
+  youtubeWatchUrl,
   bulletinBlock,
   sourceWording,
 } from "./hymn-model.js";
@@ -2981,15 +2982,6 @@ function publishNowPlaying(track) {
       setToggleLabel(false);
     },
     nexttrack: () => stepSong(1),
-    // Chrome may ask the page to enter picture-in-picture when the user leaves.
-    // The video lives in YouTube's frame, so the page can only offer fullscreen,
-    // which Chrome on Android turns into a floating window on Home.
-    enterpictureinpicture: () => {
-      const frame = ytPlayer && typeof ytPlayer.getIframe === "function" ? ytPlayer.getIframe() : null;
-      if (frame && typeof frame.requestFullscreen === "function") {
-        Promise.resolve(frame.requestFullscreen()).catch(() => {});
-      }
-    },
   };
   for (const [name, handler] of Object.entries(handlers)) {
     try {
@@ -3013,7 +3005,7 @@ function clearNowPlaying() {
   } catch {
     /* ignore */
   }
-  for (const name of ["play", "pause", "nexttrack", "enterpictureinpicture"]) {
+  for (const name of ["play", "pause", "nexttrack"]) {
     try {
       session.setActionHandler(name, null);
     } catch {
@@ -3062,6 +3054,25 @@ function watchSong(track) {
     if (!songHolding) noteProgress(track, now);
     if (!songHolding && now + 0.25 >= track.end) finishSong();
   }, 400);
+}
+
+const songYoutube = document.getElementById("song-youtube");
+
+// Points the "Open in YouTube" link at the playing video and the current second.
+function paintYoutubeLink() {
+  const track = currentSong();
+  if (!songYoutube || !track || !track.videoId) return;
+  let now = track.start || 0;
+  try {
+    if (ytPlayer && typeof ytPlayer.getCurrentTime === "function") now = ytPlayer.getCurrentTime();
+  } catch {
+    /* keep the song start */
+  }
+  songYoutube.href = youtubeWatchUrl(track.videoId, now);
+}
+
+if (songYoutube) {
+  for (const type of ["pointerdown", "focus", "click"]) songYoutube.addEventListener(type, paintYoutubeLink);
 }
 
 function loadSong() {
