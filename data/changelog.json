@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-11-22",
+    "hymns": [
+      578
+    ],
+    "note": "Added No. 578, \"The Son of God Goes Forth to War\", sung at the evening service on November 22."
+  },
+  {
+    "date": "2026-11-22",
     "hymns": [],
     "note": "Shuffle now reorders the hymn list on the page to match the play order. Play all puts it back in the normal order."
   },

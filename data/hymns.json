@@ -8538,6 +8538,81 @@
     "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2021/10/10.17.21Bulletin-pm.pdf. Credit as printed: Attr. to Andrew of Crete, ca. 660-732; Tr. by John Mason Neale, 1862; alt.; ST. ANDREW OF CRETE 6.5.6.5.D. John B. Dykes, 1868. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text."
   },
   {
+    "number": 578,
+    "title": "The Son of God Goes Forth to War",
+    "section": null,
+    "author": "Reginald Heber",
+    "translator": null,
+    "composer": "Henry S. Cutler (1872)",
+    "tune": "ALL SAINTS NEW",
+    "tune_book": "1990 Trinity Hymnal",
+    "alt_tunes": [
+      {
+        "tune": "MINSTREL BOY",
+        "composer": "Ancient Irish air, The Moreen",
+        "meter": null,
+        "book": null,
+        "number": null,
+        "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.22.26Bulletin-pm-6x9-1.pdf"
+      }
+    ],
+    "year_text": "1827",
+    "public_domain": true,
+    "copyright_note": null,
+    "source_url": "https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.22.26Bulletin-pm-6x9-1.pdf",
+    "stanzas": [
+      [
+        "The Son of God goes forth to war,",
+        "a kingly crown to gain;",
+        "his blood-red banner streams afar:",
+        "who follows in his train?",
+        "Who best can drink his cup of woe,",
+        "triumphant over pain,",
+        "who patient bears his cross below,",
+        "he follows in his train."
+      ],
+      [
+        "The martyr first, whose eagle eye",
+        "could pierce beyond the grave,",
+        "who saw his Master in the sky,",
+        "and called on him to save:",
+        "like him, with pardon on his tongue",
+        "in midst of mortal pain,",
+        "he prayed for them that did the wrong:",
+        "who follows in his train?"
+      ],
+      [
+        "A glorious band, the chosen few",
+        "on whom the Spirit came,",
+        "twelve valiant saints, their hope they knew,",
+        "and mocked the cross and flame;",
+        "they met the tyrant's brandished steel,",
+        "the lion's gory mane;",
+        "they bowed their necks the death to feel:",
+        "who follows in their train?"
+      ],
+      [
+        "A noble army, men and boys,",
+        "the matron and the maid,",
+        "around the Savior's throne rejoice,",
+        "in robes of light arrayed:",
+        "they climbed the steep ascent of heav'n",
+        "through peril, toil, and pain:",
+        "O God, to us may grace be giv'n",
+        "to follow in their train."
+      ]
+    ],
+    "stanza_numbers": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "refrain": null,
+    "refrain_after_each_stanza": false,
+    "notes": "Text from the Faith Presbyterian Tacoma bulletin https://faithtacoma.sfo2.cdn.digitaloceanspaces.com/2026/11/11.22.26Bulletin-pm-6x9-1.pdf. Credit as printed: Reginald Heber, 1827 / MINSTREL BOY, Ancient Irish air, The Moreen. Syllable hyphens in the music underlay are joined into words. The credit line shows no copyright notice on the text. Trinity Hymnal (1990) no. 578 sets these words to ALL SAINTS NEW, C.M.D., by Henry S. Cutler, 1872 (https://hymnary.org/hymn/TH1990/578). Faith sang them to MINSTREL BOY at the evening service on November 22, 2026. Heber's text was published in his posthumous Hymns, 1827, for St. Stephen's Day; the hymnal prints four stanzas, and the original had eight."
+  },
+  {
     "number": 580,
     "title": "Lead On, O King Eternal",
     "section": null,

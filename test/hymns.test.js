@@ -91,7 +91,7 @@ function group(label) {
 }
 
 test("loads the Trinity Hymnal hymns in number order", () => {
-  assert.equal(hymns.length, 203);
+  assert.equal(hymns.length, 204);
   const numbers = hymns.map((hymn) => hymn.number);
   assert.deepEqual([...numbers].sort((a, b) => a - b), numbers, "hymns are in number order");
   assert.equal(new Set(numbers).size, numbers.length, "no number appears twice");
@@ -373,7 +373,7 @@ test("every hymn has a season and every theme tag is a real hymn", () => {
   for (const number of [108, 401, 559]) assert.ok(allYear.includes(number), String(number));
   // Bulletin hymns land here until someone sorts them into a season.
   assert.ok(allYear.includes(15) && allYear.includes(691));
-  assert.equal(allYear.length, 173);
+  assert.equal(allYear.length, 174);
 });
 
 test("every recording belongs to a hymn that is in the book", () => {
@@ -1312,7 +1312,7 @@ test("bulletin hymns keep the printed words, and fully copyrighted ones show onl
   assert.equal(byNumber.get(647).stanzas[2][2], "my never-failing treas'ry filled");
 
   const linked = hymns.filter((hymn) => faithBulletin(hymn));
-  assert.equal(linked.length, 168);
+  assert.equal(linked.length, 169);
   for (const hymn of hymns) {
     const bulletin = faithBulletin(hymn);
     if (!bulletin) {
@@ -2031,7 +2031,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v69";/);
+  assert.match(sw, /const CACHE = "hark-v70";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2762,7 +2762,7 @@ test("a hymn sung to two tunes names both, each with its book", () => {
   assert.deepEqual(altTunes({}), []);
   assert.deepEqual(altTunes(null), []);
   for (const other of hymns) {
-    if (other.number !== 99) assert.deepEqual(altTunes(other), [], String(other.number));
+    if (other.number !== 99 && other.number !== 578) assert.deepEqual(altTunes(other), [], String(other.number));
   }
 });
 
@@ -2930,4 +2930,16 @@ test("the player frame can enter picture in picture and keeps a plain, visible s
     assert.doesNotMatch(body, /transform\s*:|display\s*:\s*none|opacity\s*:\s*0\s*;|visibility\s*:\s*hidden/);
   }
   assert.doesNotMatch(css, /\.song-bar\s*\{[^}]*transform/);
+});
+
+test("no. 578 keeps the bulletin words, the hymnal tune, and the tune Faith sang", () => {
+  const hymn = byNumber.get(578);
+  assert.equal(hymn.title, "The Son of God Goes Forth to War");
+  assert.equal(hymn.author, "Reginald Heber");
+  assert.equal(hymn.tune, "ALL SAINTS NEW");
+  assert.deepEqual(altTunes(hymn).map((item) => item.tune), ["MINSTREL BOY"]);
+  assert.equal(hymn.stanzas.length, 4);
+  assert.equal(hymn.stanzas[3][7], "to follow in their train.");
+  assert.ok(bulletinImages["578"]);
+  assert.deepEqual(themes.hymns["578"], { seasons: ["all-year"], topics: ["king"] });
 });
