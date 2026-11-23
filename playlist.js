@@ -97,6 +97,22 @@ export function songsWithEndings({ hymns, recordings }) {
   return tracksForHymns({ hymns: sorted, recordings });
 }
 
+// The hymns of a list in the order of `tracks`. Hymns with no track in
+// `tracks` follow, in their original order.
+export function hymnsInTrackOrder(hymns, tracks) {
+  const list = Array.isArray(hymns) ? hymns : [];
+  const byNumber = new Map(list.map((hymn) => [hymn.number, hymn]));
+  const heard = [];
+  const used = new Set();
+  for (const track of tracks || []) {
+    const hymn = byNumber.get(track.number);
+    if (!hymn || used.has(hymn.number)) continue;
+    used.add(hymn.number);
+    heard.push(hymn);
+  }
+  return heard.concat(list.filter((hymn) => !used.has(hymn.number)));
+}
+
 // Timed songs from `number` through the end of the book. No wrap.
 export function songsFromNumber(tracks, number) {
   if (!Array.isArray(tracks)) return [];

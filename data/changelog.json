@@ -2,6 +2,11 @@
   {
     "date": "2026-11-22",
     "hymns": [],
+    "note": "Shuffle now reorders the hymn list on the page to match the play order. Play all puts it back in the normal order."
+  },
+  {
+    "date": "2026-11-22",
+    "hymns": [],
     "note": "Removed the \"Music not shown\" box from hymn pages."
   },
   {
