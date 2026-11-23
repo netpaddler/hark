@@ -25,7 +25,7 @@ jobs:
           node-version: 22
 
       - name: Run tests
-        run: node --test test/hymns.test.js test/player-nav.test.js
+        run: node --test test/hymns.test.js test/player-nav.test.js test/seo.test.js
 
   deploy:
     needs: test
@@ -49,6 +49,9 @@ jobs:
 
       - name: Build the RSS feed
         run: node scripts/build-feed.mjs
+
+      - name: Build the hymn pages, sitemap, and robots.txt
+        run: node scripts/build-seo.mjs
 
       - name: Collect site files
         run: |
