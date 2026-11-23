@@ -9,7 +9,7 @@ import { isLiked, likeButtonState, likedHymns, readLikes, toggleLike } from "../
 import { changelogDateLabel, groupChangelog } from "../changelog.js";
 import { SITE, buildFeed } from "../scripts/build-feed.mjs";
 import { entriesToAnnounce, pushNotice } from "../worker/src/push-notice.js";
-import { captionEnd, estimatedEnd, nextEndingSong, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "../playlist.js";
+import { captionEnd, estimatedEnd, hymnsInTrackOrder, nextEndingSong, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, tracksForHymns } from "../playlist.js";
 import { bytesToBase64Url, decryptPayload, encryptPayload } from "../worker/src/webpush.js";
 import {
   authorIndex,
@@ -2031,7 +2031,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v68";/);
+  assert.match(sw, /const CACHE = "hark-v69";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2255,12 +2255,20 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.deepEqual(shuffled.slice(1, -1), christmas.slice(2));
   assert.equal(shuffled[shuffled.length - 1], christmas[0]);
 
+  const hymnsToOrder = [{ number: 1 }, { number: 2 }, { number: 3 }, { number: 4 }];
+  const playOrderTracks = [{ number: 3 }, { number: 1 }, { number: 9 }];
+  assert.deepEqual(
+    hymnsInTrackOrder(hymnsToOrder, playOrderTracks).map((hymn) => hymn.number),
+    [3, 1, 2, 4],
+  );
+  assert.deepEqual(hymnsInTrackOrder(hymnsToOrder, []).map((hymn) => hymn.number), [1, 2, 3, 4]);
+
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   assert.match(appSource, /function playAllControls/);
   assert.match(appSource, /Play all/);
-  assert.match(appSource, /playAllControls\(feature\.theme\.id\)/);
+  assert.match(appSource, /playAllControls\(feature\.theme\.id, show\)/);
   assert.match(appSource, /playAllControls\(selectedThemeId\(\)\)/);
-  assert.match(appSource, /playAllControls\(group\.id\)/);
+  assert.match(appSource, /playAllControls\(group\.id, /);
   assert.match(appSource, /updateViaCache: "none"/);
   assert.match(appSource, /registration\.update\(\)/);
   assert.match(appSource, /visibilitychange/);

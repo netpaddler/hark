@@ -39,7 +39,7 @@ import {
   bulletinBlock,
   sourceWording,
 } from "./hymn-model.js";
-import { nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, trackFrom, tracksForHymns } from "./playlist.js";
+import { hymnsInTrackOrder, nextPlay, playbackStop, shuffleTracks, songsFromNumber, songsWithEndings, themeTracks, trackFrom, tracksForHymns } from "./playlist.js";
 import { sendListen } from "./listen.js";
 import { gaEvent, gaPage, gaUserProps, hymnParams, likedBucket, progressMarks, startAnalytics } from "./ga.js";
 import { requestConfig, requestsOpen } from "./config/requests.js";
@@ -522,7 +522,20 @@ function autoPlayButton() {
   return auto;
 }
 
-function playRow(tracks, lead) {
+// Shows a hymn list in the order of the given tracks, or the original list
+// again when no tracks are given. The list must be on the page when it is used.
+function listSwapper(original, hymnList, build) {
+  let shown = original;
+  return (tracks) => {
+    const next = tracks ? build(hymnsInTrackOrder(hymnList, tracks)) : original;
+    if (next === shown) return;
+    shown.replaceWith(next);
+    shown = next;
+  };
+}
+
+// `show` is optional. It puts the list next to the row in the play order.
+function playRow(tracks, lead, show) {
   const row = el("p", { class: "play-all" });
   if (lead) row.append(lead);
   if (tracks.length) {
@@ -530,11 +543,14 @@ function playRow(tracks, lead) {
     const shuffle = el("button", { type: "button", class: "play-song" }, "Shuffle");
     all.addEventListener("click", () => {
       gaEvent("play_all", { list_size: tracks.length });
+      if (show) show(null);
       beginSongs(tracks, "all");
     });
     shuffle.addEventListener("click", () => {
       gaEvent("shuffle", { list_size: tracks.length });
-      beginSongs(shuffleTracks(tracks), "all");
+      const order = shuffleTracks(tracks);
+      if (show) show(order);
+      beginSongs(order, "all");
     });
     row.append(all, shuffle);
   }
@@ -542,7 +558,7 @@ function playRow(tracks, lead) {
   return row;
 }
 
-function playAllControls(themeId) {
+function playAllControls(themeId, show) {
   if (!themeId) return null;
   const tracks = themeTracks({
     hymns,
@@ -551,12 +567,12 @@ function playAllControls(themeId) {
     themeId,
   });
   if (!tracks.length) return null;
-  return playRow(tracks);
+  return playRow(tracks, null, show);
 }
 
-function listPlayControls(hymnList) {
+function listPlayControls(hymnList, show) {
   if (!hymnList || hymnList.length === 0) return null;
-  return playRow(tracksForHymns({ hymns: hymnList, recordings: recordingCatalog }));
+  return playRow(tracksForHymns({ hymns: hymnList, recordings: recordingCatalog }), null, show);
 }
 
 // The recording the button at the top of a hymn page starts: the newest one
@@ -604,7 +620,7 @@ function hymnsOnScreen(index, result) {
 }
 
 function listWithPlay(node, hymnList) {
-  const play = listPlayControls(hymnList);
+  const play = listPlayControls(hymnList, listSwapper(node, hymnList, numberList));
   if (!play) return node;
   const wrap = el("div", { class: "list-play" });
   wrap.append(play, node);
@@ -657,9 +673,10 @@ function themeGroup(group, open) {
   summary.addEventListener("click", () => {
     if (!details.open) gaEvent("theme_open", { theme: group.title });
   });
-  const play = playAllControls(group.id);
+  const list = themeHymnList(group.hymns);
+  const play = playAllControls(group.id, listSwapper(list, group.hymns, themeHymnList));
   if (play) details.append(play);
-  details.append(themeHymnList(group.hymns));
+  details.append(list);
   return details;
 }
 
@@ -970,10 +987,11 @@ function renderTheme(id) {
   const page = el("div", { class: "theme-page" });
   page.append(el("p", { class: "theme-back" }, el("a", { href: "#/themes" }, "All themes")));
   page.append(el("h2", { class: "theme-page-title" }, theme.title));
-  const straight = playAllControls(id);
+  const shownList = list.length ? themeHymnList(list) : null;
+  const straight = playAllControls(id, shownList && listSwapper(shownList, list, themeHymnList));
   if (straight) page.append(straight);
-  if (list.length === 0) page.append(el("p", { class: "empty" }, "No songs match that search."));
-  else page.append(themeHymnList(list));
+  if (shownList) page.append(shownList);
+  else page.append(el("p", { class: "empty" }, "No songs match that search."));
   main.replaceChildren(page);
   const y = scrollMemory[key] || 0;
   requestAnimationFrame(() => window.scrollTo(0, y));
@@ -1939,8 +1957,13 @@ function welcomeFeatured(feature) {
     el("p", { class: "kicker" }, kicker),
     el("h2", { class: "section-title", id: "welcome-featured-title" }, heading),
   ]);
+  const featuredList = (hymnList) =>
+    el("ul", { class: "hymn-list featured-list" }, hymnList.map((hymn) => hymnRow(hymn)));
+  const restHymns = rest.map((pick) => pick.hymn);
+  const restList = rest.length ? featuredList(restHymns) : null;
   if (feature.theme) {
-    const play = playAllControls(feature.theme.id);
+    const show = restList && listSwapper(restList, restHymns, featuredList);
+    const play = playAllControls(feature.theme.id, show);
     if (play) titleBlock.append(play);
   }
   head.append(titleBlock);
@@ -1949,15 +1972,7 @@ function welcomeFeatured(feature) {
     head.append(arrowLink(`#/theme/${feature.theme.id}`, label));
   } else head.append(arrowLink("#/", welcomeCopy.actions.browse));
   block.append(head);
-  if (rest.length) {
-    block.append(
-      el(
-        "ul",
-        { class: "hymn-list featured-list" },
-        rest.map((pick) => hymnRow(pick.hymn)),
-      ),
-    );
-  }
+  if (restList) block.append(restList);
   if (feature.upcoming) {
     const next = feature.upcoming.theme;
     block.append(
