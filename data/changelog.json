@@ -1,6 +1,11 @@
 [
   {
     "date": "2026-11-22",
+    "hymns": [],
+    "note": "Added a recording of No. 578, \"The Son of God Goes Forth to War\", from the November 22 evening service."
+  },
+  {
+    "date": "2026-11-22",
     "hymns": [
       578
     ],

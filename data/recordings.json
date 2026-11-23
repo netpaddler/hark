@@ -4445,5 +4445,18 @@
       "end_seconds": 1216,
       "end_source": "audio"
     }
+  ],
+  "578": [
+    {
+      "label": "Sunday Evening Worship, Nov 22, 2026, congregation",
+      "video_title": "Sunday Evening Worship - November 22, 2026",
+      "video_date": "2026-11-22",
+      "url": "https://www.youtube.com/watch?v=hBbjhQDgiI0&t=4705s",
+      "start_seconds": 4705,
+      "confidence": "medium",
+      "notes": "Closing hymn, sung to MINSTREL BOY, just before the benediction. This video has no auto captions yet, so the times come from a local transcript of the audio (faster-whisper) and the sound level. Starts at the spoken announcement: Let's conclude our worship service standing and singing the hymn in your order of service, The Son of God Goes Forth to War. The singing begins about 4751. The end is where the music stops and the minister begins the benediction (The grace of the Lord Jesus Christ) at 4927.",
+      "end_seconds": 4926,
+      "end_source": "audio"
+    }
   ]
 }
