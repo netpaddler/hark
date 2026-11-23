@@ -20,6 +20,16 @@ Tests, with no install step:
 node --test
 ```
 
+## Search pages
+
+Every hymn has a static page at `/hymn/NNN/` (the same number the app uses, for example `/hymn/578/`), so search engines can find a hymn by its title and a shared link shows a preview. The pages, `sitemap.xml`, and `robots.txt` are generated from the data and committed. After you add or change hymns in `data/hymns.json` (or `data/changelog.json`), run:
+
+```bash
+npm run build:seo
+```
+
+and commit the output. `test/seo.test.js` fails when the files are out of date. A hymn above 742 never names the Trinity Hymnal on its page, and a copyrighted hymn shows no words. The page links into the app with "Open in Hark" (`/#/hymn/NNN`). The share image is `icons/share.png`, drawn from `scripts/share-image.html`.
+
 ## Welcome page
 
 A first visit to the bare address opens on a welcome page, `#/welcome`. It says what Hark is and has four buttons: Browse the hymns, Browse by season, Install Hark, and Request a hymn. A search box opens a hymn by its number, or the list with the search filled in. Below that are a hymn for today, a few figures, what Hark offers, and the seasons.

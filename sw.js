@@ -1,4 +1,4 @@
-const CACHE = "hark-v71";
+const CACHE = "hark-v72";
 
 // vendor/abcjs-basic-min.js is deliberately absent. It is close to half a
 // megabyte, and precaching it meant every first visit paid for music the
@@ -147,6 +147,10 @@ async function networkFirst(request) {
     const cached = await cache.match(request);
     if (cached) return cached;
     if (request.mode === "navigate") {
+      // A hymn page that was never cached: open the same hymn inside the app,
+      // which has its own copy of the words. Any other page gets the shell.
+      const page = new URL(request.url).pathname.match(/^\/hymn\/(\d+)\/?$/);
+      if (page) return Response.redirect(`/#/hymn/${page[1]}`, 302);
       const shell = await cache.match("./index.html");
       if (shell) return shell;
     }

@@ -6,7 +6,14 @@
     <atom:link href="https://hark.theweightofglory.com/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Hymns added to Hark.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 22 Nov 2026 12:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 23 Nov 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Each hymn now has its own page, so you can find Hark hymns by searching and share a link that shows a preview.</title>
+      <link>https://hark.theweightofglory.com/#/whats-new</link>
+      <guid isPermaLink="false">https://hark.theweightofglory.com/#/whats-new/2026-11-23/undefined</guid>
+      <pubDate>Mon, 23 Nov 2026 12:00:00 GMT</pubDate>
+      <description><![CDATA[<p>Each hymn now has its own page, so you can find Hark hymns by searching and share a link that shows a preview.</p>]]></description>
+    </item>
     <item>
       <title>Added a recording of No. 578, &quot;The Son of God Goes Forth to War&quot;, from the November 22 evening service.</title>
       <link>https://hark.theweightofglory.com/#/whats-new</link>
