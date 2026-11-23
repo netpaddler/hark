@@ -27,7 +27,7 @@ The first three entries are a seed from the git history of `data/hymns.json`. Th
 ## Fields
 These are the requested fields plus one extra, `stanza_numbers`. It gives the hymnal's stanza number for each entry in `stanzas`. It matters for no. 196, where only stanzas 1 and 4 are given. Stanza numbers and "[Refrain]" markers have been removed from the lines. `refrain` is printed once. `refrain_after_each_stanza` is true wherever the source marks the refrain as repeated.
 
-A hymn sung to more than one tune has `alt_tunes`, a list of `{ tune, composer, meter, book, number, source_url }`, and `tune_book`, the book that sets it to its main `tune`. The page then names every tune with its book, as in "WINCHESTER NEW (1990 Trinity Hymnal) · also sung to MARYTON (1961 Trinity Hymnal)". Only no. 99 has these now.
+A hymn sung to more than one tune has `alt_tunes`, a list of `{ tune, composer, meter, book, number, source_url }`, and `tune_book`, the book that sets it to its main `tune`. The page then names every tune with its book, as in "WINCHESTER NEW (1990 Trinity Hymnal) · also sung to MARYTON (1961 Trinity Hymnal)". Nos. 99 and 578 have these now. No. 578 is set to ALL SAINTS NEW in the 1990 Trinity Hymnal, but the Nov 22, 2026 evening bulletin prints MINSTREL BOY.
 
 ## Sources
 1. **hymnary.org Trinity Hymnal (1990) instance pages**, `https://hymnary.org/hymn/TH1990/N`. These supplied the full text, stanza order, author, translator, tune, composer and copyright lines.
