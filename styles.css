@@ -2463,7 +2463,6 @@ html[data-installed="true"] .btn-install {
 }
 
 .play-song,
-.play-auto,
 .song-bar-controls button,
 .song-keep {
   border: 1px solid var(--line);
@@ -2574,17 +2573,6 @@ html[data-player="on"]::before {
 
 #song-next {
   flex: 1 1 8.5rem;
-}
-
-.play-auto {
-  background: var(--paper-raised);
-  color: var(--ink);
-}
-
-.play-auto[aria-pressed="true"] {
-  background: var(--accent);
-  color: var(--accent-ink);
-  border-color: transparent;
 }
 
 @media (max-width: 420px) {

@@ -2,6 +2,11 @@
   {
     "date": "2026-11-24",
     "hymns": [],
+    "note": "Removed the Auto play all setting. Songs now play through the list you started and then stop."
+  },
+  {
+    "date": "2026-11-24",
+    "hymns": [],
     "note": "Next and Previous now follow the shuffled order after you press Shuffle."
   },
   {

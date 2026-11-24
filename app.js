@@ -508,20 +508,6 @@ function themeHymnList(list) {
   );
 }
 
-function autoPlayButton() {
-  const auto = el(
-    "button",
-    {
-      type: "button",
-      class: "play-auto",
-      "aria-pressed": autoPlayAll() ? "true" : "false",
-    },
-    "Auto play all",
-  );
-  auto.addEventListener("click", () => setAutoPlayAll(!autoPlayAll()));
-  return auto;
-}
-
 // Shows a hymn list in the order of the given tracks, or the original list
 // again when no tracks are given. The list must be on the page when it is used.
 function listSwapper(original, hymnList, build) {
@@ -554,7 +540,6 @@ function playRow(tracks, lead, show) {
     });
     row.append(all, shuffle);
   }
-  row.append(autoPlayButton());
   return row;
 }
 
@@ -625,25 +610,6 @@ function listWithPlay(node, hymnList) {
   const wrap = el("div", { class: "list-play" });
   wrap.append(play, node);
   return wrap;
-}
-
-function autoPlayAll() {
-  try {
-    return localStorage.getItem("hark-auto-play-all") === "1";
-  } catch {
-    return false;
-  }
-}
-
-function setAutoPlayAll(on) {
-  try {
-    localStorage.setItem("hark-auto-play-all", on ? "1" : "0");
-  } catch {
-    /* storage can be blocked */
-  }
-  for (const button of document.querySelectorAll(".play-auto")) {
-    button.setAttribute("aria-pressed", on ? "true" : "false");
-  }
 }
 
 function endingSongs() {
@@ -2960,16 +2926,9 @@ function finishSong() {
     catalog: endingSongs(),
     queue: songQueue,
     index: songIndex,
-    auto: autoPlayAll(),
   });
   if (following) {
-    if (songIndex + 1 >= songQueue.length) {
-      songMode = "catalog";
-      songQueue = [following];
-      songIndex = 0;
-    } else {
-      songIndex += 1;
-    }
+    songIndex += 1;
     loadSong();
     return;
   }
@@ -3059,21 +3018,19 @@ function playQueued(track, mode) {
 function stepSong(delta) {
   if (!songQueue.length) return;
   if (delta > 0) {
-    const auto = autoPlayAll();
     const atEnd = songIndex + 1 >= songQueue.length;
-    if (atEnd && (auto || songMode === "one")) {
+    if (atEnd && songMode === "one") {
       const following = nextPlay({
         catalog: endingSongs(),
         queue: songQueue,
         index: songIndex,
-        auto,
-        singleAdvance: songMode === "one",
+        singleAdvance: true,
       });
       if (!following) {
         stopSongs();
         return;
       }
-      playQueued(following, auto ? "catalog" : "one");
+      playQueued(following, "one");
       return;
     }
   }
