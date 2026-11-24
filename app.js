@@ -2963,7 +2963,7 @@ function finishSong() {
     auto: autoPlayAll(),
   });
   if (following) {
-    if (autoPlayAll()) {
+    if (songIndex + 1 >= songQueue.length) {
       songMode = "catalog";
       songQueue = [following];
       songIndex = 0;
@@ -3061,7 +3061,7 @@ function stepSong(delta) {
   if (delta > 0) {
     const auto = autoPlayAll();
     const atEnd = songIndex + 1 >= songQueue.length;
-    if (auto || (songMode === "one" && atEnd)) {
+    if (atEnd && (auto || songMode === "one")) {
       const following = nextPlay({
         catalog: endingSongs(),
         queue: songQueue,

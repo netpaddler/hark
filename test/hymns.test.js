@@ -2031,7 +2031,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v72";/);
+  assert.match(sw, /const CACHE = "hark-v73";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2357,14 +2357,27 @@ test("a song started outside a theme continues through the book", () => {
     picked.map((hymn) => hymn.number),
   );
   const fromSearch = nextPlay({ catalog, queue: listed, index: 0, auto: true });
-  assert.equal(fromSearch.number, nextEndingSong(catalog, listed[0].number, { wrap: true }).number);
-  assert.notEqual(fromSearch.number, listed[1].number);
+  assert.equal(fromSearch.number, listed[1].number);
+  const pastList = nextPlay({ catalog, queue: listed, index: 2, auto: true });
+  assert.equal(pastList.number, nextEndingSong(catalog, listed[2].number, { wrap: true }).number);
   const kept = nextPlay({ catalog, queue: listed, index: 0, auto: false });
   assert.equal(kept.number, listed[1].number);
   const fromHere = songsFromNumber(catalog, listed[0].number);
   assert.equal(fromHere[0].number, listed[0].number);
   assert.ok(fromHere.every((track) => track.number >= listed[0].number));
   assert.ok(fromHere.length < catalog.length);
+});
+
+test("next follows the shuffled queue, with auto play all on or off", () => {
+  const catalog = songsWithEndings({ hymns, recordings });
+  const order = shuffleTracks(catalog.slice(0, 6), () => 0.1);
+  assert.notDeepEqual(order.map((t) => t.number), catalog.slice(0, 6).map((t) => t.number));
+  for (const auto of [true, false]) {
+    for (let at = 0; at < order.length - 1; at += 1) {
+      assert.equal(nextPlay({ catalog, queue: order, index: at, auto }).number, order[at + 1].number);
+    }
+  }
+  assert.equal(nextPlay({ catalog, queue: order, index: order.length - 1, auto: false }), null);
 });
 
 test("the player stays pinned at the top while the words scroll under it", () => {
