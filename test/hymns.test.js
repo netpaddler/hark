@@ -2031,7 +2031,7 @@ test("the RSS feed is generated from the changelog", () => {
   assert.match(appSource, /Subscribe \(RSS\)/);
   assert.match(appSource, /#\/whats-new/);
   const sw = readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-  assert.match(sw, /const CACHE = "hark-v73";/);
+  assert.match(sw, /const CACHE = "hark-v74";/);
   assert.ok(sw.includes('"./changelog.js"'));
   assert.ok(sw.includes('"./data/changelog.json"'));
   assert.ok(sw.includes('"./feed.xml"'));
@@ -2317,8 +2317,7 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.equal(nextEndingSong(book, 1, { wrap: false }).number, 4);
   assert.equal(nextEndingSong(book, 4, { wrap: false }), null);
   assert.equal(nextEndingSong(book, 4, { wrap: true }).number, 1);
-  assert.match(appSource, /Auto play all/);
-  assert.match(appSource, /hark-auto-play-all/);
+  assert.equal(/Auto play all|hark-auto-play-all|autoPlayAll|play-auto/.test(appSource), false);
   assert.match(appSource, /nextPlay\(\{/);
   assert.match(appSource, /function listPlayControls/);
   assert.match(appSource, /listWithPlay\(numberList\(result\.hymns\), result\.hymns\)/);
@@ -2328,24 +2327,17 @@ test("play all keeps caption ends and every song still stops", () => {
   assert.match(appSource, /hymnPlayControls\(hymn\)/);
 });
 
-test("a song started outside a theme continues through the book", () => {
+test("a single song steps to the next number and a queue stops at its end", () => {
   const catalog = songsWithEndings({ hymns, recordings });
   assert.ok(catalog.length > 5);
-  const started = nextPlay({ catalog, queue: [catalog[0]], index: 0, auto: true });
+  const started = nextPlay({ catalog, queue: [catalog[0]], index: 0, singleAdvance: true });
   assert.equal(started.number, catalog[1].number);
-  const wrapped = nextPlay({
-    catalog,
-    queue: [catalog[catalog.length - 1]],
-    index: 0,
-    auto: true,
-  });
-  assert.equal(wrapped.number, catalog[0].number);
+  assert.equal(nextPlay({ catalog, queue: [catalog[0]], index: 0 }), null);
   assert.equal(
     nextPlay({
       catalog,
       queue: [catalog[catalog.length - 1]],
       index: 0,
-      auto: false,
       singleAdvance: true,
     }),
     null,
@@ -2356,35 +2348,30 @@ test("a song started outside a theme continues through the book", () => {
     listed.map((track) => track.number),
     picked.map((hymn) => hymn.number),
   );
-  const fromSearch = nextPlay({ catalog, queue: listed, index: 0, auto: true });
+  const fromSearch = nextPlay({ catalog, queue: listed, index: 0 });
   assert.equal(fromSearch.number, listed[1].number);
-  const pastList = nextPlay({ catalog, queue: listed, index: 2, auto: true });
-  assert.equal(pastList.number, nextEndingSong(catalog, listed[2].number, { wrap: true }).number);
-  const kept = nextPlay({ catalog, queue: listed, index: 0, auto: false });
-  assert.equal(kept.number, listed[1].number);
+  assert.equal(nextPlay({ catalog, queue: listed, index: 2 }), null);
   const fromHere = songsFromNumber(catalog, listed[0].number);
   assert.equal(fromHere[0].number, listed[0].number);
   assert.ok(fromHere.every((track) => track.number >= listed[0].number));
   assert.ok(fromHere.length < catalog.length);
 });
 
-test("next follows the shuffled queue, with auto play all on or off", () => {
+test("next follows the shuffled queue and stops at its end", () => {
   const catalog = songsWithEndings({ hymns, recordings });
   const order = shuffleTracks(catalog.slice(0, 6), () => 0.1);
   assert.notDeepEqual(order.map((t) => t.number), catalog.slice(0, 6).map((t) => t.number));
-  for (const auto of [true, false]) {
-    for (let at = 0; at < order.length - 1; at += 1) {
-      assert.equal(nextPlay({ catalog, queue: order, index: at, auto }).number, order[at + 1].number);
-    }
+  for (let at = 0; at < order.length - 1; at += 1) {
+    assert.equal(nextPlay({ catalog, queue: order, index: at }).number, order[at + 1].number);
   }
-  assert.equal(nextPlay({ catalog, queue: order, index: order.length - 1, auto: false }), null);
+  assert.equal(nextPlay({ catalog, queue: order, index: order.length - 1 }), null);
 });
 
 test("the player stays pinned at the top while the words scroll under it", () => {
   const appSource = readFileSync(new URL("../app.js", import.meta.url), "utf8");
   const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
-  // The hymn's own play button leads the row with Play all, Shuffle and Auto play all.
+  // The hymn's own play button leads the row with Play all and Shuffle.
   const controls = appSource.slice(appSource.indexOf("function hymnPlayControls("), appSource.indexOf("function hymnsOnScreen("));
   assert.match(controls, /playControl\(hymn, item, "Play song"\)/);
   assert.match(controls, /item \? playControl/);
