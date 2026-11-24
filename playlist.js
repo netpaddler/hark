@@ -120,17 +120,17 @@ export function songsFromNumber(tracks, number) {
 }
 
 // The song that should start after the one at `index`.
-// Auto play all follows hymn number through `catalog` and wraps.
-// It does not stay inside a theme, a search, or the list that started playback.
-// With auto off, a list continues in list order. A single song steps to the
-// next higher number and stops after the last one.
+// A queue is followed in its own order, shuffled or not. Only at the end of the
+// queue does auto play all continue by hymn number through `catalog` and wrap.
+// With auto off, a single song steps to the next higher number and stops after
+// the last one, and a list stops at its end.
 export function nextPlay({ catalog, queue, index, auto, singleAdvance = false }) {
   const list = Array.isArray(queue) ? queue : [];
   const at = Number.isInteger(index) ? index : 0;
   const current = list[at];
   if (!current) return null;
-  if (auto) return nextEndingSong(catalog, current.number, { wrap: true });
   if (at + 1 < list.length) return list[at + 1];
+  if (auto) return nextEndingSong(catalog, current.number, { wrap: true });
   if (singleAdvance) return nextEndingSong(catalog, current.number, { wrap: false });
   return null;
 }

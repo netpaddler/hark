@@ -1,5 +1,10 @@
 [
   {
+    "date": "2026-11-24",
+    "hymns": [],
+    "note": "Next and Previous now follow the shuffled order after you press Shuffle."
+  },
+  {
     "date": "2026-11-23",
     "hymns": [],
     "note": "Each hymn now has its own page, so you can find Hark hymns by searching and share a link that shows a preview."

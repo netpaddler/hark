@@ -6,7 +6,14 @@
     <atom:link href="https://hark.theweightofglory.com/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Hymns added to Hark.</description>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Nov 2026 12:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 24 Nov 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Next and Previous now follow the shuffled order after you press Shuffle.</title>
+      <link>https://hark.theweightofglory.com/#/whats-new</link>
+      <guid isPermaLink="false">https://hark.theweightofglory.com/#/whats-new/2026-11-24/undefined</guid>
+      <pubDate>Tue, 24 Nov 2026 12:00:00 GMT</pubDate>
+      <description><![CDATA[<p>Next and Previous now follow the shuffled order after you press Shuffle.</p>]]></description>
+    </item>
     <item>
       <title>Each hymn now has its own page, so you can find Hark hymns by searching and share a link that shows a preview.</title>
       <link>https://hark.theweightofglory.com/#/whats-new</link>
